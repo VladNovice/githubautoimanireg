@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MTI Automation</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg-color: #000000;
+            --card-bg: rgba(28, 28, 30, 0.7);
+            --accent-blue: #007AFF;
+            --text-main: #ffffff;
+            --text-secondary: #8E8E93;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        /* Заголовок */
+        header {
+            width: 100%;
+            margin-bottom: 30px;
+            text-align: left;
+            padding-left: 10px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        p.subtitle {
+            color: var(--text-secondary);
+            font-size: 15px;
+            margin-top: 5px;
+        }
+
+        /* Основной контейнер */
+        .container {
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Плашки категорий */
+        .category-card {
+            position: relative;
+            width: 100%;
+            height: 180px;
+            border-radius: 24px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 20px;
+            text-decoration: none;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            transition: transform 0.2s ease, brightness 0.2s ease;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .category-card:active {
+            transform: scale(0.97);
+            brightness: 0.8;
+        }
+
+        .beauty-bg {
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.8)), 
+                              url('https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=800');
+        }
+
+        .crypto-bg {
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.8)), 
+                              url('https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&q=80&w=800');
+        }
+
+        .category-card h2 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .category-card span {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 4px;
+        }
+
+        /* Экран настройки (скрыт по умолчанию) */
+        #setup-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-color);
+            z-index: 100;
+            padding: 25px;
+            overflow-y: auto;
+        }
+
+        .back-btn {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 14px;
+            margin-bottom: 30px;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-bottom: 8px;
+            margin-left: 5px;
+        }
+
+        input {
+            width: 100%;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 15px;
+            color: white;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .main-button {
+            width: 100%;
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            border-radius: 18px;
+            padding: 18px;
+            font-size: 17px;
+            font-weight: 600;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .main-button:active {
+            opacity: 0.8;
+        }
+
+        /* Анимация появления */
+        .fade-in {
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Главный экран -->
+    <div id="main-screen" class="container fade-in">
+        <header>
+            <h1>MTI Automation</h1>
+            <p class="subtitle">Выберите шаблон для запуска</p>
+        </header>
+
+        <div class="category-card beauty-bg" onclick="openSetup('Бьюти Бизнес')">
+            <h2>Бьюти бизнес</h2>
+            <span>Салоны, студии, запись</span>
+        </div>
+
+        <div class="category-card crypto-bg" onclick="openSetup('Крипто Сообщество')">
+            <h2>Крипто бизнес</h2>
+            <span>Сообщества, сигналы, DAO</span>
+        </div>
+    </div>
+
+    <!-- Экран настройки -->
+    <div id="setup-screen" class="fade-in">
+        <button class="back-btn" onclick="closeSetup()">← Назад</button>
+        
+        <header>
+            <h1 id="setup-title">Настройка</h1>
+            <p class="subtitle">Заполните данные для запуска бота</p>
+        </header>
+
+        <div class="form-group">
+            <label>Название проекта</label>
+            <input type="text" id="proj-name" placeholder="Например: MyBeautyBot">
+        </div>
+
+        <div class="form-group">
+            <label>Telegram API Token</label>
+            <input type="text" id="bot-token" placeholder="583920:AAH...">
+        </div>
+
+        <div class="form-group">
+            <label>Контакт владельца</label>
+            <input type="text" id="owner-contact" placeholder="@username">
+        </div>
+
+        <button class="main-button" onclick="launchBot()">Запустить автоматизацию</button>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Расширить на весь экран
+        tg.headerColor = '#000000';
+
+        function openSetup(category) {
+            document.getElementById('main-screen').style.display = 'none';
+            document.getElementById('setup-screen').style.display = 'block';
+            document.getElementById('setup-title').innerText = category;
+            
+            // Виброотклик при нажатии
+            tg.HapticFeedback.impactOccurred('medium');
+        }
+
+        function closeSetup() {
+            document.getElementById('setup-screen').style.display = 'none';
+            document.getElementById('main-screen').style.display = 'flex';
+        }
+
+        function launchBot() {
+            const name = document.getElementById('proj-name').value;
+            const token = document.getElementById('bot-token').value;
+
+            if (!name || !token) {
+                tg.showAlert("Пожалуйста, заполните все поля");
+                return;
+            }
+
+            tg.showConfirm(`Запустить проект "${name}"?`, (confirmed) => {
+                if (confirmed) {
+                    tg.HapticFeedback.notificationOccurred('success');
+                    
+                    // Отправляем данные боту
+                    const data = {
+                        action: 'launch_bot',
+                        project: name,
+                        token: token,
+                        category: document.getElementById('setup-title').innerText
+                    };
+                    
+                    tg.sendData(JSON.stringify(data));
+                    tg.close();
+                }
+            });
+        }
+    </script>
+</body>
+</html>
