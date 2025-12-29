@@ -7,273 +7,82 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
-            --bg-color: #000000;
-            --secondary-bg: #1c1c1e;
-            --tertiary-bg: #2c2c2e;
-            --accent-blue: #007AFF;
-            --text-main: #ffffff;
-            --text-secondary: #8E8E93;
-            --glass: rgba(255, 255, 255, 0.08);
-            --border: rgba(255, 255, 255, 0.1);
-            --safe-area-top: env(safe-area-inset-top);
+            --ios-bg: #000000; --ios-secondary-bg: #1C1C1E; --ios-blue: #0A84FF; --ios-gray: #8E8E93; --ios-text: #FFFFFF; --ios-border: rgba(255, 255, 255, 0.1);
         }
-
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-            min-height: 100vh;
-        }
-
-        /* Навигационная панель с блюром */
-        .nav-bar {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            padding: calc(var(--safe-area-top) + 20px) 20px 15px 20px;
-            border-bottom: 0.5px solid var(--border);
-        }
-
-        h1 {
-            font-size: 34px;
-            font-weight: 700;
-            margin: 0;
-            letter-spacing: -1px;
-        }
-
-        .subtitle {
-            color: var(--text-secondary);
-            font-size: 15px;
-            margin: 4px 0 0 0;
-        }
-
-        .container {
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        /* Карточки категорий */
-        .category-card {
-            position: relative;
-            width: 100%;
-            height: 180px;
-            border-radius: 22px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            padding: 20px;
-            border: 0.5px solid var(--border);
-            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            background-size: cover;
-            background-position: center;
-        }
-
-        .category-card:active {
-            transform: scale(0.96);
-        }
-
-        .category-card::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.85) 100%);
-            z-index: 1;
-        }
-
-        .card-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        .card-content h2 {
-            margin: 0;
-            font-size: 24px;
-            font-weight: 600;
-            letter-spacing: -0.5px;
-        }
-
-        .card-content span {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.6);
-            margin-top: 4px;
-            display: block;
-        }
-
-        /* Формы как в iOS Settings */
-        #setup-screen {
-            display: none;
-            padding: 20px;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .form-section {
-            background: var(--secondary-bg);
-            border-radius: 14px;
-            overflow: hidden;
-            margin-bottom: 30px;
-        }
-
-        .input-group {
-            border-bottom: 0.5px solid var(--border);
-            padding: 12px 16px;
-        }
-
-        .input-group:last-child {
-            border-bottom: none;
-        }
-
-        .input-group label {
-            font-size: 12px;
-            text-transform: uppercase;
-            color: var(--text-secondary);
-            font-weight: 600;
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        input {
-            width: 100%;
-            background: transparent;
-            border: none;
-            color: white;
-            font-size: 17px;
-            outline: none;
-            padding: 4px 0;
-        }
-
-        .main-button {
-            width: 100%;
-            background: var(--accent-blue);
-            color: white;
-            border: none;
-            border-radius: 14px;
-            padding: 18px;
-            font-size: 17px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
-
-        .main-button:active {
-            opacity: 0.7;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .beauty-bg { background-image: url('https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=800'); }
-        .crypto-bg { background-image: url('https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&q=80&w=800'); }
+        body { background: var(--ios-bg); color: var(--ios-text); font-family: -apple-system, sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; margin: 0; }
+        header { width: 100%; margin-bottom: 25px; }
+        h1 { font-size: 34px; margin: 0; }
+        .subtitle { color: var(--ios-gray); font-size: 16px; }
+        .category-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 500px; }
+        .ios-card { background: var(--ios-secondary-bg); border-radius: 20px; padding: 20px; aspect-ratio: 1/1; display: flex; flex-direction: column; justify-content: space-between; border: 0.5px solid var(--ios-border); cursor: pointer; }
+        #setup-screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--ios-bg); z-index: 100; padding: 20px; box-sizing: border-box; }
+        .ios-group { background: var(--ios-secondary-bg); border-radius: 12px; overflow: hidden; margin-bottom: 20px; width: 100%; }
+        .ios-row { padding: 12px 16px; border-bottom: 0.5px solid var(--ios-border); display: flex; flex-direction: column; }
+        .ios-row label { font-size: 12px; color: var(--ios-gray); text-transform: uppercase; }
+        .ios-row input { background: transparent; border: none; color: white; font-size: 17px; outline: none; }
+        .ios-btn-main { background: var(--ios-blue); color: white; border: none; border-radius: 14px; padding: 16px; font-size: 17px; font-weight: 600; width: 100%; cursor: pointer; }
+        .trial-info { font-size: 13px; color: var(--ios-gray); text-align: center; margin-top: 15px; }
     </style>
 </head>
 <body>
 
-    <div class="nav-bar">
-        <h1 id="page-title">MTI Automation</h1>
-        <p class="subtitle" id="page-subtitle">Выберите шаблон для запуска</p>
-    </div>
-
-    <div id="main-screen" class="container">
-        <div class="category-card beauty-bg" onclick="openSetup('Бьюти бизнес', 'Салоны и запись')">
-            <div class="card-content">
-                <h2>Бьюти бизнес</h2>
-                <span>Салоны, студии, запись</span>
+    <div id="main-screen" style="width: 100%; max-width: 500px;">
+        <header>
+            <h1>Автоматизация</h1>
+            <p class="subtitle">Выберите тип бизнеса</p>
+        </header>
+        <div class="category-grid">
+            <div class="ios-card" onclick="openSetup('Бьюти')">
+                <div style="font-size:32px">✨</div>
+                <div><h2>Бьюти</h2><span>Запись и услуги</span></div>
             </div>
-        </div>
-
-        <div class="category-card crypto-bg" onclick="openSetup('Крипто бизнес', 'Сигналы и сообщества')">
-            <div class="card-content">
-                <h2>Крипто бизнес</h2>
-                <span>Сообщества, сигналы, DAO</span>
+            <div class="ios-card" onclick="openSetup('Крипто')">
+                <div style="font-size:32px">💎</div>
+                <div><h2>Крипто</h2><span>DAO и сигналы</span></div>
             </div>
         </div>
     </div>
 
     <div id="setup-screen">
-        <div class="form-section">
-            <div class="input-group">
-                <label>Название проекта</label>
-                <input type="text" id="proj-name" placeholder="Например: MyBeautyBot">
-            </div>
-            <div class="input-group">
-                <label>Telegram API Token</label>
-                <input type="text" id="bot-token" placeholder="583920:AAH...">
-            </div>
-            <div class="input-group">
-                <label>Контакт владельца</label>
-                <input type="text" id="owner-contact" placeholder="@username">
+        <div onclick="closeSetup()" style="color:var(--ios-blue); margin-bottom:20px; cursor:pointer;">‹ Назад</div>
+        <h1 id="setup-title">Настройка</h1>
+        <div class="ios-group">
+            <div class="ios-row"><label>Название проекта</label><input type="text" id="proj-name" placeholder="MyBot"></div>
+            <div class="ios-row"><label>Telegram Token</label><input type="text" id="bot-token" placeholder="от @BotFather"></div>
+        </div>
+        <div class="ios-group">
+            <div class="ios-row" style="flex-direction:row; justify-content:space-between;">
+                <span>Подписка: <b>1 неделя FREE</b></span>
+                <span style="color:var(--ios-blue)">0 ₽</span>
             </div>
         </div>
-        <button class="main-button" onclick="launchBot()">Запустить автоматизацию</button>
+        <button class="ios-btn-main" onclick="launchBot()">Попробовать бесплатно</button>
+        <p class="trial-info">Далее 1490 ₽/мес. Отмена в любое время.</p>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
-        
-        // Возвращаем принудительный фуллскрин
         tg.expand();
-        tg.headerColor = '#000000';
-        tg.backgroundColor = '#000000';
 
-        const mainScreen = document.getElementById('main-screen');
-        const setupScreen = document.getElementById('setup-screen');
-        const pageTitle = document.getElementById('page-title');
-        const pageSubtitle = document.getElementById('page-subtitle');
-
-        tg.BackButton.onClick(() => closeSetup());
-
-        function openSetup(title, subtitle) {
-            mainScreen.style.display = 'none';
-            setupScreen.style.display = 'block';
-            pageTitle.innerText = title;
-            pageSubtitle.innerText = subtitle;
-            tg.BackButton.show();
-            tg.HapticFeedback.impactOccurred('medium');
-            window.scrollTo(0,0);
+        function openSetup(cat) {
+            document.getElementById('setup-screen').style.display = 'block';
+            document.getElementById('setup-title').innerText = cat;
         }
 
-        function closeSetup() {
-            mainScreen.style.display = 'flex';
-            setupScreen.style.display = 'none';
-            pageTitle.innerText = 'MTI Automation';
-            pageSubtitle.innerText = 'Выберите шаблон для запуска';
-            tg.BackButton.hide();
-            tg.HapticFeedback.impactOccurred('light');
-        }
+        function closeSetup() { document.getElementById('setup-screen').style.display = 'none'; }
 
         function launchBot() {
             const name = document.getElementById('proj-name').value;
             const token = document.getElementById('bot-token').value;
+            if(!name || !token) { tg.showAlert("Заполните все поля"); return; }
 
-            if (!name || !token) {
-                tg.showAlert("Пожалуйста, заполните поля");
-                return;
-            }
-
-            tg.showConfirm(`Запустить "${name}"?`, (ok) => {
-                if (ok) {
-                    tg.HapticFeedback.notificationOccurred('success');
-                    tg.sendData(JSON.stringify({project: name, token: token}));
-                    tg.close();
-                }
-            });
+            tg.sendData(JSON.stringify({
+                action: 'init',
+                category: document.getElementById('setup-title').innerText,
+                proj_name: name,
+                bot_token: token
+            }));
+            tg.close();
         }
     </script>
 </body>
