@@ -9,19 +9,16 @@
         :root {
             --bg-color: #000000;
             --secondary-bg: #1c1c1e;
-            --tertiary-bg: #2c2c2e;
             --accent-blue: #007AFF;
             --text-main: #ffffff;
             --text-secondary: #8E8E93;
-            --glass: rgba(255, 255, 255, 0.08);
             --border: rgba(255, 255, 255, 0.1);
-            --safe-area-top: env(safe-area-inset-top);
         }
 
         * {
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
         }
 
         body {
@@ -29,121 +26,102 @@
             color: var(--text-main);
             margin: 0;
             padding: 0;
+            /* Не фиксируем высоту 100vh, чтобы окно было адаптивным */
+            min-height: 100%; 
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
-            -webkit-user-select: none;
         }
 
-        /* Навигационная панель (iOS style) */
+        /* Навигационная панель адаптированная под компактный режим */
         .nav-bar {
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            padding: calc(var(--safe-area-top) + 15px) 20px 10px 20px;
+            padding: 12px 20px 10px 20px;
             border-bottom: 0.5px solid var(--border);
         }
 
         h1 {
-            font-size: 34px;
+            font-size: 28px;
             font-weight: 700;
             margin: 0;
-            letter-spacing: -1px;
+            letter-spacing: -0.5px;
         }
 
         .subtitle {
             color: var(--text-secondary);
-            font-size: 15px;
-            margin: 4px 0 0 0;
-            font-weight: 400;
+            font-size: 14px;
+            margin: 2px 0 0 0;
         }
 
         .container {
-            padding: 20px;
+            padding: 16px;
             display: flex;
             flex-direction: column;
-            gap: 16px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            gap: 12px;
         }
 
-        /* Карточки категорий */
+        /* Карточки */
         .category-card {
             position: relative;
             width: 100%;
-            height: 160px;
-            border-radius: 20px;
+            height: 140px;
+            border-radius: 18px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            padding: 20px;
-            text-decoration: none;
+            padding: 18px;
             border: 0.5px solid var(--border);
-            transition: transform 0.2s ease;
+            transition: transform 0.1s ease;
             background-size: cover;
             background-position: center;
         }
 
         .category-card:active {
-            transform: scale(0.96);
+            transform: scale(0.97);
         }
 
         .category-card::after {
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.9) 100%);
+            background: linear-gradient(180deg, rgba(0,0,0,0) 30%, rgba(0,0,0,0.85) 100%);
             z-index: 1;
         }
 
-        .card-content {
-            position: relative;
-            z-index: 2;
-        }
+        .card-content { position: relative; z-index: 2; }
+        .card-content h2 { margin: 0; font-size: 20px; font-weight: 600; }
+        .card-content span { font-size: 13px; color: rgba(255, 255, 255, 0.6); }
 
-        .category-card h2 {
-            margin: 0;
-            font-size: 24px;
-            font-weight: 600;
-            letter-spacing: -0.5px;
-        }
-
-        .category-card span {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.6);
-            margin-top: 4px;
-            display: block;
-        }
-
-        /* Стили форм (как в Настройках iOS) */
+        /* Стили формы iOS */
+        #setup-screen { display: none; padding: 16px; animation: slideUp 0.3s ease-out; }
+        
         .form-section {
             background: var(--secondary-bg);
             border-radius: 12px;
             overflow: hidden;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         .input-group {
-            position: relative;
             border-bottom: 0.5px solid var(--border);
-            padding: 12px 16px;
-            display: flex;
-            flex-direction: column;
+            padding: 10px 16px;
         }
 
-        .input-group:last-child {
-            border-bottom: none;
-        }
+        .input-group:last-child { border-bottom: none; }
 
-        .input-group label {
-            font-size: 12px;
+        label {
+            font-size: 11px;
             text-transform: uppercase;
             color: var(--text-secondary);
-            margin-bottom: 4px;
-            font-weight: 500;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 2px;
         }
 
         input {
@@ -153,67 +131,48 @@
             color: white;
             font-size: 17px;
             outline: none;
-            padding: 4px 0;
+            padding: 2px 0;
         }
 
-        input::placeholder {
-            color: #48484a;
-        }
-
-        /* Главная кнопка */
         .main-button {
             width: 100%;
             background: var(--accent-blue);
             color: white;
             border: none;
-            border-radius: 14px;
-            padding: 18px;
+            border-radius: 12px;
+            padding: 16px;
             font-size: 17px;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s;
-            margin-top: 10px;
         }
 
-        .main-button:active {
-            background: #005ecb;
-        }
+        .main-button:active { opacity: 0.8; }
 
-        /* Анимации экранов */
-        #setup-screen {
-            display: none;
-            padding: 20px;
-            animation: slideIn 0.3s ease-out;
-        }
-
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
         .beauty-bg { background-image: url('https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=800'); }
         .crypto-bg { background-image: url('https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&q=80&w=800'); }
-
     </style>
 </head>
 <body>
 
-    <!-- Навигация -->
     <div class="nav-bar">
         <h1 id="page-title">MTI Automation</h1>
         <p class="subtitle" id="page-subtitle">Выберите шаблон для запуска</p>
     </div>
 
-    <!-- Главный экран -->
     <div id="main-screen" class="container">
-        <div class="category-card beauty-bg" onclick="openSetup('Бьюти бизнес', 'Салоны, студии, запись')">
+        <div class="category-card beauty-bg" onclick="openSetup('Бьюти бизнес', 'Настройка записи')">
             <div class="card-content">
                 <h2>Бьюти бизнес</h2>
                 <span>Салоны, студии, запись</span>
             </div>
         </div>
 
-        <div class="category-card crypto-bg" onclick="openSetup('Крипто бизнес', 'Сообщества, сигналы, DAO')">
+        <div class="category-card crypto-bg" onclick="openSetup('Крипто бизнес', 'Настройка сигналов')">
             <div class="card-content">
                 <h2>Крипто бизнес</h2>
                 <span>Сообщества, сигналы, DAO</span>
@@ -221,87 +180,61 @@
         </div>
     </div>
 
-    <!-- Экран настройки -->
     <div id="setup-screen">
         <div class="form-section">
             <div class="input-group">
                 <label>Название проекта</label>
-                <input type="text" id="proj-name" placeholder="Например: MyBeautyBot">
+                <input type="text" id="proj-name" placeholder="MyBeautyBot">
             </div>
             <div class="input-group">
                 <label>Telegram API Token</label>
                 <input type="text" id="bot-token" placeholder="583920:AAH...">
             </div>
-            <div class="input-group">
-                <label>Контакт владельца</label>
-                <input type="text" id="owner-contact" placeholder="@username">
-            </div>
         </div>
-
-        <button class="main-button" onclick="launchBot()">Запустить автоматизацию</button>
+        <button class="main-button" onclick="launchBot()">Запустить</button>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.expand();
-        tg.backgroundColor = '#000000';
+
+        // Инициализируем приложение без вызова expand()
+        tg.ready(); 
+        
         tg.headerColor = '#000000';
+        tg.backgroundColor = '#000000';
 
         const mainScreen = document.getElementById('main-screen');
         const setupScreen = document.getElementById('setup-screen');
         const pageTitle = document.getElementById('page-title');
         const pageSubtitle = document.getElementById('page-subtitle');
 
-        // Настройка нативной кнопки назад Telegram
-        tg.BackButton.onClick(() => {
-            closeSetup();
-        });
+        tg.BackButton.onClick(() => closeSetup());
 
         function openSetup(title, subtitle) {
-            // Плавное переключение
             mainScreen.style.display = 'none';
             setupScreen.style.display = 'block';
-            
             pageTitle.innerText = title;
-            pageSubtitle.innerText = 'Настройка параметров';
-            
+            pageSubtitle.innerText = subtitle;
             tg.BackButton.show();
-            tg.HapticFeedback.impactOccurred('medium');
+            tg.HapticFeedback.impactOccurred('light');
         }
 
         function closeSetup() {
             mainScreen.style.display = 'flex';
             setupScreen.style.display = 'none';
-            
             pageTitle.innerText = 'MTI Automation';
             pageSubtitle.innerText = 'Выберите шаблон для запуска';
-            
             tg.BackButton.hide();
         }
 
         function launchBot() {
             const name = document.getElementById('proj-name').value;
-            const token = document.getElementById('bot-token').value;
-
-            if (!name || !token) {
-                tg.showAlert("Пожалуйста, заполните все поля");
+            if (!name) {
+                tg.showAlert("Введите название");
                 return;
             }
-
-            tg.showConfirm(`Запустить проект "${name}"?`, (confirmed) => {
-                if (confirmed) {
-                    tg.HapticFeedback.notificationOccurred('success');
-                    
-                    const data = {
-                        action: 'launch_bot',
-                        project: name,
-                        token: token,
-                        category: pageTitle.innerText
-                    };
-                    
-                    tg.sendData(JSON.stringify(data));
-                }
-            });
+            tg.HapticFeedback.notificationOccurred('success');
+            tg.close();
         }
     </script>
 </body>
