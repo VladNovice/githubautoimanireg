@@ -2,47 +2,43 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MTI Automation</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
             --bg-color: #000000;
-            --secondary-bg: #1c1c1e;
+            --card-bg: rgba(28, 28, 30, 0.7);
             --accent-blue: #007AFF;
             --text-main: #ffffff;
             --text-secondary: #8E8E93;
+            --glass: rgba(255, 255, 255, 0.05);
             --border: rgba(255, 255, 255, 0.1);
         }
 
         * {
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
         }
 
         body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0;
-            padding: 0;
-            /* Не фиксируем высоту 100vh, чтобы окно было адаптивным */
-            min-height: 100%; 
+            padding: 20px;
             display: flex;
             flex-direction: column;
+            align-items: center;
             overflow-x: hidden;
         }
 
-        /* Навигационная панель адаптированная под компактный режим */
-        .nav-bar {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            padding: 12px 20px 10px 20px;
-            border-bottom: 0.5px solid var(--border);
+        /* Заголовок */
+        header {
+            width: 100%;
+            margin-bottom: 30px;
+            text-align: left;
+            padding-left: 10px;
         }
 
         h1 {
@@ -52,86 +48,118 @@
             letter-spacing: -0.5px;
         }
 
-        .subtitle {
+        p.subtitle {
             color: var(--text-secondary);
-            font-size: 14px;
-            margin: 2px 0 0 0;
+            font-size: 15px;
+            margin-top: 5px;
         }
 
+        /* Основной контейнер */
         .container {
-            padding: 16px;
+            width: 100%;
+            max-width: 400px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 20px;
         }
 
-        /* Карточки */
+        /* Плашки категорий */
         .category-card {
             position: relative;
             width: 100%;
-            height: 140px;
-            border-radius: 18px;
+            height: 180px;
+            border-radius: 24px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            padding: 18px;
-            border: 0.5px solid var(--border);
-            transition: transform 0.1s ease;
+            padding: 20px;
+            text-decoration: none;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            transition: transform 0.2s ease, brightness 0.2s ease;
             background-size: cover;
             background-position: center;
         }
 
         .category-card:active {
             transform: scale(0.97);
+            brightness: 0.8;
         }
 
-        .category-card::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(180deg, rgba(0,0,0,0) 30%, rgba(0,0,0,0.85) 100%);
-            z-index: 1;
+        .beauty-bg {
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.8)), 
+                              url('https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=800');
         }
 
-        .card-content { position: relative; z-index: 2; }
-        .card-content h2 { margin: 0; font-size: 20px; font-weight: 600; }
-        .card-content span { font-size: 13px; color: rgba(255, 255, 255, 0.6); }
+        .crypto-bg {
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.8)), 
+                              url('https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&q=80&w=800');
+        }
 
-        /* Стили формы iOS */
-        #setup-screen { display: none; padding: 16px; animation: slideUp 0.3s ease-out; }
-        
-        .form-section {
-            background: var(--secondary-bg);
-            border-radius: 12px;
-            overflow: hidden;
+        .category-card h2 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .category-card span {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 4px;
+        }
+
+        /* Экран настройки (скрыт по умолчанию) */
+        #setup-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-color);
+            z-index: 100;
+            padding: 25px;
+            overflow-y: auto;
+        }
+
+        .back-btn {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 14px;
+            margin-bottom: 30px;
+            cursor: pointer;
+        }
+
+        .form-group {
             margin-bottom: 20px;
         }
 
-        .input-group {
-            border-bottom: 0.5px solid var(--border);
-            padding: 10px 16px;
-        }
-
-        .input-group:last-child { border-bottom: none; }
-
         label {
-            font-size: 11px;
-            text-transform: uppercase;
-            color: var(--text-secondary);
-            font-weight: 600;
             display: block;
-            margin-bottom: 2px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-bottom: 8px;
+            margin-left: 5px;
         }
 
         input {
             width: 100%;
-            background: transparent;
-            border: none;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 15px;
             color: white;
-            font-size: 17px;
+            font-size: 16px;
             outline: none;
-            padding: 2px 0;
+            transition: border 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--accent-blue);
         }
 
         .main-button {
@@ -139,102 +167,121 @@
             background: var(--accent-blue);
             color: white;
             border: none;
-            border-radius: 12px;
-            padding: 16px;
+            border-radius: 18px;
+            padding: 18px;
             font-size: 17px;
             font-weight: 600;
+            margin-top: 20px;
             cursor: pointer;
+            transition: opacity 0.2s;
         }
 
-        .main-button:active { opacity: 0.8; }
-
-        @keyframes slideUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        .main-button:active {
+            opacity: 0.8;
         }
 
-        .beauty-bg { background-image: url('https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=800'); }
-        .crypto-bg { background-image: url('https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&q=80&w=800'); }
+        /* Анимация появления */
+        .fade-in {
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
 
-    <div class="nav-bar">
-        <h1 id="page-title">MTI Automation</h1>
-        <p class="subtitle" id="page-subtitle">Выберите шаблон для запуска</p>
-    </div>
+    <!-- Главный экран -->
+    <div id="main-screen" class="container fade-in">
+        <header>
+            <h1>MTI Automation</h1>
+            <p class="subtitle">Выберите шаблон для запуска</p>
+        </header>
 
-    <div id="main-screen" class="container">
-        <div class="category-card beauty-bg" onclick="openSetup('Бьюти бизнес', 'Настройка записи')">
-            <div class="card-content">
-                <h2>Бьюти бизнес</h2>
-                <span>Салоны, студии, запись</span>
-            </div>
+        <div class="category-card beauty-bg" onclick="openSetup('Бьюти Бизнес')">
+            <h2>Бьюти бизнес</h2>
+            <span>Салоны, студии, запись</span>
         </div>
 
-        <div class="category-card crypto-bg" onclick="openSetup('Крипто бизнес', 'Настройка сигналов')">
-            <div class="card-content">
-                <h2>Крипто бизнес</h2>
-                <span>Сообщества, сигналы, DAO</span>
-            </div>
+        <div class="category-card crypto-bg" onclick="openSetup('Крипто Сообщество')">
+            <h2>Крипто бизнес</h2>
+            <span>Сообщества, сигналы, DAO</span>
         </div>
     </div>
 
-    <div id="setup-screen">
-        <div class="form-section">
-            <div class="input-group">
-                <label>Название проекта</label>
-                <input type="text" id="proj-name" placeholder="MyBeautyBot">
-            </div>
-            <div class="input-group">
-                <label>Telegram API Token</label>
-                <input type="text" id="bot-token" placeholder="583920:AAH...">
-            </div>
+    <!-- Экран настройки -->
+    <div id="setup-screen" class="fade-in">
+        <button class="back-btn" onclick="closeSetup()">← Назад</button>
+        
+        <header>
+            <h1 id="setup-title">Настройка</h1>
+            <p class="subtitle">Заполните данные для запуска бота</p>
+        </header>
+
+        <div class="form-group">
+            <label>Название проекта</label>
+            <input type="text" id="proj-name" placeholder="Например: MyBeautyBot">
         </div>
-        <button class="main-button" onclick="launchBot()">Запустить</button>
+
+        <div class="form-group">
+            <label>Telegram API Token</label>
+            <input type="text" id="bot-token" placeholder="583920:AAH...">
+        </div>
+
+        <div class="form-group">
+            <label>Контакт владельца</label>
+            <input type="text" id="owner-contact" placeholder="@username">
+        </div>
+
+        <button class="main-button" onclick="launchBot()">Запустить автоматизацию</button>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
-
-        // Инициализируем приложение без вызова expand()
-        tg.ready(); 
-        
+        tg.expand(); // Расширить на весь экран
         tg.headerColor = '#000000';
-        tg.backgroundColor = '#000000';
 
-        const mainScreen = document.getElementById('main-screen');
-        const setupScreen = document.getElementById('setup-screen');
-        const pageTitle = document.getElementById('page-title');
-        const pageSubtitle = document.getElementById('page-subtitle');
-
-        tg.BackButton.onClick(() => closeSetup());
-
-        function openSetup(title, subtitle) {
-            mainScreen.style.display = 'none';
-            setupScreen.style.display = 'block';
-            pageTitle.innerText = title;
-            pageSubtitle.innerText = subtitle;
-            tg.BackButton.show();
-            tg.HapticFeedback.impactOccurred('light');
+        function openSetup(category) {
+            document.getElementById('main-screen').style.display = 'none';
+            document.getElementById('setup-screen').style.display = 'block';
+            document.getElementById('setup-title').innerText = category;
+            
+            // Виброотклик при нажатии
+            tg.HapticFeedback.impactOccurred('medium');
         }
 
         function closeSetup() {
-            mainScreen.style.display = 'flex';
-            setupScreen.style.display = 'none';
-            pageTitle.innerText = 'MTI Automation';
-            pageSubtitle.innerText = 'Выберите шаблон для запуска';
-            tg.BackButton.hide();
+            document.getElementById('setup-screen').style.display = 'none';
+            document.getElementById('main-screen').style.display = 'flex';
         }
 
         function launchBot() {
             const name = document.getElementById('proj-name').value;
-            if (!name) {
-                tg.showAlert("Введите название");
+            const token = document.getElementById('bot-token').value;
+
+            if (!name || !token) {
+                tg.showAlert("Пожалуйста, заполните все поля");
                 return;
             }
-            tg.HapticFeedback.notificationOccurred('success');
-            tg.close();
+
+            tg.showConfirm(`Запустить проект "${name}"?`, (confirmed) => {
+                if (confirmed) {
+                    tg.HapticFeedback.notificationOccurred('success');
+                    
+                    // Отправляем данные боту
+                    const data = {
+                        action: 'launch_bot',
+                        project: name,
+                        token: token,
+                        category: document.getElementById('setup-title').innerText
+                    };
+                    
+                    tg.sendData(JSON.stringify(data));
+                    tg.close();
+                }
+            });
         }
     </script>
 </body>
