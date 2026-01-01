@@ -8,11 +8,12 @@
     <style>
         :root {
             --bg: #000000;
-            --card-bg: #1C1C1E;
-            --accent: #0A84FF;
+            --card-bg: #111111;
+            --accent: #007AFF;
+            --accent-light: #5AC8FA;
             --text-main: #FFFFFF;
             --text-secondary: #8E8E93;
-            --border: rgba(255, 255, 255, 0.1);
+            --border: rgba(255, 255, 255, 0.08);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -20,7 +21,7 @@
         body {
             background: var(--bg);
             color: var(--text-main);
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
@@ -36,114 +37,116 @@
             min-height: 100vh;
         }
 
-        header { margin-bottom: 28px; }
-        h1 { font-size: 32px; font-weight: 800; margin: 0; letter-spacing: -1px; }
-        .subtitle { 
-            color: var(--text-secondary); 
-            font-size: 16px; 
-            margin-top: 6px; 
-            font-weight: 400;
-            letter-spacing: 0.2px;
-        }
+        header { margin-bottom: 32px; }
+        h1 { font-size: 34px; font-weight: 800; margin: 0; letter-spacing: -1px; }
+        .subtitle { color: var(--text-secondary); font-size: 16px; margin-top: 6px; font-weight: 400; }
 
-        /* ВЕРТИКАЛЬНЫЕ КАРТОЧКИ */
+        /* ВЕРТИКАЛЬНЫЕ КАРТОЧКИ С ДИЗАЙНОМ ВНУТРИ */
         .category-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 12px;
+            gap: 14px;
+            margin-bottom: 14px;
         }
 
         .photo-card {
             position: relative;
-            height: 260px;
-            border-radius: 24px;
+            height: 280px;
+            border-radius: 28px;
             overflow: hidden;
             background: var(--card-bg);
-            border: 0.5px solid var(--border);
+            border: 1px solid var(--border);
             transition: transform 0.1s ease;
         }
 
-        .photo-card:active { transform: scale(0.97); }
+        .photo-card:active { transform: scale(0.96); }
 
         .photo-card img {
             width: 100%; height: 100%;
             object-fit: cover;
-            opacity: 0.8;
+            opacity: 0.6;
         }
 
-        .photo-card::after {
-            content: '';
+        /* Стеклянная плашка внутри */
+        .ui-badge {
             position: absolute;
-            inset: 0;
-            background: linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.95) 100%);
+            top: 16px; left: 16px;
+            padding: 6px 12px;
+            background: rgba(0, 122, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 100px;
+            border: 1px solid rgba(0, 122, 255, 0.3);
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--accent-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 3;
         }
 
         .card-content {
             position: absolute;
-            bottom: 20px; left: 16px; right: 16px;
+            bottom: 0; left: 0; right: 0;
+            padding: 20px;
+            background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.9) 80%);
             z-index: 2;
         }
 
-        .card-title { font-size: 20px; font-weight: 700; margin: 0; }
-        .card-desc { font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 4px; line-height: 1.2; }
+        .card-title { font-size: 22px; font-weight: 700; margin: 0; }
+        .card-desc { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
 
-        /* ГОРИЗОНТАЛЬНЫЕ ФОТО-КНОПКИ */
+        /* ГОРИЗОНТАЛЬНЫЕ КАРТОЧКИ */
         .links-section {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 14px;
         }
 
         .wide-photo-btn {
             position: relative;
-            height: 90px;
-            border-radius: 22px;
+            height: 100px;
+            border-radius: 24px;
             overflow: hidden;
-            display: flex;
-            align-items: center;
-            padding: 0 20px;
-            text-decoration: none;
-            border: 0.5px solid var(--border);
+            border: 1px solid var(--border);
             transition: transform 0.1s ease;
         }
 
-        .wide-photo-btn:active { transform: scale(0.98); }
-
         .wide-photo-btn img {
-            position: absolute;
-            inset: 0;
             width: 100%; height: 100%;
             object-fit: cover;
-            opacity: 0.7;
+            opacity: 0.5;
         }
 
         .wide-photo-btn::after {
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(90deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 100%);
-            z-index: 1;
+            background: linear-gradient(90deg, rgba(0,0,0,0.9) 0%, transparent 100%);
         }
 
         .btn-content {
-            position: relative;
-            z-index: 2;
+            position: absolute;
+            inset: 0;
+            padding: 0 24px;
             display: flex;
-            width: 100%;
             justify-content: space-between;
             align-items: center;
+            z-index: 2;
         }
 
-        .btn-body { display: flex; flex-direction: column; }
-        .btn-title { font-size: 17px; font-weight: 700; color: #fff; }
-        .btn-subtitle { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 2px; }
+        .btn-title { font-size: 18px; font-weight: 700; color: #fff; }
+        .btn-subtitle { font-size: 13px; color: var(--accent-light); margin-top: 2px; font-weight: 500; }
 
         .btn-chevron {
+            width: 32px; height: 32px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: #fff;
-            font-size: 20px;
-            font-weight: 300;
-            opacity: 0.6;
+            font-size: 18px;
         }
 
         /* ФУТЕР */
@@ -151,47 +154,45 @@
             margin-top: auto;
             padding-top: 40px;
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
+            justify-content: center;
         }
 
         .mti-badge {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 6px 14px;
-            background: rgba(255,255,255,0.03);
+            gap: 10px;
+            padding: 8px 16px;
+            background: #111;
             border-radius: 100px;
-            border: 0.5px solid var(--border);
+            border: 1px solid var(--border);
         }
 
         .status-dot {
-            width: 6px; height: 6px;
-            background: #32D74B;
+            width: 8px; height: 8px;
+            background: var(--accent);
             border-radius: 50%;
-            box-shadow: 0 0 10px rgba(50, 215, 75, 0.3);
+            box-shadow: 0 0 12px var(--accent);
         }
 
         .mti-name {
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: #fff;
             text-transform: uppercase;
         }
 
         /* ЭКРАН НАСТРОЙКИ */
         #setup-screen {
             position: fixed; inset: 0; background: var(--bg); z-index: 100;
-            transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.1, 0.7, 0.1, 1);
             padding: calc(env(safe-area-inset-top) + 20px) 16px;
         }
         #setup-screen.active { transform: translateY(0); }
-        .ios-group { background: var(--card-bg); border-radius: 16px; margin: 20px 0; overflow: hidden; }
-        .ios-row { padding: 16px; border-bottom: 0.5px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .ios-row input { background: transparent; border: none; color: var(--accent); font-size: 17px; text-align: right; outline: none; width: 60%; }
-        .ios-btn-main { background: var(--accent); color: white; border: none; border-radius: 16px; padding: 18px; font-size: 17px; font-weight: 600; width: 100%; }
+        .ios-group { background: #111; border-radius: 20px; margin: 24px 0; overflow: hidden; border: 1px solid var(--border); }
+        .ios-row { padding: 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .ios-row input { background: transparent; border: none; color: var(--accent); font-size: 17px; text-align: right; outline: none; width: 60%; font-weight: 600; }
+        .ios-btn-main { background: var(--accent); color: white; border: none; border-radius: 20px; padding: 20px; font-size: 17px; font-weight: 700; width: 100%; }
     </style>
 </head>
 <body>
@@ -205,43 +206,45 @@
         <div class="category-grid">
             <!-- БЬЮТИ -->
             <div class="photo-card" onclick="openSetup('Beauty', 'Бьюти')">
-                <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=600&auto=format&fit=crop" alt="Beauty">
+                <div class="ui-badge">Booking System</div>
+                <img src="https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?q=80&w=600&auto=format&fit=crop">
                 <div class="card-content">
                     <div class="card-title">Бьюти</div>
-                    <div class="card-desc">Запись, CRM и лояльность</div>
+                    <div class="card-desc">Интерфейс управления записью</div>
                 </div>
             </div>
 
             <!-- КРИПТО -->
             <div class="photo-card" onclick="openSetup('Crypto', 'Крипто')">
-                <img src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=600&auto=format&fit=crop" alt="Crypto">
+                <div class="ui-badge" style="color: #32D74B; border-color: rgba(50, 215, 75, 0.3); background: rgba(50, 215, 75, 0.1);">Live Market</div>
+                <img src="https://images.unsplash.com/photo-1642104704074-907c0698cbd9?q=80&w=600&auto=format&fit=crop">
                 <div class="card-content">
                     <div class="card-title">Крипто</div>
-                    <div class="card-desc">DAO, Web3 и сигналы</div>
+                    <div class="card-desc">Web3 шлюзы и DAO модули</div>
                 </div>
             </div>
         </div>
 
         <div class="links-section">
-            <!-- КАНАЛ (ПОЛНОЕ ФОТО) -->
+            <!-- КАНАЛ -->
             <div class="wide-photo-btn" onclick="tg.openTelegramLink('https://t.me/mti_news')">
-                <img src="https://images.unsplash.com/photo-1504711432869-0fd30f787162?q=80&w=600&auto=format&fit=crop" alt="News">
+                <img src="https://images.unsplash.com/photo-1585829365234-781fcd50c819?q=80&w=600&auto=format&fit=crop">
                 <div class="btn-content">
                     <div class="btn-body">
-                        <span class="btn-title">Новостной канал</span>
-                        <span class="btn-subtitle">Следите за обновлениями</span>
+                        <span class="btn-title">Новостной поток</span>
+                        <span class="btn-subtitle">Системные обновления</span>
                     </div>
                     <div class="btn-chevron">›</div>
                 </div>
             </div>
 
-            <!-- КЕЙСЫ (ПОЛНОЕ ФОТО) -->
+            <!-- КЕЙСЫ -->
             <div class="wide-photo-btn" onclick="tg.openTelegramLink('https://t.me/mti_cases')">
-                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=600&auto=format&fit=crop" alt="Cases">
+                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=600&auto=format&fit=crop">
                 <div class="btn-content">
                     <div class="btn-body">
-                        <span class="btn-title">Наши кейсы</span>
-                        <span class="btn-subtitle">Реализованные проекты</span>
+                        <span class="btn-title">Архив кейсов</span>
+                        <span class="btn-subtitle">+240% эффективности</span>
                     </div>
                     <div class="btn-chevron">›</div>
                 </div>
@@ -260,21 +263,22 @@
     <div id="setup-screen">
         <h1 id="setup-title">Настройка</h1>
         <div class="ios-group">
-            <div class="ios-row"><label>Название</label><input type="text" id="proj-name" placeholder="My Bot"></div>
-            <div class="ios-row"><label>API Токен</label><input type="text" id="bot-token" placeholder="Token"></div>
+            <div class="ios-row"><label>Название</label><input type="text" id="proj-name" placeholder="MTI_Project"></div>
+            <div class="ios-row"><label>API Токен</label><input type="text" id="bot-token" placeholder="0000:XXXX"></div>
         </div>
         <div id="features-list" class="ios-group"></div>
-        <button class="ios-btn-main" onclick="launchBot()">Запустить проект</button>
+        <button class="ios-btn-main" onclick="launchBot()">Активировать систему</button>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
         tg.headerColor = '#000000';
+        tg.backgroundColor = '#000000';
 
         const features = {
-            'Beauty': ['Онлайн-запись', 'База клиентов', 'Уведомления'],
-            'Crypto': ['Прием USDT', 'Доступ по подписке', 'DAO Модуль']
+            'Beauty': ['Smart-календарь', 'CRM-интеграция', 'Авто-уведомления'],
+            'Crypto': ['USDT-процессинг', 'DAO-управление', 'Web3-авторизация']
         };
 
         function openSetup(type, title) {
@@ -283,7 +287,7 @@
             const list = document.getElementById('features-list');
             list.innerHTML = '';
             features[type].forEach(f => {
-                list.innerHTML += `<div class="ios-row"><span>${f}</span><span style="color:var(--accent)">✓</span></div>`;
+                list.innerHTML += `<div class="ios-row"><span>${f}</span><span style="color:var(--accent); font-weight:bold;">✓</span></div>`;
             });
             screen.classList.add('active');
             tg.BackButton.show();
@@ -297,7 +301,7 @@
         function launchBot() {
             const name = document.getElementById('proj-name').value;
             const token = document.getElementById('bot-token').value;
-            if(!name || !token) { tg.showAlert("Заполните все поля"); return; }
+            if(!name || !token) { tg.showAlert("Требуется ввод конфигурации"); return; }
             tg.HapticFeedback.notificationOccurred('success');
             tg.sendData(JSON.stringify({ name, token }));
             tg.close();
