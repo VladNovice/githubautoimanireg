@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>MTI Premium</title>
+    <title>MTI</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
             --bg: #000000;
-            --card-bg: #1C1C1E;
-            --accent: #0A84FF;
-            --text-main: #FFFFFF;
-            --text-secondary: #8E8E93;
-            --separator: rgba(255, 255, 255, 0.08);
-            --glass: rgba(255, 255, 255, 0.03);
+            --card: #1C1C1E;
+            --secondary-card: #2C2C2E;
+            --accent: #007AFF;
+            --text: #FFFFFF;
+            --text-gray: #8E8E93;
+            --border: rgba(255, 255, 255, 0.1);
         }
 
         * { 
@@ -24,354 +24,296 @@
 
         body {
             background: var(--bg);
-            color: var(--text-main);
+            color: var(--text);
             margin: 0;
             padding: 0;
             -webkit-font-smoothing: antialiased;
-            overflow-x: hidden;
         }
 
-        .app-container {
-            padding: calc(env(safe-area-inset-top) + 20px) 20px 40px 20px;
+        .container {
+            padding: calc(env(safe-area-inset-top) + 20px) 16px 40px;
             max-width: 440px;
             margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 32px;
         }
 
-        /* HEADER */
         header {
+            margin-bottom: 32px;
             padding-left: 4px;
         }
 
-        .header-logo {
-            height: 26px;
-            width: auto;
+        .logo {
+            height: 24px;
             margin-bottom: 8px;
-            opacity: 0.95;
+            display: block;
         }
 
-        .subtitle { 
-            color: var(--text-secondary); 
-            font-size: 15px; 
+        .tagline {
+            font-size: 15px;
+            color: var(--text-gray);
             font-weight: 400;
-            margin: 0;
             letter-spacing: -0.2px;
         }
 
-        /* GRID: ВЫСОКИЕ КАРТОЧКИ */
-        .category-grid {
+        /* GRID: Максимально высокие вертикальные кнопки */
+        .main-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 16px;
+            margin-bottom: 16px;
         }
 
-        .category-card {
-            background: var(--card-bg);
-            border-radius: 28px;
+        .tall-card {
+            background: var(--card);
+            border-radius: 24px;
+            height: 260px; /* Высота для акцента */
             padding: 24px;
-            height: 240px; /* Еще выше для премиального вида */
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            border: 1px solid var(--separator);
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            border: 0.5px solid var(--border);
+            transition: all 0.2s ease;
         }
 
-        /* ЭФФЕКТ ПРИ НАЖАТИИ */
-        .category-card:active, .custom-card:active {
-            transform: scale(0.95);
-            background: #2C2C2E;
-        }
-
-        /* ИКОНКИ С ГРАДИЕНТОМ И ГЛУБИНОЙ */
-        .icon-wrapper {
-            width: 56px;
-            height: 56px;
-            background: var(--glass);
-            border-radius: 16px;
+        /* ИКОНКИ: Минимализм без дешманских линий */
+        .symbol {
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
-            border: 0.5px solid rgba(255,255,255,0.1);
         }
 
-        .icon-wrapper svg {
-            width: 32px;
-            height: 32px;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+        .dot-matrix {
+            display: grid;
+            grid-template-columns: repeat(2, 6px);
+            gap: 4px;
         }
+        .dot { width: 6px; height: 6px; background: var(--text); border-radius: 50%; opacity: 0.8; }
+        .dot.blue { background: var(--accent); opacity: 1; }
 
-        .card-title { 
-            font-size: 20px; 
-            font-weight: 700; 
-            margin-bottom: 6px;
+        .card-label {
+            font-size: 20px;
+            font-weight: 600;
             letter-spacing: -0.5px;
-        }
-        
-        .card-desc { 
-            font-size: 13px; 
-            color: var(--text-secondary); 
-            line-height: 1.4;
-            font-weight: 400;
+            margin-bottom: 6px;
         }
 
-        /* AI CUSTOM CARD: ШИРОКАЯ И СТИЛЬНАЯ */
-        .custom-card {
-            background: var(--card-bg);
-            border-radius: 28px;
-            padding: 28px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            border: 1px solid var(--separator);
-            position: relative;
+        .card-sub {
+            font-size: 13px;
+            color: var(--text-gray);
+            line-height: 1.35;
         }
 
-        .ai-glow {
-            position: absolute;
-            right: -20px;
-            top: -20px;
-            width: 120px;
-            height: 120px;
-            background: radial-gradient(circle, rgba(10, 132, 255, 0.15) 0%, transparent 70%);
-            pointer-events: none;
-        }
-
-        /* LIST STYLE */
-        .ios-list {
-            background: var(--card-bg);
-            border-radius: 20px;
-            border: 1px solid var(--separator);
-            overflow: hidden;
-        }
-
-        .list-item {
+        /* AI CARD: Горизонтальный Apple-стайл блок */
+        .wide-card {
+            background: var(--card);
+            border-radius: 24px;
+            padding: 24px;
+            border: 0.5px solid var(--border);
+            margin-bottom: 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 18px 20px;
+            transition: all 0.2s ease;
+        }
+
+        .ai-indicator {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: conic-gradient(from 180deg at 50% 50%, #007AFF 0deg, #5856D6 120deg, #AF52DE 240deg, #007AFF 360deg);
+            filter: blur(8px);
+            opacity: 0.5;
+            position: absolute;
+        }
+
+        /* Списки */
+        .list-section {
+            background: var(--card);
+            border-radius: 16px;
+            border: 0.5px solid var(--border);
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .list-row {
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             text-decoration: none;
             color: inherit;
         }
 
-        .list-item:not(:last-child) { border-bottom: 1px solid var(--separator); }
+        .list-row:not(:last-child) { border-bottom: 0.5px solid var(--border); }
+        .list-row:active, .tall-card:active, .wide-card:active { background: var(--secondary-card); }
 
-        .chevron { color: #48484A; font-size: 18px; font-weight: 300; }
+        .list-title { font-size: 17px; letter-spacing: -0.4px; }
+        .chevron { color: #48484A; font-weight: 300; }
 
-        /* STATUS */
-        footer { text-align: center; padding: 20px 0; }
-        .engine-status {
-            font-size: 11px;
-            color: #48484A;
-            letter-spacing: 1.2px;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        /* MODAL */
-        #setup-screen {
+        /* Setup Screen */
+        #setup {
             position: fixed;
             inset: 0;
             background: var(--bg);
-            z-index: 100;
+            z-index: 1000;
+            padding: calc(env(safe-area-inset-top) + 20px) 20px;
             transform: translateY(100%);
-            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            padding: calc(env(safe-area-inset-top) + 20px) 24px;
+            transition: transform 0.4s cubic-bezier(0.15, 0.4, 0.05, 1);
         }
-        #setup-screen.active { transform: translateY(0); }
+        #setup.active { transform: translateY(0); }
 
-        .input-group {
-            background: var(--card-bg);
-            border-radius: 20px;
-            margin: 32px 0;
-            border: 1px solid var(--separator);
+        .input-block {
+            background: var(--card);
+            border-radius: 14px;
+            margin-top: 24px;
         }
 
-        .input-row {
-            padding: 16px 20px;
+        .input-item {
+            padding: 14px 16px;
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
         }
-        .input-row:not(:last-child) { border-bottom: 1px solid var(--separator); }
-        
+        .input-item:not(:last-child) { border-bottom: 0.5px solid var(--border); }
+
         input {
-            background: transparent;
-            border: none;
-            color: var(--accent);
-            font-size: 17px;
-            text-align: right;
-            outline: none;
-            width: 60%;
+            background: none; border: none; color: var(--accent);
+            text-align: right; font-size: 17px; outline: none; width: 60%;
+        }
+
+        .status {
+            text-align: center; font-size: 11px; color: #48484A; 
+            text-transform: uppercase; letter-spacing: 1px;
         }
 
     </style>
 </head>
 <body>
 
-<div class="app-container">
+<div class="container">
     <header>
-        <img src="mti,.png" alt="MTI" class="header-logo">
-        <p class="subtitle">Next-gen business automation</p>
+        <img src="mti,.png" alt="MTI" class="logo">
+        <div class="tagline">Next-Gen Business Engineering</div>
     </header>
 
-    <section class="category-grid">
-        <!-- BEAUTY CARD -->
-        <div class="category-card" onclick="openSetup('Beauty', 'Beauty CRM')">
-            <div class="icon-wrapper">
-                <svg viewBox="0 0 32 32" fill="none">
-                    <defs>
-                        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#FF375F;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#FF9F0A;stop-opacity:1" />
-                        </linearGradient>
-                    </defs>
-                    <circle cx="16" cy="16" r="12" fill="url(#grad1)" fill-opacity="0.2" stroke="url(#grad1)" stroke-width="2"/>
-                    <path d="M16 10L18.5 15L24 15.5L20 19.5L21 25L16 22.5L11 25L12 19.5L8 15.5L13.5 15L16 10Z" fill="url(#grad1)"/>
-                </svg>
+    <main class="main-grid">
+        <!-- BEAUTY -->
+        <div class="tall-card" onclick="openMod('Beauty')">
+            <div class="symbol">
+                <div class="dot-matrix">
+                    <div class="dot blue"></div><div class="dot"></div>
+                    <div class="dot"></div><div class="dot"></div>
+                </div>
             </div>
             <div>
-                <div class="card-title">Beauty</div>
-                <div class="card-desc">Интеллектуальный сервис записи и лояльности</div>
+                <div class="card-label">Beauty</div>
+                <div class="card-sub">Service ecosystem & retention management</div>
             </div>
         </div>
 
-        <!-- CRYPTO CARD -->
-        <div class="category-card" onclick="openSetup('Crypto', 'Crypto Pay')">
-            <div class="icon-wrapper">
-                <svg viewBox="0 0 32 32" fill="none">
-                    <defs>
-                        <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#0A84FF;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#5E5CE6;stop-opacity:1" />
-                        </linearGradient>
-                    </defs>
-                    <rect x="6" y="8" width="20" height="16" rx="4" fill="url(#grad2)" fill-opacity="0.2" stroke="url(#grad2)" stroke-width="2"/>
-                    <circle cx="16" cy="16" r="3" fill="url(#grad2)"/>
-                </svg>
+        <!-- CRYPTO -->
+        <div class="tall-card" onclick="openMod('Crypto')">
+            <div class="symbol">
+                <div style="width:16px; height:16px; border: 2px solid var(--accent); border-radius:4px; transform: rotate(45deg);"></div>
             </div>
             <div>
-                <div class="card-title">Crypto</div>
-                <div class="card-desc">Web3 решения и автоматизация выплат</div>
+                <div class="card-label">Crypto</div>
+                <div class="card-sub">Web3 node infra & automated payments</div>
             </div>
         </div>
-    </section>
+    </main>
 
-    <!-- AI CUSTOM CARD -->
-    <section class="custom-card" onclick="openSetup('AI', 'Custom AI')">
-        <div class="ai-glow"></div>
-        <div class="icon-wrapper" style="background: rgba(255,255,255,0.05);">
-            <svg viewBox="0 0 32 32" fill="none">
-                <defs>
-                    <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#BF5AF2;stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:#5E5CE6;stop-opacity:1" />
-                    </linearGradient>
-                </defs>
-                <path d="M16 6C10.4772 6 6 10.4772 6 16C6 21.5228 10.4772 26 16 26C21.5228 26 26 21.5228 26 16C26 10.4772 21.5228 6 16 6Z" stroke="url(#grad3)" stroke-width="2" stroke-dasharray="4 2"/>
-                <circle cx="16" cy="16" r="6" fill="url(#grad3)"/>
-            </svg>
+    <!-- AI & CUSTOM -->
+    <div class="wide-card" onclick="openMod('AI')">
+        <div style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+            <div class="ai-indicator"></div>
+            <div style="width: 12px; height: 12px; background: white; border-radius: 50%; z-index: 1;"></div>
         </div>
-        <div style="flex: 1;">
-            <div class="card-title" style="font-size: 18px;">AI & Custom Development</div>
-            <div class="card-desc">Разработка нейросетевых агентов под ключ</div>
+        <div style="flex: 1; margin: 0 16px;">
+            <div class="card-label" style="font-size: 18px; margin: 0;">AI & Custom Solution</div>
+            <div class="card-sub">Individual architectural development</div>
         </div>
-        <span class="chevron">›</span>
-    </section>
+        <div class="chevron">›</div>
+    </div>
 
-    <section class="ios-list">
-        <div class="list-item" onclick="tg.openTelegramLink('https://t.me/mti_news')">
-            <span style="font-weight: 500;">Новости экосистемы</span>
+    <div class="list-section">
+        <a href="https://t.me/mti_news" class="list-row">
+            <span class="list-title">Updates</span>
             <span class="chevron">›</span>
-        </div>
-        <div class="list-item" onclick="tg.openTelegramLink('https://t.me/mti_cases')">
-            <span style="font-weight: 500;">Кейсы и внедрения</span>
+        </a>
+        <a href="https://t.me/mti_cases" class="list-row">
+            <span class="list-title">Case Archive</span>
             <span class="chevron">›</span>
-        </div>
-    </section>
+        </a>
+    </div>
 
-    <footer>
-        <div class="engine-status">
-            <span style="color: #32D74B;">●</span> MTI Engine v2.0
-        </div>
+    <footer class="status">
+        Core engine 2.1 • Operational
     </footer>
 </div>
 
-<!-- SETUP SCREEN -->
-<div id="setup-screen">
-    <h1 id="setup-title" style="font-size: 34px; font-weight: 800; margin: 0; letter-spacing: -1.2px;">Настройка</h1>
-    <p style="color: var(--text-secondary); font-size: 17px; margin-top: 8px;">Конфигурация модуля</p>
-    
-    <div class="input-group">
-        <div class="input-row">
-            <label style="font-size: 17px;">Название</label>
-            <input type="text" id="proj-name" placeholder="Мой проект">
+<!-- MODAL SYSTEM -->
+<div id="setup">
+    <div style="display:flex; justify-content: space-between; align-items: center;">
+        <h1 id="m-title" style="font-size: 34px; letter-spacing: -1.2px; margin: 0;">Module</h1>
+    </div>
+
+    <div class="input-block">
+        <div class="input-item">
+            <span>Name</span>
+            <input type="text" id="p-name" placeholder="Project name">
         </div>
-        <div class="input-row">
-            <label style="font-size: 17px;">Контакт</label>
-            <input type="text" id="bot-token" placeholder="@username">
+        <div class="input-item">
+            <span>Link</span>
+            <input type="text" id="p-link" placeholder="@contact">
         </div>
     </div>
 
-    <div style="font-size: 13px; color: var(--text-secondary); margin-left: 20px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">Технические возможности</div>
-    <div id="features-list" class="ios-list"></div>
+    <div style="margin: 24px 4px 12px; font-size: 13px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px;">Functionality</div>
+    <div id="feat-list" class="list-section"></div>
 </div>
 
 <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
     tg.headerColor = '#000000';
-    tg.backgroundColor = '#000000';
 
-    const features = {
-        'Beauty': ['Smart Booking', 'CRM Integration', 'Retention Engine', 'Apple Wallet Pass'],
-        'Crypto': ['USDT/TON Gateway', 'Smart Contracts', 'Auto-Settlements', 'KYC/AML Bot'],
-        'AI': ['GPT-4o Assistant', 'Neural Sales Funnel', 'Voice AI Agents', 'Custom RAG System']
+    const data = {
+        'Beauty': ['Booking Core', 'Client CRM', 'Wallet Passes', 'AI Scheduling'],
+        'Crypto': ['L2 Transactions', 'Asset Monitoring', 'Smart Contracts', 'Custody Solutions'],
+        'AI': ['Neural Assistant', 'Custom LLM RAG', 'Automated Workflows', 'Visual Processing']
     };
 
-    function openSetup(type, title) {
-        const screen = document.getElementById('setup-screen');
-        document.getElementById('setup-title').innerText = title;
-        
-        const list = document.getElementById('features-list');
+    function openMod(id) {
+        document.getElementById('m-title').innerText = id;
+        const list = document.getElementById('feat-list');
         list.innerHTML = '';
-        features[type].forEach(f => {
-            list.innerHTML += `
-                <div class="list-item">
-                    <span style="font-size:16px; font-weight:400;">${f}</span>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A84FF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                </div>
-            `;
+        data[id].forEach(f => {
+            list.innerHTML += `<div class="list-row"><span style="font-size:16px;">${f}</span><span style="color:var(--accent)">✓</span></div>`;
         });
-
-        screen.classList.add('active');
-        tg.MainButton.text = "Запустить конфигурацию";
+        
+        document.getElementById('setup').classList.add('active');
+        tg.MainButton.text = "Continue";
         tg.MainButton.show();
-        
         tg.BackButton.show();
-        tg.BackButton.onClick(() => {
-            screen.classList.remove('active');
-            tg.BackButton.hide();
-            tg.MainButton.hide();
-        });
         
-        tg.HapticFeedback.impactOccurred('heavy');
+        tg.HapticFeedback.impactOccurred('medium');
     }
 
+    tg.BackButton.onClick(() => {
+        document.getElementById('setup').classList.remove('active');
+        tg.MainButton.hide();
+        tg.BackButton.hide();
+    });
+
     tg.MainButton.onClick(() => {
-        const name = document.getElementById('proj-name').value;
-        const contact = document.getElementById('bot-token').value;
-        if(!name || !contact) {
-            tg.showPopup({ message: "Заполните параметры проекта" });
-            return;
-        }
+        const p = document.getElementById('p-name').value;
+        if(!p) return tg.showAlert("Enter project name");
         tg.HapticFeedback.notificationOccurred('success');
-        tg.sendData(JSON.stringify({ order: name, contact }));
+        tg.sendData(JSON.stringify({mod: document.getElementById('m-title').innerText, name: p}));
         tg.close();
     });
 </script>
