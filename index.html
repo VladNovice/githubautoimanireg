@@ -8,13 +8,12 @@
     <style>
         :root {
             --bg: #000000;
-            --card-bg: #121214;
-            --accent: #007AFF;
-            --accent-glow: rgba(0, 122, 255, 0.3);
+            --card-bg: #1C1C1E;
+            --accent: #0A84FF;
             --text-main: #FFFFFF;
             --text-secondary: #8E8E93;
-            --glass: rgba(255, 255, 255, 0.05);
             --border: rgba(255, 255, 255, 0.08);
+            --glass: rgba(255, 255, 255, 0.04);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -36,27 +35,27 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            gap: 16px;
         }
 
-        header { margin-bottom: 30px; }
-        h1 { font-size: 32px; font-weight: 800; margin: 0; letter-spacing: -1px; }
-        .subtitle { color: var(--text-secondary); font-size: 16px; margin-top: 4px; font-weight: 400; }
+        header { margin-bottom: 20px; }
+        h1 { font-size: 34px; font-weight: 800; margin: 0; letter-spacing: -1px; }
+        .subtitle { color: var(--text-secondary); font-size: 16px; margin-top: 4px; }
 
-        /* СЕТКА ВЕРТИКАЛЬНЫХ КАРТОЧЕК */
+        /* ВЕРТИКАЛЬНЫЕ КАРТОЧКИ (300px) */
         .category-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 14px;
-            margin-bottom: 14px;
         }
 
         .photo-card {
             position: relative;
-            height: 280px;
-            border-radius: 26px;
+            height: 300px;
+            border-radius: 30px;
             overflow: hidden;
             background: var(--card-bg);
-            border: 1px solid var(--border);
+            border: 0.5px solid var(--border);
             transition: transform 0.1s ease;
         }
 
@@ -65,136 +64,126 @@
         .photo-card img {
             width: 100%; height: 100%;
             object-fit: cover;
-            opacity: 0.4;
-            filter: grayscale(20%);
+            opacity: 0.5;
         }
 
-        /* ВНУТРЕННИЕ ЭЛЕМЕНТЫ ДИЗАЙНА (UI LAYERS) */
-        .inner-ui {
+        /* ЭЛЕМЕНТЫ ВНУТРИ КАРТОЧЕК */
+        .card-ui-layer {
             position: absolute;
             inset: 0;
-            padding: 16px;
+            padding: 20px;
             z-index: 2;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
         }
 
-        .ui-top-tag {
-            align-self: flex-start;
-            padding: 4px 10px;
-            background: rgba(0, 122, 255, 0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 122, 255, 0.2);
-            border-radius: 8px;
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--accent);
-            text-transform: uppercase;
-        }
-
-        /* Имитация интерфейса внутри Бьюти */
+        /* Виджет для Бьюти */
         .beauty-widget {
-            width: 100%;
-            height: 60px;
             background: var(--glass);
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            margin-top: 40px;
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            gap: 10px;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 18px;
+            padding: 12px;
+            border: 0.5px solid var(--border);
+            margin-top: 50px;
         }
-        .beauty-widget .circle { width: 30px; height: 30px; border-radius: 50%; background: var(--accent); opacity: 0.5; }
-        .beauty-widget .lines { flex: 1; }
-        .beauty-widget .line { height: 4px; background: #fff; opacity: 0.2; border-radius: 2px; margin-bottom: 4px; }
+        .beauty-widget .client { display: flex; align-items: center; gap: 10px; }
+        .beauty-widget .avatar { width: 24px; height: 24px; background: var(--accent); border-radius: 50%; }
+        .beauty-widget .info { flex: 1; }
+        .beauty-widget .name { font-size: 11px; font-weight: 600; }
+        .beauty-widget .time { font-size: 9px; color: var(--accent); font-weight: 700; margin-top: 2px; }
 
-        /* Имитация графика внутри Крипто */
-        .crypto-chart {
+        /* Виджет для Крипто */
+        .crypto-widget {
+            margin-top: 50px;
+            height: 40px;
             width: 100%;
-            height: 50px;
-            margin-top: 40px;
-            background: linear-gradient(90deg, transparent, rgba(0, 122, 255, 0.1), transparent);
             position: relative;
-            overflow: hidden;
         }
-        .crypto-chart::before {
-            content: '';
-            position: absolute;
-            top: 50%; left: 0; width: 100%; height: 2px;
-            background: var(--accent);
-            box-shadow: 0 0 10px var(--accent);
-            transform: skewY(-10deg);
+        .crypto-widget svg { width: 100%; height: 100%; }
+        .crypto-widget .price-pill {
+            display: inline-block;
+            background: rgba(50, 215, 75, 0.15);
+            padding: 4px 8px;
+            border-radius: 6px;
+            color: #32D74B;
+            font-size: 10px;
+            font-weight: 800;
+            margin-bottom: 8px;
         }
 
-        .card-footer {
-            background: linear-gradient(180deg, transparent, rgba(0,0,0,0.9));
-            padding: 20px 16px;
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-        }
-        .card-title { font-size: 20px; font-weight: 700; margin: 0; }
+        .card-title-box { margin-top: auto; }
+        .card-title { font-size: 22px; font-weight: 700; }
         .card-desc { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
 
-        /* ГОРИЗОНТАЛЬНЫЕ КАРТОЧКИ */
+        /* ГОРИЗОНТАЛЬНЫЕ КАРТОЧКИ (120px) */
         .links-section {
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
 
-        .wide-photo-btn {
+        .wide-card {
             position: relative;
-            height: 110px;
-            border-radius: 24px;
+            height: 120px;
+            border-radius: 26px;
             overflow: hidden;
-            border: 1px solid var(--border);
+            border: 0.5px solid var(--border);
             transition: transform 0.1s ease;
         }
 
-        .wide-photo-btn img {
+        .wide-card:active { transform: scale(0.98); }
+
+        .wide-card img {
             width: 100%; height: 100%;
             object-fit: cover;
-            opacity: 0.3;
+            opacity: 0.4;
         }
 
-        .wide-photo-btn::after {
+        .wide-card::after {
             content: '';
             position: absolute;
             inset: 0;
             background: linear-gradient(90deg, #000 0%, transparent 100%);
         }
 
-        .wide-content {
+        .wide-ui {
             position: absolute;
             inset: 0;
-            z-index: 3;
             padding: 0 24px;
+            z-index: 3;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
 
-        .wide-info .title { font-size: 18px; font-weight: 700; display: block; }
-        .wide-info .sub { font-size: 13px; color: var(--accent); font-weight: 600; margin-top: 2px; }
+        .wide-info .tag {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+            display: block;
+        }
+        .wide-info .title { font-size: 20px; font-weight: 700; }
+        .wide-info .sub { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
 
-        .chevron-circle {
-            width: 36px; height: 36px;
-            background: rgba(255,255,255,0.05);
+        .chevron-box {
+            width: 38px; height: 38px;
+            background: var(--glass);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid var(--border);
+            border: 0.5px solid var(--border);
             color: #fff;
         }
 
         /* ФУТЕР */
         .mti-footer {
             margin-top: auto;
-            padding: 40px 0 10px 0;
+            padding: 20px 0;
             display: flex;
             justify-content: center;
         }
@@ -204,27 +193,26 @@
             align-items: center;
             gap: 10px;
             padding: 10px 20px;
-            background: #0a0a0a;
+            background: var(--card-bg);
             border-radius: 100px;
-            border: 1px solid var(--border);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            border: 0.5px solid var(--border);
         }
 
-        .status-pulse {
+        .pulse {
             width: 8px; height: 8px;
             background: var(--accent);
             border-radius: 50%;
             box-shadow: 0 0 12px var(--accent);
-            animation: pulse 2s infinite;
+            animation: pulse-anim 2s infinite;
         }
 
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.4; }
-            100% { opacity: 1; }
+        @keyframes pulse-anim {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 1; }
         }
 
-        .mti-name { font-size: 12px; font-weight: 800; letter-spacing: 2px; color: #fff; text-transform: uppercase; }
+        .mti-name { font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
 
         /* ЭКРАН НАСТРОЙКИ */
         #setup-screen {
@@ -233,10 +221,10 @@
             padding: calc(env(safe-area-inset-top) + 20px) 16px;
         }
         #setup-screen.active { transform: translateY(0); }
-        .ios-group { background: #0a0a0a; border-radius: 20px; margin: 24px 0; overflow: hidden; border: 1px solid var(--border); }
-        .ios-row { padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .ios-group { background: var(--card-bg); border-radius: 20px; margin: 24px 0; overflow: hidden; border: 0.5px solid var(--border); }
+        .ios-row { padding: 20px; border-bottom: 0.5px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
         .ios-row input { background: transparent; border: none; color: var(--accent); font-size: 17px; text-align: right; outline: none; width: 60%; font-weight: 600; }
-        .ios-btn-main { background: var(--accent); color: white; border: none; border-radius: 22px; padding: 20px; font-size: 17px; font-weight: 700; width: 100%; box-shadow: 0 10px 30px rgba(0, 122, 255, 0.3); }
+        .ios-btn-main { background: var(--accent); color: white; border: none; border-radius: 20px; padding: 20px; font-size: 17px; font-weight: 700; width: 100%; box-shadow: 0 8px 25px rgba(10, 132, 255, 0.3); }
     </style>
 </head>
 <body>
@@ -250,66 +238,73 @@
         <div class="category-grid">
             <!-- БЬЮТИ -->
             <div class="photo-card" onclick="openSetup('Beauty', 'Бьюти')">
-                <div class="inner-ui">
-                    <div class="ui-top-tag">Service UI</div>
+                <div class="card-ui-layer">
                     <div class="beauty-widget">
-                        <div class="circle"></div>
-                        <div class="lines">
-                            <div class="line" style="width: 80%;"></div>
-                            <div class="line" style="width: 50%;"></div>
+                        <div class="client">
+                            <div class="avatar"></div>
+                            <div class="info">
+                                <div class="name">Анна Павлова</div>
+                                <div class="time">Сегодня, 14:30</div>
+                            </div>
                         </div>
                     </div>
+                    <div class="card-title-box">
+                        <div class="card-title">Бьюти</div>
+                        <div class="card-desc">Digital-сервис</div>
+                    </div>
                 </div>
-                <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=600&auto=format&fit=crop">
-                <div class="card-footer">
-                    <div class="card-title">Бьюти</div>
-                    <div class="card-desc">Автоматизация сервиса</div>
-                </div>
+                <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=600&auto=format&fit=crop">
             </div>
 
             <!-- КРИПТО -->
             <div class="photo-card" onclick="openSetup('Crypto', 'Крипто')">
-                <div class="inner-ui">
-                    <div class="ui-top-tag" style="color:#32D74B; border-color:rgba(50,215,75,0.2);">Market Live</div>
-                    <div class="crypto-chart"></div>
+                <div class="card-ui-layer">
+                    <div class="crypto-widget">
+                        <div class="price-pill">+12.4% LIVE</div>
+                        <svg viewBox="0 0 100 40" preserveAspectRatio="none">
+                            <path d="M0 35 Q 25 35, 40 20 T 70 10 T 100 5" fill="none" stroke="#0A84FF" stroke-width="3" />
+                        </svg>
+                    </div>
+                    <div class="card-title-box">
+                        <div class="card-title">Крипто</div>
+                        <div class="card-desc">Web3 Экосистема</div>
+                    </div>
                 </div>
                 <img src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=600&auto=format&fit=crop">
-                <div class="card-footer">
-                    <div class="card-title">Крипто</div>
-                    <div class="card-desc">Web3 и DAO системы</div>
-                </div>
             </div>
         </div>
 
         <div class="links-section">
             <!-- КАНАЛ -->
-            <div class="wide-photo-btn" onclick="tg.openTelegramLink('https://t.me/mti_news')">
-                <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=600&auto=format&fit=crop">
-                <div class="wide-content">
+            <div class="wide-card" onclick="tg.openTelegramLink('https://t.me/mti_news')">
+                <div class="wide-ui">
                     <div class="wide-info">
-                        <span class="title">Новостной поток</span>
-                        <span class="sub">System Update v2.4</span>
+                        <span class="tag">Live Feed</span>
+                        <span class="title">Новостной канал</span>
+                        <span class="sub">Системные обновления 24/7</span>
                     </div>
-                    <div class="chevron-circle">›</div>
+                    <div class="chevron-box">›</div>
                 </div>
+                <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=600&auto=format&fit=crop">
             </div>
 
             <!-- КЕЙСЫ -->
-            <div class="wide-photo-btn" onclick="tg.openTelegramLink('https://t.me/mti_cases')">
-                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=600&auto=format&fit=crop">
-                <div class="wide-content">
+            <div class="wide-card" onclick="tg.openTelegramLink('https://t.me/mti_cases')">
+                <div class="wide-ui">
                     <div class="wide-info">
-                        <span class="title">Архив кейсов</span>
-                        <span class="sub">ROI +450% Success</span>
+                        <span class="tag" style="color: #32D74B;">ROI Analysis</span>
+                        <span class="title">Наши кейсы</span>
+                        <span class="sub">Эффективность до +340%</span>
                     </div>
-                    <div class="chevron-circle">›</div>
+                    <div class="chevron-box">›</div>
                 </div>
+                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=600&auto=format&fit=crop">
             </div>
         </div>
 
         <footer class="mti-footer">
             <div class="mti-badge">
-                <div class="status-pulse"></div>
+                <div class="pulse"></div>
                 <span class="mti-name">MTI Core Engine</span>
             </div>
         </footer>
@@ -319,22 +314,21 @@
     <div id="setup-screen">
         <h1 id="setup-title">Настройка</h1>
         <div class="ios-group">
-            <div class="ios-row"><label>Проект</label><input type="text" id="proj-name" placeholder="MTI_Alpha"></div>
-            <div class="ios-row"><label>Токен</label><input type="text" id="bot-token" placeholder="API Key"></div>
+            <div class="ios-row"><label>Проект</label><input type="text" id="proj-name" placeholder="Name"></div>
+            <div class="ios-row"><label>Токен</label><input type="text" id="bot-token" placeholder="API Token"></div>
         </div>
         <div id="features-list" class="ios-group"></div>
-        <button class="ios-btn-main" onclick="launchBot()">Активировать систему</button>
+        <button class="ios-btn-main" onclick="launchBot()">Активировать</button>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
         tg.headerColor = '#000000';
-        tg.backgroundColor = '#000000';
 
         const features = {
-            'Beauty': ['Smart-календарь', 'CRM-модуль', 'Push-уведомления'],
-            'Crypto': ['USDT-процессинг', 'DAO-управление', 'Web3-авторизация']
+            'Beauty': ['Booking System', 'Customer CRM', 'Auto-Notify'],
+            'Crypto': ['USDT Gateway', 'DAO Manager', 'Live Signals']
         };
 
         function openSetup(type, title) {
@@ -357,7 +351,7 @@
         function launchBot() {
             const name = document.getElementById('proj-name').value;
             const token = document.getElementById('bot-token').value;
-            if(!name || !token) { tg.showAlert("Требуется конфигурация"); return; }
+            if(!name || !token) { tg.showAlert("Конфигурация не завершена"); return; }
             tg.HapticFeedback.notificationOccurred('success');
             tg.sendData(JSON.stringify({ name, token }));
             tg.close();
