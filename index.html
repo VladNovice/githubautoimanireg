@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>MTI</title>
+    <title>MTI Premium</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
             --bg: #000000;
-            --card: #1C1C1E;
-            --secondary-card: #2C2C2E;
+            --card: #151517;
+            --card-active: #1C1C1E;
             --accent: #007AFF;
-            --text: #FFFFFF;
+            --text-main: #FFFFFF;
             --text-gray: #8E8E93;
-            --border: rgba(255, 255, 255, 0.1);
+            --border: rgba(255, 255, 255, 0.06);
         }
 
         * { 
@@ -24,7 +24,7 @@
 
         body {
             background: var(--bg);
-            color: var(--text);
+            color: var(--text-main);
             margin: 0;
             padding: 0;
             -webkit-font-smoothing: antialiased;
@@ -36,25 +36,27 @@
             margin: 0 auto;
         }
 
+        /* ЛОГОТИП ПОБОЛЬШЕ */
         header {
-            margin-bottom: 32px;
+            margin-bottom: 40px;
             padding-left: 4px;
         }
 
         .logo {
-            height: 24px;
-            margin-bottom: 8px;
+            height: 48px; /* Увеличено */
+            width: auto;
             display: block;
+            margin-bottom: 12px;
         }
 
         .tagline {
-            font-size: 15px;
+            font-size: 17px;
             color: var(--text-gray);
             font-weight: 400;
-            letter-spacing: -0.2px;
+            letter-spacing: -0.4px;
         }
 
-        /* GRID: Максимально высокие вертикальные кнопки */
+        /* СЕТКА С ВЫСОКИМИ КНОПКАМИ */
         .main-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -64,82 +66,99 @@
 
         .tall-card {
             background: var(--card);
-            border-radius: 24px;
-            height: 260px; /* Высота для акцента */
+            border-radius: 32px;
+            height: 320px; /* Еще выше для стиля */
             padding: 24px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            border: 0.5px solid var(--border);
-            transition: all 0.2s ease;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        /* ИКОНКИ: Минимализм без дешманских линий */
-        .symbol {
-            width: 44px;
-            height: 44px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .tall-card:active {
+            transform: scale(0.96);
+            background: var(--card-active);
         }
 
-        .dot-matrix {
-            display: grid;
-            grid-template-columns: repeat(2, 6px);
-            gap: 4px;
+        /* ЭФФЕКТ ВЫРЕЗАННОЙ ИКОНКИ (DEBOSSED) */
+        .engraved-icon {
+            position: absolute;
+            top: 40px;
+            right: -20px;
+            width: 160px;
+            height: 160px;
+            pointer-events: none;
+            opacity: 0.15; /* Тонкий эффект */
         }
-        .dot { width: 6px; height: 6px; background: var(--text); border-radius: 50%; opacity: 0.8; }
-        .dot.blue { background: var(--accent); opacity: 1; }
+
+        /* Специальный градиент для эффекта глубины */
+        .engraved-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: none;
+            stroke: #fff;
+            stroke-width: 1;
+            filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.8)) drop-shadow(-1px -1px 1px rgba(255,255,255,0.1));
+        }
 
         .card-label {
-            font-size: 20px;
-            font-weight: 600;
-            letter-spacing: -0.5px;
-            margin-bottom: 6px;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.8px;
+            margin-bottom: 8px;
+            z-index: 2;
         }
 
         .card-sub {
-            font-size: 13px;
+            font-size: 14px;
             color: var(--text-gray);
-            line-height: 1.35;
+            line-height: 1.4;
+            font-weight: 400;
+            z-index: 2;
         }
 
-        /* AI CARD: Горизонтальный Apple-стайл блок */
+        /* AI WIDE CARD */
         .wide-card {
             background: var(--card);
-            border-radius: 24px;
-            padding: 24px;
-            border: 0.5px solid var(--border);
-            margin-bottom: 24px;
+            border-radius: 32px;
+            padding: 28px;
+            border: 1px solid var(--border);
+            margin-bottom: 30px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
             transition: all 0.2s ease;
         }
 
-        .ai-indicator {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: conic-gradient(from 180deg at 50% 50%, #007AFF 0deg, #5856D6 120deg, #AF52DE 240deg, #007AFF 360deg);
-            filter: blur(8px);
-            opacity: 0.5;
-            position: absolute;
+        .wide-card:active { transform: scale(0.97); background: var(--card-active); }
+
+        .ai-symbol {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #222, #000);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 0.5px solid rgba(255,255,255,0.1);
+            box-shadow: inset 0 0 10px rgba(0,122,255,0.2);
+            margin-right: 20px;
         }
 
-        /* Списки */
-        .list-section {
+        /* ЛИСТ КЕЙСОВ */
+        .ios-list {
             background: var(--card);
-            border-radius: 16px;
-            border: 0.5px solid var(--border);
+            border-radius: 20px;
+            border: 1px solid var(--border);
             overflow: hidden;
-            margin-bottom: 40px;
         }
 
         .list-row {
-            padding: 16px;
+            padding: 18px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -147,47 +166,49 @@
             color: inherit;
         }
 
-        .list-row:not(:last-child) { border-bottom: 0.5px solid var(--border); }
-        .list-row:active, .tall-card:active, .wide-card:active { background: var(--secondary-card); }
+        .list-row:not(:last-child) { border-bottom: 1px solid var(--border); }
+        .list-row:active { background: var(--card-active); }
 
-        .list-title { font-size: 17px; letter-spacing: -0.4px; }
-        .chevron { color: #48484A; font-weight: 300; }
+        .chevron { color: #3A3A3C; font-size: 18px; }
 
-        /* Setup Screen */
+        /* MODAL */
         #setup {
             position: fixed;
             inset: 0;
             background: var(--bg);
             z-index: 1000;
-            padding: calc(env(safe-area-inset-top) + 20px) 20px;
+            padding: calc(env(safe-area-inset-top) + 20px) 24px;
             transform: translateY(100%);
             transition: transform 0.4s cubic-bezier(0.15, 0.4, 0.05, 1);
         }
         #setup.active { transform: translateY(0); }
 
-        .input-block {
+        .input-group {
             background: var(--card);
-            border-radius: 14px;
-            margin-top: 24px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            margin: 32px 0;
         }
 
-        .input-item {
-            padding: 14px 16px;
+        .input-row {
+            padding: 18px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid var(--border);
         }
-        .input-item:not(:last-child) { border-bottom: 0.5px solid var(--border); }
-
+        
         input {
             background: none; border: none; color: var(--accent);
             text-align: right; font-size: 17px; outline: none; width: 60%;
         }
 
-        .status {
-            text-align: center; font-size: 11px; color: #48484A; 
-            text-transform: uppercase; letter-spacing: 1px;
+        footer { text-align: center; margin-top: 40px; }
+        .status-dot {
+            display: inline-flex; align-items: center; gap: 8px;
+            font-size: 11px; color: #48484A; letter-spacing: 1.5px; font-weight: 700;
         }
+        .dot { width: 4px; height: 4px; background: #32D74B; border-radius: 50%; box-shadow: 0 0 10px #32D74B; }
 
     </style>
 </head>
@@ -196,84 +217,94 @@
 <div class="container">
     <header>
         <img src="mti,.png" alt="MTI" class="logo">
-        <div class="tagline">Next-Gen Business Engineering</div>
+        <div class="tagline">Engineering the future of automation.</div>
     </header>
 
     <main class="main-grid">
-        <!-- BEAUTY -->
+        <!-- КАРТОЧКА BEAUTY -->
         <div class="tall-card" onclick="openMod('Beauty')">
-            <div class="symbol">
-                <div class="dot-matrix">
-                    <div class="dot blue"></div><div class="dot"></div>
-                    <div class="dot"></div><div class="dot"></div>
-                </div>
+            <!-- Вырезанная иконка на фоне -->
+            <div class="engraved-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+                </svg>
             </div>
+            <div style="width: 40px; height: 3px; background: var(--accent); border-radius: 2px;"></div>
             <div>
                 <div class="card-label">Beauty</div>
-                <div class="card-sub">Service ecosystem & retention management</div>
+                <div class="card-sub">AI-driven CRM and seamless booking experiences.</div>
             </div>
         </div>
 
-        <!-- CRYPTO -->
+        <!-- КАРТОЧКА CRYPTO -->
         <div class="tall-card" onclick="openMod('Crypto')">
-            <div class="symbol">
-                <div style="width:16px; height:16px; border: 2px solid var(--accent); border-radius:4px; transform: rotate(45deg);"></div>
+            <!-- Вырезанная иконка на фоне -->
+            <div class="engraved-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2L2 7L12 12L22 7L12 2Z" />
+                    <path d="M2 17L12 22L22 17" />
+                    <path d="M2 12L12 17L22 12" />
+                </svg>
             </div>
+            <div style="width: 40px; height: 3px; background: #fff; border-radius: 2px; opacity: 0.3;"></div>
             <div>
                 <div class="card-label">Crypto</div>
-                <div class="card-sub">Web3 node infra & automated payments</div>
+                <div class="card-sub">Web3 infrastructure and automated liquidity.</div>
             </div>
         </div>
     </main>
 
-    <!-- AI & CUSTOM -->
+    <!-- AI WIDE CARD -->
     <div class="wide-card" onclick="openMod('AI')">
-        <div style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
-            <div class="ai-indicator"></div>
-            <div style="width: 12px; height: 12px; background: white; border-radius: 50%; z-index: 1;"></div>
+        <div class="ai-symbol">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5">
+                <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke-dasharray="2 2"/>
+                <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" fill="#fff"/>
+            </svg>
         </div>
-        <div style="flex: 1; margin: 0 16px;">
-            <div class="card-label" style="font-size: 18px; margin: 0;">AI & Custom Solution</div>
-            <div class="card-sub">Individual architectural development</div>
+        <div style="flex: 1;">
+            <div class="card-label" style="font-size: 19px; margin: 0;">AI Architect</div>
+            <div class="card-sub">Custom neural networks & agents.</div>
         </div>
-        <div class="chevron">›</div>
+        <span class="chevron">›</span>
     </div>
 
-    <div class="list-section">
+    <div class="ios-list">
         <a href="https://t.me/mti_news" class="list-row">
-            <span class="list-title">Updates</span>
+            <span style="font-size: 17px; font-weight: 500;">Insights</span>
             <span class="chevron">›</span>
         </a>
         <a href="https://t.me/mti_cases" class="list-row">
-            <span class="list-title">Case Archive</span>
+            <span style="font-size: 17px; font-weight: 500;">Case Studies</span>
             <span class="chevron">›</span>
         </a>
     </div>
 
-    <footer class="status">
-        Core engine 2.1 • Operational
+    <footer>
+        <div class="status-dot">
+            <div class="dot"></div> MTI CORE SECURE
+        </div>
     </footer>
 </div>
 
-<!-- MODAL SYSTEM -->
+<!-- SETUP SCREEN -->
 <div id="setup">
-    <div style="display:flex; justify-content: space-between; align-items: center;">
-        <h1 id="m-title" style="font-size: 34px; letter-spacing: -1.2px; margin: 0;">Module</h1>
+    <h1 id="m-title" style="font-size: 38px; font-weight: 800; letter-spacing: -1.5px; margin: 0;">Module</h1>
+    <p style="color: var(--text-gray); font-size: 17px; margin-top: 8px;">Technical Specification</p>
+
+    <div class="input-group">
+        <div class="input-row">
+            <span>Project</span>
+            <input type="text" id="p-name" placeholder="Title">
+        </div>
+        <div class="input-row" style="border:none;">
+            <span>Contact</span>
+            <input type="text" id="p-link" placeholder="@username">
+        </div>
     </div>
 
-    <div class="input-block">
-        <div class="input-item">
-            <span>Name</span>
-            <input type="text" id="p-name" placeholder="Project name">
-        </div>
-        <div class="input-item">
-            <span>Link</span>
-            <input type="text" id="p-link" placeholder="@contact">
-        </div>
-    </div>
-
-    <div style="margin: 24px 4px 12px; font-size: 13px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px;">Functionality</div>
-    <div id="feat-list" class="list-section"></div>
+    <div style="margin-bottom: 12px; font-size: 13px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Capabilities</div>
+    <div id="feat-list" class="ios-list"></div>
 </div>
 
 <script>
@@ -282,9 +313,9 @@
     tg.headerColor = '#000000';
 
     const data = {
-        'Beauty': ['Booking Core', 'Client CRM', 'Wallet Passes', 'AI Scheduling'],
-        'Crypto': ['L2 Transactions', 'Asset Monitoring', 'Smart Contracts', 'Custody Solutions'],
-        'AI': ['Neural Assistant', 'Custom LLM RAG', 'Automated Workflows', 'Visual Processing']
+        'Beauty': ['Advanced CRM', 'Smart Retention', 'Apple Wallet', 'Booking Engine'],
+        'Crypto': ['Liquidity Bot', 'Node Infra', 'Tokenomics', 'Smart Contracts'],
+        'AI': ['Neural Agents', 'LLM Fine-tuning', 'Vision AI', 'Voice Systems']
     };
 
     function openMod(id) {
@@ -292,14 +323,13 @@
         const list = document.getElementById('feat-list');
         list.innerHTML = '';
         data[id].forEach(f => {
-            list.innerHTML += `<div class="list-row"><span style="font-size:16px;">${f}</span><span style="color:var(--accent)">✓</span></div>`;
+            list.innerHTML += `<div class="list-row"><span style="font-size:16px;">${f}</span><span style="color:var(--accent); font-weight:bold;">✓</span></div>`;
         });
         
         document.getElementById('setup').classList.add('active');
-        tg.MainButton.text = "Continue";
+        tg.MainButton.text = "Initialize Setup";
         tg.MainButton.show();
         tg.BackButton.show();
-        
         tg.HapticFeedback.impactOccurred('medium');
     }
 
@@ -311,7 +341,7 @@
 
     tg.MainButton.onClick(() => {
         const p = document.getElementById('p-name').value;
-        if(!p) return tg.showAlert("Enter project name");
+        if(!p) return tg.showAlert("Please name your project");
         tg.HapticFeedback.notificationOccurred('success');
         tg.sendData(JSON.stringify({mod: document.getElementById('m-title').innerText, name: p}));
         tg.close();
