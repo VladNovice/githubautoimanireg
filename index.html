@@ -36,11 +36,17 @@
             min-height: 100vh;
         }
 
-        header { margin-bottom: 24px; }
-        h1 { font-size: 28px; font-weight: 700; margin: 0; letter-spacing: -0.5px; }
-        .subtitle { color: var(--text-secondary); font-size: 15px; margin-top: 4px; }
+        header { margin-bottom: 28px; }
+        h1 { font-size: 32px; font-weight: 800; margin: 0; letter-spacing: -1px; }
+        .subtitle { 
+            color: var(--text-secondary); 
+            font-size: 16px; 
+            margin-top: 6px; 
+            font-weight: 400;
+            letter-spacing: 0.2px;
+        }
 
-        /* УДЛИНЕННЫЕ КАРТОЧКИ (260px) */
+        /* ДЛИННЫЕ КАРТОЧКИ */
         .category-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -50,8 +56,8 @@
 
         .photo-card {
             position: relative;
-            height: 260px; /* Увеличено для вертикального акцента */
-            border-radius: 22px;
+            height: 260px;
+            border-radius: 24px;
             overflow: hidden;
             background: var(--card-bg);
             border: 0.5px solid var(--border);
@@ -63,14 +69,14 @@
         .photo-card img {
             width: 100%; height: 100%;
             object-fit: cover;
-            opacity: 0.85;
+            opacity: 0.8;
         }
 
         .photo-card::after {
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(0,0,0,0.9) 100%);
+            background: linear-gradient(180deg, rgba(0,0,0,0) 50%, rgba(0,0,0,0.95) 100%);
         }
 
         .card-content {
@@ -82,7 +88,7 @@
         .card-title { font-size: 20px; font-weight: 700; margin: 0; }
         .card-desc { font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 4px; line-height: 1.2; }
 
-        /* КНОПКИ С КЕВРОНОМ (СТРЕЛОЧКОЙ) */
+        /* КНОПКИ С КЕВРОНОМ */
         .links-section {
             display: flex;
             flex-direction: column;
@@ -99,7 +105,7 @@
             text-decoration: none;
             border: 0.5px solid var(--border);
             transition: background 0.2s;
-            justify-content: space-between; /* Раздвигаем контент и стрелочку */
+            justify-content: space-between;
         }
 
         .wide-btn:active { background: #2C2C2E; }
@@ -128,10 +134,10 @@
             color: var(--text-secondary);
             font-size: 20px;
             font-weight: 300;
-            opacity: 0.4;
+            opacity: 0.3;
         }
 
-        /* ФУТЕР */
+        /* ОБНОВЛЕННЫЙ ФУТЕР */
         .mti-footer {
             margin-top: auto;
             padding-top: 40px;
@@ -155,12 +161,13 @@
             width: 6px; height: 6px;
             background: #32D74B;
             border-radius: 50%;
+            box-shadow: 0 0 10px rgba(50, 215, 75, 0.3);
         }
 
         .mti-name {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
-            letter-spacing: 0.8px;
+            letter-spacing: 1px;
             color: var(--text-secondary);
             text-transform: uppercase;
         }
@@ -183,7 +190,7 @@
     <div class="app-container">
         <header>
             <h1>MTI Automation</h1>
-            <p class="subtitle">Выберите решение для бизнеса</p>
+            <p class="subtitle">Создаем цифровое превосходство</p>
         </header>
 
         <div class="category-grid">
@@ -231,7 +238,7 @@
         <footer class="mti-footer">
             <div class="mti-badge">
                 <div class="status-dot"></div>
-                <span class="mti-name">MTI Automation</span>
+                <span class="mti-name">MTI Core Engine</span>
             </div>
         </footer>
     </div>
