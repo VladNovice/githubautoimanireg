@@ -8,212 +8,233 @@
     <style>
         :root {
             --bg: #000000;
-            --card-bg: #0A0A0B;
-            --card-inner: #161618;
-            --accent: #0A84FF;
-            --accent-glow: rgba(10, 132, 255, 0.15);
+            --card-bg: #1C1C1E;
+            --accent: #007AFF; /* Apple Blue */
             --text-main: #FFFFFF;
             --text-secondary: #8E8E93;
-            --border: rgba(255, 255, 255, 0.06);
-            --glass: rgba(255, 255, 255, 0.03);
+            --separator: rgba(255, 255, 255, 0.1);
+            --glass: rgba(28, 28, 30, 0.7);
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+        }
 
         body {
             background: var(--bg);
             color: var(--text-main);
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
-            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
         .app-container {
-            padding: calc(env(safe-area-inset-top) + 20px) 16px calc(env(safe-area-inset-bottom) + 20px) 16px;
+            padding: calc(env(safe-area-inset-top) + 20px) 16px 40px 16px;
             width: 100%;
-            max-width: 500px;
+            max-width: 440px;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
-            gap: 16px;
+            gap: 24px;
         }
 
-        header { margin-bottom: 24px; padding-left: 4px; }
-        h1 { font-size: 34px; font-weight: 800; margin: 0; letter-spacing: -1px; }
-        .subtitle { color: var(--text-secondary); font-size: 16px; margin-top: 6px; font-weight: 400; }
+        /* HEADER */
+        header {
+            padding: 0 4px;
+        }
+        h1 { 
+            font-size: 34px; 
+            font-weight: 700; 
+            margin: 0; 
+            letter-spacing: -0.5px;
+        }
+        .subtitle { 
+            color: var(--text-secondary); 
+            font-size: 17px; 
+            margin-top: 4px;
+            font-weight: 400;
+        }
 
-        /* ВЕРТИКАЛЬНЫЕ КАРТОЧКИ */
+        /* GRID */
         .category-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 14px;
-        }
-
-        .photo-card {
-            position: relative;
-            height: 300px;
-            border-radius: 32px;
-            overflow: hidden;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            transition: transform 0.1s ease, border-color 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            /* Абстрактный фон вместо фото */
-            background: radial-gradient(circle at 50% 0%, rgba(10, 132, 255, 0.08) 0%, transparent 70%), var(--card-bg);
-        }
-
-        .photo-card:active { transform: scale(0.96); border-color: var(--accent); }
-
-        /* Внутренние элементы дизайна */
-        .card-ui-layer {
-            position: absolute;
-            inset: 0;
-            padding: 24px;
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Декоративная сетка на фоне */
-        .bg-pattern {
-            position: absolute;
-            inset: 0;
-            background-image: radial-gradient(var(--border) 1px, transparent 1px);
-            background-size: 16px 16px;
-            opacity: 0.3;
-            pointer-events: none;
-        }
-
-        .beauty-widget {
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 14px;
-            border: 1px solid var(--border);
-            margin-top: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-        }
-        .beauty-widget .status-bar { height: 4px; width: 40%; background: var(--accent); border-radius: 2px; margin-bottom: 8px; box-shadow: 0 0 10px var(--accent); }
-        .beauty-widget .text-line { height: 8px; width: 100%; background: var(--border); border-radius: 4px; margin-bottom: 6px; }
-        .beauty-widget .text-line.short { width: 60%; }
-
-        .crypto-widget {
-            margin-top: 40px;
-            height: 60px;
-            width: 100%;
-            display: flex;
-            align-items: flex-end;
-            gap: 4px;
-        }
-        .bar { flex: 1; background: var(--border); border-radius: 2px; transition: height 0.3s; }
-        .bar.active { background: var(--accent); box-shadow: 0 0 15px var(--accent); }
-
-        .card-title-box { margin-top: auto; }
-        .card-title { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
-        .card-desc { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
-
-        /* ГОРИЗОНТАЛЬНЫЕ КАРТОЧКИ */
-        .links-section {
-            display: flex;
-            flex-direction: column;
             gap: 12px;
         }
 
-        .wide-card {
-            position: relative;
-            height: 110px;
-            border-radius: 28px;
-            overflow: hidden;
-            border: 1px solid var(--border);
-            background: linear-gradient(90deg, var(--card-inner) 0%, var(--card-bg) 100%);
-            transition: transform 0.1s ease;
+        .category-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 180px;
+            border: 0.5px solid var(--separator);
+            transition: background 0.2s ease, transform 0.1s ease;
         }
 
-        .wide-card:active { transform: scale(0.98); }
+        .category-card:active {
+            transform: scale(0.97);
+            background: #2C2C2E;
+        }
 
-        .wide-ui {
-            position: absolute;
-            inset: 0;
-            padding: 0 24px;
-            z-index: 3;
+        .card-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .card-label {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-title {
+            font-size: 19px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+        .card-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        /* LIST SECTION */
+        .list-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 0.5px solid var(--separator);
+        }
+
+        .list-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            padding: 16px 20px;
+            transition: background 0.2s;
+            cursor: pointer;
         }
 
-        .wide-info .tag {
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--accent);
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 6px;
-            display: block;
+        .list-item:not(:last-child) {
+            border-bottom: 0.5px solid var(--separator);
         }
-        .wide-info .title { font-size: 19px; font-weight: 700; }
-        .wide-info .sub { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
 
-        .chevron-box {
-            width: 40px; height: 40px;
-            background: var(--glass);
-            border-radius: 50%;
+        .list-item:active {
+            background: #2C2C2E;
+        }
+
+        .list-item-content {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid var(--border);
-            color: var(--text-main);
+            flex-direction: column;
         }
 
-        /* ФУТЕР */
-        .mti-footer {
-            margin-top: auto;
-            padding: 24px 0;
-            display: flex;
-            justify-content: center;
+        .list-item-title {
+            font-size: 17px;
+            font-weight: 400;
         }
 
-        .mti-badge {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 24px;
-            background: var(--card-inner);
-            border-radius: 100px;
-            border: 1px solid var(--border);
+        .list-item-sub {
+            font-size: 13px;
+            color: var(--text-secondary);
         }
 
-        .pulse {
-            width: 8px; height: 8px;
-            background: var(--accent);
-            border-radius: 50%;
-            box-shadow: 0 0 15px var(--accent);
-            animation: pulse-anim 2.5s infinite;
+        .chevron {
+            color: #48484A;
+            font-size: 18px;
+            font-weight: 300;
         }
 
-        @keyframes pulse-anim {
-            0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(1.1); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-
-        .mti-name { font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #fff; }
-
-        /* ЭКРАН НАСТРОЙКИ */
+        /* SETUP SCREEN (MODAL STYLE) */
         #setup-screen {
-            position: fixed; inset: 0; background: var(--bg); z-index: 100;
-            transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.1, 0.7, 0.1, 1);
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            z-index: 100;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.15, 0, 0.2, 1);
             padding: calc(env(safe-area-inset-top) + 20px) 16px;
+            display: flex;
+            flex-direction: column;
         }
-        #setup-screen.active { transform: translateY(0); }
-        .ios-group { background: var(--card-inner); border-radius: 24px; margin: 24px 0; overflow: hidden; border: 1px solid var(--border); }
-        .ios-row { padding: 20px; border-bottom: 0.5px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .ios-row input { background: transparent; border: none; color: var(--accent); font-size: 17px; text-align: right; outline: none; width: 60%; font-weight: 600; }
-        .ios-btn-main { background: var(--accent); color: white; border: none; border-radius: 24px; padding: 22px; font-size: 17px; font-weight: 700; width: 100%; box-shadow: 0 10px 30px rgba(10, 132, 255, 0.25); margin-top: 10px; }
+
+        #setup-screen.active {
+            transform: translateY(0);
+        }
+
+        .ios-input-group {
+            background: var(--card-bg);
+            border-radius: 14px;
+            margin-top: 32px;
+            border: 0.5px solid var(--separator);
+        }
+
+        .ios-input-row {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            min-height: 44px;
+        }
+
+        .ios-input-row:not(:last-child) {
+            border-bottom: 0.5px solid var(--separator);
+        }
+
+        .ios-input-row label {
+            width: 100px;
+            font-size: 17px;
+        }
+
+        .ios-input-row input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 17px;
+            outline: none;
+        }
+
+        .ios-input-row input::placeholder {
+            color: #48484A;
+        }
+
+        /* FOOTER */
+        .footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            background: #32D74B;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #32D74B;
+        }
+
     </style>
 </head>
 <body>
@@ -221,126 +242,130 @@
     <div class="app-container">
         <header>
             <h1>MTI</h1>
-            <p class="subtitle">Интеллектуальная автоматизация</p>
+            <p class="subtitle">Автоматизация бизнеса</p>
         </header>
 
-        <div class="category-grid">
-            <!-- БЬЮТИ -->
-            <div class="photo-card" onclick="openSetup('Beauty', 'Бьюти')">
-                <div class="bg-pattern"></div>
-                <div class="card-ui-layer">
-                    <div class="beauty-widget">
-                        <div class="status-bar"></div>
-                        <div class="text-line"></div>
-                        <div class="text-line short"></div>
-                    </div>
-                    <div class="card-title-box">
-                        <div class="card-title">Бьюти</div>
-                        <div class="card-desc">Digital Ecosystem</div>
-                    </div>
+        <section class="category-grid">
+            <div class="category-card" onclick="openSetup('Beauty', 'Бьюти')">
+                <div class="card-icon">✨</div>
+                <div class="card-label">
+                    <span class="card-title">Beauty</span>
+                    <span class="card-desc">CRM & Запись</span>
                 </div>
             </div>
-
-            <!-- КРИПТО -->
-            <div class="photo-card" onclick="openSetup('Crypto', 'Крипто')">
-                <div class="bg-pattern"></div>
-                <div class="card-ui-layer">
-                    <div class="crypto-widget">
-                        <div class="bar" style="height: 30%;"></div>
-                        <div class="bar" style="height: 50%;"></div>
-                        <div class="bar active" style="height: 80%;"></div>
-                        <div class="bar" style="height: 40%;"></div>
-                        <div class="bar" style="height: 60%;"></div>
-                    </div>
-                    <div class="card-title-box">
-                        <div class="card-title">Крипто</div>
-                        <div class="card-desc">Web3 Infrastructure</div>
-                    </div>
+            <div class="category-card" onclick="openSetup('Crypto', 'Крипто')">
+                <div class="card-icon">⛓️</div>
+                <div class="card-label">
+                    <span class="card-title">Crypto</span>
+                    <span class="card-desc">Web3 ноды</span>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div class="links-section">
-            <!-- КАНАЛ -->
-            <div class="wide-card" onclick="tg.openTelegramLink('https://t.me/mti_news')">
-                <div class="bg-pattern"></div>
-                <div class="wide-ui">
-                    <div class="wide-info">
-                        <span class="tag">Network</span>
-                        <span class="title">Новостной канал</span>
-                        <span class="sub">Глобальные обновления</span>
+        <section>
+            <div class="list-section">
+                <div class="list-item" onclick="tg.openTelegramLink('https://t.me/mti_news')">
+                    <div class="list-item-content">
+                        <span class="list-item-title">Новости</span>
+                        <span class="list-item-sub">Обновления системы</span>
                     </div>
-                    <div class="chevron-box">›</div>
+                    <span class="chevron">›</span>
+                </div>
+                <div class="list-item" onclick="tg.openTelegramLink('https://t.me/mti_cases')">
+                    <div class="list-item-content">
+                        <span class="list-item-title">Кейсы</span>
+                        <span class="list-item-sub">Наши результаты</span>
+                    </div>
+                    <span class="chevron">›</span>
                 </div>
             </div>
+        </section>
 
-            <!-- КЕЙСЫ -->
-            <div class="wide-card" onclick="tg.openTelegramLink('https://t.me/mti_cases')">
-                <div class="bg-pattern"></div>
-                <div class="wide-ui">
-                    <div class="wide-info">
-                        <span class="tag" style="color: #32D74B;">Analytics</span>
-                        <span class="title">Наши кейсы</span>
-                        <span class="sub">История успеха MTI</span>
-                    </div>
-                    <div class="chevron-box">›</div>
-                </div>
-            </div>
-        </div>
-
-        <footer class="mti-footer">
-            <div class="mti-badge">
-                <div class="pulse"></div>
-                <span class="mti-name">Active Engine</span>
+        <footer class="footer">
+            <div class="status-badge">
+                <div class="dot"></div>
+                Active Engine 2.0
             </div>
         </footer>
     </div>
 
-    <!-- ЭКРАН НАСТРОЙКИ -->
+    <!-- SETUP SCREEN -->
     <div id="setup-screen">
         <h1 id="setup-title">Настройка</h1>
-        <div class="ios-group">
-            <div class="ios-row"><label>Проект</label><input type="text" id="proj-name" placeholder="Name"></div>
-            <div class="ios-row"><label>Токен</label><input type="text" id="bot-token" placeholder="API Token"></div>
+        
+        <div class="ios-input-group">
+            <div class="ios-input-row">
+                <label>Проект</label>
+                <input type="text" id="proj-name" placeholder="Название">
+            </div>
+            <div class="ios-input-row">
+                <label>API Токен</label>
+                <input type="text" id="bot-token" placeholder="Вставьте ключ">
+            </div>
         </div>
-        <div id="features-list" class="ios-group"></div>
-        <button class="ios-btn-main" onclick="launchBot()">Активировать</button>
+
+        <p style="color: var(--text-secondary); font-size: 13px; padding: 12px 16px;">
+            Введите данные для активации интеллектуальных модулей MTI в вашем проекте.
+        </p>
+
+        <div id="features-preview" class="list-section" style="margin-top: 10px;">
+            <!-- Сюда добавятся фичи -->
+        </div>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
         tg.headerColor = '#000000';
-        tg.backgroundColor = '#000000';
 
         const features = {
-            'Beauty': ['Booking Core', 'Customer CRM', 'Smart Notify'],
-            'Crypto': ['Liquidity Gateway', 'DAO Modules', 'Node Status']
+            'Beauty': ['Запись клиентов', 'Учет материалов', 'Уведомления'],
+            'Crypto': ['Мониторинг транзакций', 'Управление ликвидностью', 'Безопасность']
         };
 
         function openSetup(type, title) {
             const screen = document.getElementById('setup-screen');
             document.getElementById('setup-title').innerText = title;
-            const list = document.getElementById('features-list');
-            list.innerHTML = '';
+            
+            const preview = document.getElementById('features-preview');
+            preview.innerHTML = '';
             features[type].forEach(f => {
-                list.innerHTML += `<div class="ios-row"><span>${f}</span><span style="color:var(--accent); font-weight:bold;">✓</span></div>`;
+                preview.innerHTML += `
+                    <div class="list-item">
+                        <span class="list-item-title">${f}</span>
+                        <span style="color: var(--accent); font-weight: 600;">Включено</span>
+                    </div>
+                `;
             });
+
             screen.classList.add('active');
+            
+            // Нативная кнопка Telegram
+            tg.MainButton.text = "Активировать";
+            tg.MainButton.show();
+            tg.MainButton.onClick(launchBot);
+
             tg.BackButton.show();
             tg.BackButton.onClick(() => {
                 screen.classList.remove('active');
                 tg.BackButton.hide();
+                tg.MainButton.hide();
             });
-            tg.HapticFeedback.impactOccurred('medium');
+
+            tg.HapticFeedback.impactOccurred('light');
         }
 
         function launchBot() {
             const name = document.getElementById('proj-name').value;
             const token = document.getElementById('bot-token').value;
-            if(!name || !token) { tg.showAlert("Конфигурация не завершена"); return; }
+            
+            if(!name || !token) {
+                tg.showAlert("Заполните все поля");
+                return;
+            }
+
             tg.HapticFeedback.notificationOccurred('success');
-            tg.sendData(JSON.stringify({ name: name, token: token }));
+            tg.sendData(JSON.stringify({ name, token }));
             tg.close();
         }
     </script>
