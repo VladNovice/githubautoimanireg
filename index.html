@@ -9,12 +9,10 @@
         :root {
             --ios-bg: #000000;
             --ios-secondary-bg: #1C1C1E;
-            --ios-tertiary-bg: #2C2C2E;
             --ios-blue: #0A84FF;
             --ios-gray: #8E8E93;
             --ios-text: #FFFFFF;
-            --ios-border: rgba(255, 255, 255, 0.1);
-            --safe-area-top: env(safe-area-inset-top);
+            --ios-border: rgba(255, 255, 255, 0.15);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -25,64 +23,87 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
             padding: 0;
-            line-height: 1.4;
             overflow-x: hidden;
         }
 
-        /* Контейнер для всего контента */
         .app-container {
-            padding: calc(var(--safe-area-top) + 20px) 16px 40px 16px;
+            padding: calc(env(safe-area-inset-top) + 20px) 20px 40px 20px;
             max-width: 500px;
             margin: 0 auto;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s;
         }
 
-        header { margin-bottom: 28px; padding-left: 4px; }
-        
-        h1 { font-size: 34px; font-weight: 700; margin: 0; letter-spacing: -0.5px; }
-        
-        .subtitle { color: var(--ios-gray); font-size: 17px; margin-top: 4px; }
+        header { margin-bottom: 30px; }
+        h1 { font-size: 34px; font-weight: 800; margin: 0; letter-spacing: -1px; }
+        .subtitle { color: var(--ios-gray); font-size: 17px; margin-top: 5px; font-weight: 400; }
 
-        /* Сетка категорий */
-        .category-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
+        /* Стили фото-кнопок */
+        .category-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
             width: 100%;
         }
 
-        .ios-card {
-            background: var(--ios-secondary-bg);
-            border-radius: 22px;
-            padding: 20px;
+        .photo-card {
+            position: relative;
+            width: 100%;
+            height: 220px;
+            border-radius: 24px;
+            overflow: hidden;
             display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            border: 0.5px solid var(--ios-border);
-            aspect-ratio: 1 / 1.1;
-            transition: transform 0.1s ease, background-color 0.2s;
+            align-items: flex-end;
+            border: 1px solid var(--ios-border);
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
         }
 
-        .ios-card:active {
-            transform: scale(0.96);
-            background-color: var(--ios-tertiary-bg);
+        .photo-card:active {
+            transform: scale(0.97);
         }
 
-        .card-icon {
-            font-size: 36px;
-            background: rgba(255,255,255,0.05);
-            width: 56px;
-            height: 56px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 14px;
-            margin-bottom: 12px;
+        .photo-card img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
         }
 
-        .card-title { font-size: 19px; font-weight: 600; margin-bottom: 4px; }
-        
-        .card-desc { font-size: 13px; color: var(--ios-gray); line-height: 1.2; }
+        /* Градиент поверх фото для читаемости текста */
+        .photo-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(0,0,0,0) 30%, rgba(0,0,0,0.8) 100%);
+            z-index: 2;
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 3;
+            padding: 24px;
+            width: 100%;
+        }
+
+        .card-badge {
+            background: var(--ios-blue);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+
+        .card-title { font-size: 28px; font-weight: 700; margin: 0; }
+        .card-desc { font-size: 15px; color: rgba(255,255,255,0.7); margin-top: 4px; }
 
         /* Экран настройки */
         #setup-screen {
@@ -94,93 +115,69 @@
             background: var(--ios-bg);
             z-index: 100;
             transform: translateX(100%);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            padding: calc(var(--safe-area-top) + 20px) 16px;
+            transition: transform 0.4s cubic-bezier(0.1, 0.7, 0.1, 1);
+            padding: calc(env(safe-area-inset-top) + 20px) 20px;
             overflow-y: auto;
         }
 
         #setup-screen.active { transform: translateX(0); }
 
-        /* Группировка в стиле iOS Settings */
         .ios-group-title {
             font-size: 13px;
             color: var(--ios-gray);
             text-transform: uppercase;
-            margin: 0 0 8px 16px;
+            margin: 25px 0 8px 16px;
         }
 
         .ios-group {
             background: var(--ios-secondary-bg);
-            border-radius: 12px;
+            border-radius: 14px;
             overflow: hidden;
-            margin-bottom: 24px;
             border: 0.5px solid var(--ios-border);
         }
 
         .ios-row {
-            padding: 12px 16px;
+            padding: 14px 16px;
             border-bottom: 0.5px solid var(--ios-border);
             display: flex;
+            justify-content: space-between;
             align-items: center;
         }
 
         .ios-row:last-child { border-bottom: none; }
 
-        .ios-row label {
-            width: 110px;
-            font-size: 17px;
-            color: var(--ios-text);
-        }
-
+        .ios-row label { font-size: 17px; }
         .ios-row input {
-            flex: 1;
             background: transparent;
             border: none;
             color: var(--ios-blue);
             font-size: 17px;
-            outline: none;
             text-align: right;
-        }
-
-        .ios-row input::placeholder { color: #48484A; }
-
-        /* Кнопка */
-        .ios-btn-container {
-            padding: 0 16px;
-            margin-top: 32px;
+            outline: none;
+            width: 60%;
         }
 
         .ios-btn-main {
             background: var(--ios-blue);
             color: white;
             border: none;
-            border-radius: 14px;
-            padding: 16px;
+            border-radius: 16px;
+            padding: 18px;
             font-size: 17px;
             font-weight: 600;
             width: 100%;
-            cursor: pointer;
+            margin-top: 30px;
             transition: opacity 0.2s;
         }
 
-        .ios-btn-main:active { opacity: 0.8; }
+        .ios-btn-main:active { opacity: 0.7; }
 
-        .trial-info {
-            font-size: 13px;
+        .mti-footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 12px;
             color: var(--ios-gray);
-            text-align: center;
-            margin-top: 16px;
-            padding: 0 20px;
-        }
-
-        .mti-logo {
-            text-align: center;
-            margin-top: auto;
-            padding-top: 40px;
-            opacity: 0.3;
-            font-weight: 800;
-            letter-spacing: 2px;
-            font-size: 14px;
+            letter-spacing: 1px;
         }
     </style>
 </head>
@@ -188,55 +185,47 @@
 
     <div id="main-screen" class="app-container">
         <header>
-            <h1>Автоматизация</h1>
-            <p class="subtitle">Выберите сферу бизнеса</p>
+            <h1>MTI Automation</h1>
+            <p class="subtitle">Выберите решение для бизнеса</p>
         </header>
 
-        <div class="category-grid">
-            <div class="ios-card" onclick="openSetup('Бьюти', '✨')">
-                <div class="card-icon">✨</div>
-                <div>
+        <div class="category-stack">
+            <!-- Кнопка Бьюти -->
+            <div class="photo-card" onclick="openSetup('Beauty', 'Бьюти-сфера')">
+                <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=800&q=80" alt="Beauty">
+                <div class="card-content">
+                    <div class="card-badge">Premium</div>
                     <div class="card-title">Бьюти</div>
-                    <div class="card-desc">Запись, услуги и лояльность</div>
+                    <div class="card-desc">Запись, CRM и онлайн-оплата</div>
                 </div>
             </div>
-            <div class="ios-card" onclick="openSetup('Крипто', '💎')">
-                <div class="card-icon">💎</div>
-                <div>
+
+            <!-- Кнопка Крипто -->
+            <div class="photo-card" onclick="openSetup('Crypto', 'Крипто-проекты')">
+                <img src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=800&q=80" alt="Crypto">
+                <div class="card-content">
+                    <div class="card-badge" style="background: #FF9500;">Web3</div>
                     <div class="card-title">Крипто</div>
-                    <div class="card-desc">DAO, сигналы и кошельки</div>
-                </div>
-            </div>
-            <div class="ios-card" onclick="openSetup('Магазин', '🛍️')">
-                <div class="card-icon">🛍️</div>
-                <div>
-                    <div class="card-title">Маркет</div>
-                    <div class="card-desc">Продажи и корзина</div>
-                </div>
-            </div>
-            <div class="ios-card" onclick="openSetup('Инфо', '📚')">
-                <div class="card-icon">📚</div>
-                <div>
-                    <div class="card-title">Курсы</div>
-                    <div class="card-desc">Обучение и доступ</div>
+                    <div class="card-desc">DAO, сигналы и мониторинг</div>
                 </div>
             </div>
         </div>
-        
-        <div class="mti-logo">MTI AUTOMATION</div>
+
+        <div class="mti-footer">MTI SOLUTIONS © 2024</div>
     </div>
 
+    <!-- Экран настройки -->
     <div id="setup-screen">
         <header>
             <h1 id="setup-title">Настройка</h1>
-            <p class="subtitle" id="setup-subtitle">Конфигурация вашего бота</p>
+            <p class="subtitle" id="setup-subtitle">Заполните данные для запуска</p>
         </header>
 
-        <div class="ios-group-title">Основная информация</div>
+        <div class="ios-group-title">Конфигурация бота</div>
         <div class="ios-group">
             <div class="ios-row">
                 <label>Название</label>
-                <input type="text" id="proj-name" placeholder="Напр: MyBeautyBot">
+                <input type="text" id="proj-name" placeholder="Напр: MTI Beauty">
             </div>
             <div class="ios-row">
                 <label>API Токен</label>
@@ -244,76 +233,71 @@
             </div>
         </div>
 
-        <div class="ios-group-title">Тарифный план</div>
-        <div class="ios-group">
-            <div class="ios-row" style="justify-content: space-between;">
-                <span style="font-size: 17px;">Пробный период</span>
-                <span style="color: var(--ios-gray);">7 дней бесплатно</span>
-            </div>
-            <div class="ios-row" style="justify-content: space-between;">
-                <span style="font-size: 17px;">Стоимость</span>
-                <span style="font-weight: 600;">0 ₽</span>
-            </div>
+        <div class="ios-group-title">Возможности решения</div>
+        <div class="ios-group" id="features-list">
+            <!-- Сюда JS добавит список функций -->
         </div>
 
-        <div class="ios-btn-container">
-            <button class="ios-btn-main" onclick="launchBot()">Запустить проект</button>
-            <p class="trial-info">После 7 дней — 1490 ₽/мес. <br>Отмена подписки в любое время в боте.</p>
-        </div>
+        <button class="ios-btn-main" onclick="launchBot()">Создать проект</button>
+        <p style="text-align:center; color:var(--ios-gray); font-size:13px; margin-top:15px;">
+            Нажимая кнопку, вы запускаете бесплатный период 7 дней.
+        </p>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
-        tg.enableClosingConfirmation();
 
-        // Настройка цветов темы Telegram
-        document.documentElement.style.setProperty('--ios-bg', tg.themeParams.bg_color || '#000000');
-        document.documentElement.style.setProperty('--ios-secondary-bg', tg.themeParams.secondary_bg_color || '#1C1C1E');
+        const features = {
+            'Beauty': [
+                'Онлайн-запись 24/7',
+                'Напоминания клиентам',
+                'База клиентов (CRM)',
+                'Портфолио мастеров'
+            ],
+            'Crypto': [
+                'Закрытые каналы доступа',
+                'Прием оплаты в USDT/TON',
+                'Парсинг сигналов',
+                'Управление DAO'
+            ]
+        };
 
-        function openSetup(cat, emoji) {
-            const setupScreen = document.getElementById('setup-screen');
-            document.getElementById('setup-title').innerText = cat;
-            document.getElementById('setup-subtitle').innerText = `Настройка решения для ${cat}`;
+        function openSetup(type, fullTitle) {
+            const screen = document.getElementById('setup-screen');
+            document.getElementById('setup-title').innerText = fullTitle;
             
-            setupScreen.classList.add('active');
-            
-            // Показываем нативную кнопку "Назад" в Telegram
-            tg.BackButton.show();
-            tg.BackButton.onClick(() => {
-                closeSetup();
+            // Заполняем список функций
+            const list = document.getElementById('features-list');
+            list.innerHTML = '';
+            features[type].forEach(f => {
+                list.innerHTML += `<div class="ios-row"><span>${f}</span><span style="color:var(--ios-blue)">✓</span></div>`;
             });
 
-            // Легкая вибрация при переходе
+            screen.classList.add('active');
+            tg.BackButton.show();
+            tg.BackButton.onClick(() => {
+                screen.classList.remove('active');
+                tg.BackButton.hide();
+            });
             tg.HapticFeedback.impactOccurred('medium');
-        }
-
-        function closeSetup() {
-            document.getElementById('setup-screen').classList.remove('active');
-            tg.BackButton.hide();
         }
 
         function launchBot() {
             const name = document.getElementById('proj-name').value;
             const token = document.getElementById('bot-token').value;
-            const category = document.getElementById('setup-title').innerText;
-
+            
             if(!name || !token) {
-                tg.showAlert("Пожалуйста, заполните все поля для создания бота.");
+                tg.showAlert("Пожалуйста, заполните все поля");
                 return;
             }
 
-            // Вибрация успеха
             tg.HapticFeedback.notificationOccurred('success');
-
             tg.sendData(JSON.stringify({
                 action: 'init',
-                category: category,
                 proj_name: name,
-                bot_token: token,
-                source: 'mti_mobile_app'
+                bot_token: token
             }));
-            
             tg.close();
         }
     </script>
