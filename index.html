@@ -69,14 +69,14 @@
         .photo-card img {
             width: 100%; height: 100%;
             object-fit: cover;
-            opacity: 0.8;
+            opacity: 0.75;
         }
 
         .photo-card::after {
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(180deg, rgba(0,0,0,0) 50%, rgba(0,0,0,0.95) 100%);
+            background: linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.95) 100%);
         }
 
         .card-content {
@@ -115,15 +115,17 @@
             align-items: center;
         }
 
-        .btn-icon {
+        .btn-icon-box {
             width: 44px; height: 44px;
-            background: rgba(255,255,255,0.05);
             border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
+            overflow: hidden;
             margin-right: 16px;
+            border: 0.5px solid var(--border);
+        }
+
+        .btn-icon-box img {
+            width: 100%; height: 100%;
+            object-fit: cover;
         }
 
         .btn-body { display: flex; flex-direction: column; }
@@ -137,7 +139,7 @@
             opacity: 0.3;
         }
 
-        /* ОБНОВЛЕННЫЙ ФУТЕР */
+        /* ФУТЕР */
         .mti-footer {
             margin-top: auto;
             padding-top: 40px;
@@ -194,16 +196,18 @@
         </header>
 
         <div class="category-grid">
+            <!-- БЬЮТИ КАРТОЧКА -->
             <div class="photo-card" onclick="openSetup('Beauty', 'Бьюти')">
-                <img src="https://images.unsplash.com/photo-1562322140-8baeeec9302f?q=80&w=500&auto=format&fit=crop">
+                <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=600&auto=format&fit=crop" alt="Beauty">
                 <div class="card-content">
                     <div class="card-title">Бьюти</div>
                     <div class="card-desc">Запись, CRM и лояльность</div>
                 </div>
             </div>
 
+            <!-- КРИПТО КАРТОЧКА -->
             <div class="photo-card" onclick="openSetup('Crypto', 'Крипто')">
-                <img src="https://images.unsplash.com/photo-1639762681057-408e52192e55?q=80&w=500&auto=format&fit=crop">
+                <img src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=600&auto=format&fit=crop" alt="Crypto">
                 <div class="card-content">
                     <div class="card-title">Крипто</div>
                     <div class="card-desc">DAO, Web3 и сигналы</div>
@@ -212,9 +216,12 @@
         </div>
 
         <div class="links-section">
+            <!-- КАНАЛ -->
             <div class="wide-btn" onclick="tg.openTelegramLink('https://t.me/mti_news')">
                 <div class="btn-left-part">
-                    <div class="btn-icon">📢</div>
+                    <div class="btn-icon-box">
+                        <img src="https://images.unsplash.com/photo-1504711432869-0fd30f787162?q=80&w=200&auto=format&fit=crop" alt="News">
+                    </div>
                     <div class="btn-body">
                         <span class="btn-title">Новостной канал</span>
                         <span class="btn-subtitle">Следите за обновлениями</span>
@@ -223,9 +230,12 @@
                 <div class="btn-chevron">›</div>
             </div>
 
+            <!-- КЕЙСЫ -->
             <div class="wide-btn" onclick="tg.openTelegramLink('https://t.me/mti_cases')">
                 <div class="btn-left-part">
-                    <div class="btn-icon">🚀</div>
+                    <div class="btn-icon-box">
+                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=200&auto=format&fit=crop" alt="Cases">
+                    </div>
                     <div class="btn-body">
                         <span class="btn-title">Наши кейсы</span>
                         <span class="btn-subtitle">Примеры реализованных ботов</span>
