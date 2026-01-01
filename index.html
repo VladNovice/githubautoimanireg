@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>MTI Automation</title>
+    <title>MTI Premium</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
             --bg: #000000;
             --card-bg: #1C1C1E;
-            --accent: #007AFF;
+            --accent: #0A84FF;
             --text-main: #FFFFFF;
             --text-secondary: #8E8E93;
-            --separator: rgba(255, 255, 255, 0.12);
-            --card-radius: 22px;
+            --separator: rgba(255, 255, 255, 0.08);
+            --glass: rgba(255, 255, 255, 0.03);
         }
 
         * { 
             box-sizing: border-box; 
             -webkit-tap-highlight-color: transparent;
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", sans-serif;
         }
 
         body {
@@ -28,94 +28,89 @@
             margin: 0;
             padding: 0;
             -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
 
         .app-container {
-            padding: calc(env(safe-area-inset-top) + 20px) 16px 40px 16px;
+            padding: calc(env(safe-area-inset-top) + 20px) 20px 40px 20px;
             max-width: 440px;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
-            gap: 24px;
+            gap: 32px;
         }
 
+        /* HEADER */
         header {
             padding-left: 4px;
-            margin-bottom: 8px;
         }
 
         .header-logo {
-            height: 28px;
+            height: 26px;
             width: auto;
-            margin-bottom: 6px;
-            filter: brightness(1.1);
+            margin-bottom: 8px;
+            opacity: 0.95;
         }
 
         .subtitle { 
             color: var(--text-secondary); 
-            font-size: 14px; 
+            font-size: 15px; 
             font-weight: 400;
             margin: 0;
-            letter-spacing: -0.1px;
+            letter-spacing: -0.2px;
         }
 
-        /* GRID: Сделали кнопки выше (200px) */
+        /* GRID: ВЫСОКИЕ КАРТОЧКИ */
         .category-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 14px;
+            gap: 16px;
         }
 
         .category-card {
             background: var(--card-bg);
-            border-radius: var(--card-radius);
-            padding: 24px 20px;
-            height: 200px; /* Увеличенная высота */
+            border-radius: 28px;
+            padding: 24px;
+            height: 240px; /* Еще выше для премиального вида */
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            border: 0.5px solid var(--separator);
-            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s;
+            border: 1px solid var(--separator);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        /* CUSTOM CARD (AI) */
-        .custom-card {
-            background: var(--card-bg);
-            border-radius: var(--card-radius);
-            padding: 24px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            border: 0.5px solid var(--separator);
-            transition: transform 0.2s ease;
-        }
-
+        /* ЭФФЕКТ ПРИ НАЖАТИИ */
         .category-card:active, .custom-card:active {
-            transform: scale(0.96);
+            transform: scale(0.95);
             background: #2C2C2E;
         }
 
-        /* ИКОНКИ (SF SYMBOLS STYLE) */
-        .icon-box {
-            width: 42px;
-            height: 42px;
+        /* ИКОНКИ С ГРАДИЕНТОМ И ГЛУБИНОЙ */
+        .icon-wrapper {
+            width: 56px;
+            height: 56px;
+            background: var(--glass);
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--accent);
+            position: relative;
+            border: 0.5px solid rgba(255,255,255,0.1);
         }
 
-        .icon-box svg {
-            width: 28px;
-            height: 28px;
-            stroke-width: 1.5px;
+        .icon-wrapper svg {
+            width: 32px;
+            height: 32px;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
         }
 
         .card-title { 
-            font-size: 19px; 
-            font-weight: 600; 
-            margin-bottom: 4px;
-            letter-spacing: -0.4px;
+            font-size: 20px; 
+            font-weight: 700; 
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
         }
         
         .card-desc { 
@@ -125,11 +120,33 @@
             font-weight: 400;
         }
 
-        /* IOS LIST */
+        /* AI CUSTOM CARD: ШИРОКАЯ И СТИЛЬНАЯ */
+        .custom-card {
+            background: var(--card-bg);
+            border-radius: 28px;
+            padding: 28px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border: 1px solid var(--separator);
+            position: relative;
+        }
+
+        .ai-glow {
+            position: absolute;
+            right: -20px;
+            top: -20px;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, rgba(10, 132, 255, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        /* LIST STYLE */
         .ios-list {
             background: var(--card-bg);
-            border-radius: 14px;
-            border: 0.5px solid var(--separator);
+            border-radius: 20px;
+            border: 1px solid var(--separator);
             overflow: hidden;
         }
 
@@ -137,56 +154,61 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 14px 16px;
+            padding: 18px 20px;
             text-decoration: none;
             color: inherit;
         }
 
-        .list-item:not(:last-child) { border-bottom: 0.5px solid var(--separator); }
-        .list-item:active { background: #2C2C2E; }
+        .list-item:not(:last-child) { border-bottom: 1px solid var(--separator); }
 
-        .chevron { color: #48484A; font-size: 17px; margin-left: 4px; }
+        .chevron { color: #48484A; font-size: 18px; font-weight: 300; }
 
-        /* SETUP SCREEN */
+        /* STATUS */
+        footer { text-align: center; padding: 20px 0; }
+        .engine-status {
+            font-size: 11px;
+            color: #48484A;
+            letter-spacing: 1.2px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* MODAL */
         #setup-screen {
             position: fixed;
             inset: 0;
             background: var(--bg);
             z-index: 100;
             transform: translateY(100%);
-            transition: transform 0.4s cubic-bezier(0.15, 0, 0.2, 1);
-            padding: calc(env(safe-area-inset-top) + 20px) 20px;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: calc(env(safe-area-inset-top) + 20px) 24px;
         }
-
         #setup-screen.active { transform: translateY(0); }
 
-        .ios-input-group {
+        .input-group {
             background: var(--card-bg);
-            border-radius: 14px;
-            margin: 24px 0;
-            border: 0.5px solid var(--separator);
+            border-radius: 20px;
+            margin: 32px 0;
+            border: 1px solid var(--separator);
         }
 
-        .ios-input-row {
-            padding: 14px 16px;
+        .input-row {
+            padding: 16px 20px;
             display: flex;
             align-items: center;
+            justify-content: space-between;
         }
-
-        .ios-input-row:not(:last-child) { border-bottom: 0.5px solid var(--separator); }
-        .ios-input-row label { width: 100px; font-size: 17px; }
-        .ios-input-row input { 
-            flex: 1; background: transparent; border: none; 
-            color: var(--accent); font-size: 17px; text-align: right; outline: none;
+        .input-row:not(:last-child) { border-bottom: 1px solid var(--separator); }
+        
+        input {
+            background: transparent;
+            border: none;
+            color: var(--accent);
+            font-size: 17px;
+            text-align: right;
+            outline: none;
+            width: 60%;
         }
-
-        footer { text-align: center; padding: 30px 0; }
-        .engine-status {
-            font-size: 11px; color: #48484A; letter-spacing: 0.5px;
-            display: inline-flex; align-items: center; gap: 6px;
-            font-weight: 500;
-        }
-        .dot { width: 5px; height: 5px; background: #32D74B; border-radius: 50%; box-shadow: 0 0 8px rgba(50, 215, 75, 0.4); }
 
     </style>
 </head>
@@ -195,97 +217,108 @@
 <div class="app-container">
     <header>
         <img src="mti,.png" alt="MTI" class="header-logo">
-        <p class="subtitle">Интеллектуальные решения для бизнеса</p>
+        <p class="subtitle">Next-gen business automation</p>
     </header>
 
     <section class="category-grid">
-        <!-- БЬЮТИ -->
+        <!-- BEAUTY CARD -->
         <div class="category-card" onclick="openSetup('Beauty', 'Beauty CRM')">
-            <div class="icon-box">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+            <div class="icon-wrapper">
+                <svg viewBox="0 0 32 32" fill="none">
+                    <defs>
+                        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#FF375F;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#FF9F0A;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <circle cx="16" cy="16" r="12" fill="url(#grad1)" fill-opacity="0.2" stroke="url(#grad1)" stroke-width="2"/>
+                    <path d="M16 10L18.5 15L24 15.5L20 19.5L21 25L16 22.5L11 25L12 19.5L8 15.5L13.5 15L16 10Z" fill="url(#grad1)"/>
                 </svg>
             </div>
             <div>
                 <div class="card-title">Beauty</div>
-                <div class="card-desc">Системы записи и лояльности</div>
+                <div class="card-desc">Интеллектуальный сервис записи и лояльности</div>
             </div>
         </div>
 
-        <!-- КРИПТО -->
-        <div class="category-card" onclick="openSetup('Crypto', 'Crypto Web3')">
-            <div class="icon-box">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+        <!-- CRYPTO CARD -->
+        <div class="category-card" onclick="openSetup('Crypto', 'Crypto Pay')">
+            <div class="icon-wrapper">
+                <svg viewBox="0 0 32 32" fill="none">
+                    <defs>
+                        <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#0A84FF;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#5E5CE6;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <rect x="6" y="8" width="20" height="16" rx="4" fill="url(#grad2)" fill-opacity="0.2" stroke="url(#grad2)" stroke-width="2"/>
+                    <circle cx="16" cy="16" r="3" fill="url(#grad2)"/>
                 </svg>
             </div>
             <div>
                 <div class="card-title">Crypto</div>
-                <div class="card-desc">Платежи и смарт-контракты</div>
+                <div class="card-desc">Web3 решения и автоматизация выплат</div>
             </div>
         </div>
     </section>
 
-    <!-- AI & CUSTOM -->
+    <!-- AI CUSTOM CARD -->
     <section class="custom-card" onclick="openSetup('AI', 'Custom AI')">
-        <div class="icon-box" style="color: #FFFFFF;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 2a10 10 0 1 0 10 10H12V2z"></path>
-                <path d="M12 12L2.69 7"></path>
-                <path d="M12 12V22"></path>
-                <path d="M12 12l9.31-5"></path>
+        <div class="ai-glow"></div>
+        <div class="icon-wrapper" style="background: rgba(255,255,255,0.05);">
+            <svg viewBox="0 0 32 32" fill="none">
+                <defs>
+                    <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#BF5AF2;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#5E5CE6;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <path d="M16 6C10.4772 6 6 10.4772 6 16C6 21.5228 10.4772 26 16 26C21.5228 26 26 21.5228 26 16C26 10.4772 21.5228 6 16 6Z" stroke="url(#grad3)" stroke-width="2" stroke-dasharray="4 2"/>
+                <circle cx="16" cy="16" r="6" fill="url(#grad3)"/>
             </svg>
         </div>
         <div style="flex: 1;">
-            <div class="card-title" style="font-size: 17px;">AI & Custom Development</div>
-            <div class="card-desc">Индивидуальная разработка нейросетей</div>
+            <div class="card-title" style="font-size: 18px;">AI & Custom Development</div>
+            <div class="card-desc">Разработка нейросетевых агентов под ключ</div>
         </div>
         <span class="chevron">›</span>
     </section>
 
     <section class="ios-list">
         <div class="list-item" onclick="tg.openTelegramLink('https://t.me/mti_news')">
-            <span style="font-size:17px; letter-spacing: -0.3px;">Новости</span>
-            <div style="display:flex; align-items:center;">
-                <span style="color:var(--text-secondary); font-size:15px;">mti_news</span>
-                <span class="chevron">›</span>
-            </div>
+            <span style="font-weight: 500;">Новости экосистемы</span>
+            <span class="chevron">›</span>
         </div>
         <div class="list-item" onclick="tg.openTelegramLink('https://t.me/mti_cases')">
-            <span style="font-size:17px; letter-spacing: -0.3px;">Портфолио</span>
+            <span style="font-weight: 500;">Кейсы и внедрения</span>
             <span class="chevron">›</span>
         </div>
     </section>
 
     <footer>
         <div class="engine-status">
-            <div class="dot"></div>
-            MTI ENGINE ACTIVE
+            <span style="color: #32D74B;">●</span> MTI Engine v2.0
         </div>
     </footer>
 </div>
 
+<!-- SETUP SCREEN -->
 <div id="setup-screen">
-    <div style="display:flex; justify-content: space-between; align-items: flex-start;">
-        <div>
-            <h1 id="setup-title" style="font-size: 32px; font-weight: 700; margin: 0; letter-spacing: -1px;">Настройка</h1>
-            <p id="setup-subtitle" style="color: var(--text-secondary); margin-top: 5px;">Параметры интеграции</p>
-        </div>
-    </div>
+    <h1 id="setup-title" style="font-size: 34px; font-weight: 800; margin: 0; letter-spacing: -1.2px;">Настройка</h1>
+    <p style="color: var(--text-secondary); font-size: 17px; margin-top: 8px;">Конфигурация модуля</p>
     
-    <div class="ios-input-group">
-        <div class="ios-input-row">
-            <label>Проект</label>
-            <input type="text" id="proj-name" placeholder="Название">
+    <div class="input-group">
+        <div class="input-row">
+            <label style="font-size: 17px;">Название</label>
+            <input type="text" id="proj-name" placeholder="Мой проект">
         </div>
-        <div class="ios-input-row">
-            <label id="label-contact">Контакт</label>
+        <div class="input-row">
+            <label style="font-size: 17px;">Контакт</label>
             <input type="text" id="bot-token" placeholder="@username">
         </div>
     </div>
 
-    <div style="font-size: 12px; color: var(--text-secondary); margin: 0 0 8px 16px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Спецификации модуля</div>
+    <div style="font-size: 13px; color: var(--text-secondary); margin-left: 20px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">Технические возможности</div>
     <div id="features-list" class="ios-list"></div>
 </div>
 
@@ -296,39 +329,28 @@
     tg.backgroundColor = '#000000';
 
     const features = {
-        'Beauty': ['Онлайн-запись 24/7', 'Учет расходников', 'Авто-рассылки', 'Интеграция с картами'],
-        'Crypto': ['Прием USDT/TON', 'NFT доступы', 'Web3 авторизация', 'AML мониторинг'],
-        'AI': ['LLM ассистенты', 'RAG базы знаний', 'Автоматизация воронки', 'Голосовые боты']
+        'Beauty': ['Smart Booking', 'CRM Integration', 'Retention Engine', 'Apple Wallet Pass'],
+        'Crypto': ['USDT/TON Gateway', 'Smart Contracts', 'Auto-Settlements', 'KYC/AML Bot'],
+        'AI': ['GPT-4o Assistant', 'Neural Sales Funnel', 'Voice AI Agents', 'Custom RAG System']
     };
 
     function openSetup(type, title) {
         const screen = document.getElementById('setup-screen');
         document.getElementById('setup-title').innerText = title;
         
-        const tokenInput = document.getElementById('bot-token');
-        const contactLabel = document.getElementById('label-contact');
-
-        if(type === 'AI') {
-            tokenInput.placeholder = "@username";
-            contactLabel.innerText = "Связь";
-        } else {
-            tokenInput.placeholder = "API Key";
-            contactLabel.innerText = "Токен";
-        }
-
         const list = document.getElementById('features-list');
         list.innerHTML = '';
         features[type].forEach(f => {
             list.innerHTML += `
                 <div class="list-item">
-                    <span style="font-size:16px;">${f}</span>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#007AFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    <span style="font-size:16px; font-weight:400;">${f}</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A84FF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                 </div>
             `;
         });
 
         screen.classList.add('active');
-        tg.MainButton.text = "Продолжить";
+        tg.MainButton.text = "Запустить конфигурацию";
         tg.MainButton.show();
         
         tg.BackButton.show();
@@ -338,18 +360,18 @@
             tg.MainButton.hide();
         });
         
-        tg.HapticFeedback.impactOccurred('medium');
+        tg.HapticFeedback.impactOccurred('heavy');
     }
 
     tg.MainButton.onClick(() => {
         const name = document.getElementById('proj-name').value;
         const contact = document.getElementById('bot-token').value;
         if(!name || !contact) {
-            tg.showAlert("Заполните все данные");
+            tg.showPopup({ message: "Заполните параметры проекта" });
             return;
         }
         tg.HapticFeedback.notificationOccurred('success');
-        tg.sendData(JSON.stringify({ type: 'order', name, contact }));
+        tg.sendData(JSON.stringify({ order: name, contact }));
         tg.close();
     });
 </script>
