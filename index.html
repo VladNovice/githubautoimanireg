@@ -14,6 +14,7 @@
             --text: #FFFFFF;
             --text-gray: #8E8E93;
             --border: rgba(255, 255, 255, 0.1);
+            --glass: rgba(255, 255, 255, 0.08);
         }
 
         * { 
@@ -35,6 +36,58 @@
             padding: calc(env(safe-area-inset-top) + 20px) 16px 40px;
             max-width: 440px;
             margin: 0 auto;
+            position: relative;
+        }
+
+        /* LANGUAGE SWITCHER (iOS Mirror Style) */
+        .lang-selector {
+            position: absolute;
+            top: calc(env(safe-area-inset-top) + 24px);
+            right: 16px;
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 0.5px solid rgba(255, 255, 255, 0.15);
+            border-radius: 100px;
+            display: flex;
+            padding: 2px;
+            z-index: 100;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .lang-option {
+            padding: 4px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-gray);
+            position: relative;
+            z-index: 2;
+            transition: color 0.3s ease;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .lang-option.active {
+            color: #fff;
+        }
+
+        .lang-glider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 34px; /* Ширина одной кнопки */
+            height: calc(100% - 4px);
+            background: rgba(255, 255, 255, 0.12);
+            border: 0.5px solid rgba(255, 255, 255, 0.2);
+            border-radius: 100px;
+            z-index: 1;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Смещение глайдера при выборе EN */
+        body.lang-en .lang-glider {
+            transform: translateX(34px);
         }
 
         header {
@@ -43,7 +96,7 @@
         }
 
         .logo {
-            height: 42px; /* Еще чуть больше для солидности */
+            height: 42px;
             margin-bottom: 10px;
             display: block;
         }
@@ -72,31 +125,24 @@
             justify-content: space-between;
             border: 0.5px solid var(--border);
             transition: all 0.2s ease;
-            overflow: hidden; /* Обрезка иконок */
+            overflow: hidden;
             position: relative;
         }
 
-        /* СТИЛИ ДЛЯ ОГРОМНЫХ ИКОНОК */
         .symbol {
             position: absolute;
             top: -20px;
             right: -30px;
-            width: 180px; /* Очень большой размер */
+            width: 180px;
             height: 180px;
-            opacity: 0.15; /* Делаем их фоновыми, чтобы не мешали тексту */
+            opacity: 0.15;
             pointer-events: none;
             transform: rotate(15deg);
         }
 
-        /* Специальное выделение для акцентной иконки */
-        .tall-card:active .symbol {
-            opacity: 0.3;
-            transform: rotate(10deg) scale(1.1);
-        }
-
         .card-content {
             position: relative;
-            z-index: 2; /* Текст поверх иконки */
+            z-index: 2;
             margin-top: auto;
         }
 
@@ -113,7 +159,6 @@
             line-height: 1.3;
         }
 
-        /* AI CARD */
         .wide-card {
             background: var(--card);
             border-radius: 24px;
@@ -159,7 +204,6 @@
         .list-title { font-size: 17px; letter-spacing: -0.4px; }
         .chevron { color: #48484A; font-weight: 300; }
 
-        /* Setup Screen */
         #setup {
             position: fixed;
             inset: 0;
@@ -200,15 +244,20 @@
 <body>
 
 <div class="container">
+    <!-- LANGUAGE SWITCHER -->
+    <div class="lang-selector">
+        <div class="lang-glider" id="glider"></div>
+        <div class="lang-option active" id="btn-ru" onclick="toggleLang('ru')">RU</div>
+        <div class="lang-option" id="btn-en" onclick="toggleLang('en')">EN</div>
+    </div>
+
     <header>
         <img src="mti,.png" alt="MTI" class="logo">
-        <div class="tagline">Next-Gen Business Engineering</div>
+        <div class="tagline" id="txt-tagline">Next-Gen Business Engineering</div>
     </header>
 
     <main class="main-grid">
-        <!-- BEAUTY -->
         <div class="tall-card" onclick="openMod('Beauty')">
-            <!-- SVG Иконка Звезды/Блеска -->
             <div class="symbol">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" fill="white"/>
@@ -216,13 +265,11 @@
             </div>
             <div class="card-content">
                 <div class="card-label">Beauty</div>
-                <div class="card-sub">Service ecosystem & retention management</div>
+                <div class="card-sub" id="txt-beauty-sub">Service ecosystem & retention management</div>
             </div>
         </div>
 
-        <!-- CRYPTO -->
         <div class="tall-card" onclick="openMod('Crypto')">
-            <!-- SVG Иконка Гексагона/Блокчейна -->
             <div class="symbol">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 2L4 7V17L12 22L20 17V7L12 2Z" stroke="white" stroke-width="1.5"/>
@@ -231,31 +278,30 @@
             </div>
             <div class="card-content">
                 <div class="card-label">Crypto</div>
-                <div class="card-sub">Web3 node infra & automated payments</div>
+                <div class="card-sub" id="txt-crypto-sub">Web3 node infra & automated payments</div>
             </div>
         </div>
     </main>
 
-    <!-- AI & CUSTOM -->
     <div class="wide-card" onclick="openMod('AI')">
         <div style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
             <div class="ai-indicator"></div>
             <div style="width: 12px; height: 12px; background: white; border-radius: 50%; z-index: 1;"></div>
         </div>
         <div style="flex: 1; margin: 0 16px;">
-            <div class="card-label" style="font-size: 18px; margin: 0;">AI & Custom Solution</div>
-            <div class="card-sub">Individual architectural development</div>
+            <div class="card-label" style="font-size: 18px; margin: 0;" id="txt-ai-title">AI & Custom Solution</div>
+            <div class="card-sub" id="txt-ai-sub">Individual architectural development</div>
         </div>
         <div class="chevron">›</div>
     </div>
 
     <div class="list-section">
         <a href="https://t.me/mti_news" class="list-row">
-            <span class="list-title">Updates</span>
+            <span class="list-title" id="txt-updates">Updates</span>
             <span class="chevron">›</span>
         </a>
         <a href="https://t.me/mti_cases" class="list-row">
-            <span class="list-title">Case Archive</span>
+            <span class="list-title" id="txt-cases">Case Archive</span>
             <span class="chevron">›</span>
         </a>
     </div>
@@ -270,19 +316,17 @@
     <div style="display:flex; justify-content: space-between; align-items: center;">
         <h1 id="m-title" style="font-size: 34px; letter-spacing: -1.2px; margin: 0;">Module</h1>
     </div>
-
     <div class="input-block">
         <div class="input-item">
-            <span>Name</span>
-            <input type="text" id="p-name" placeholder="Project name">
+            <span id="txt-form-name">Name</span>
+            <input type="text" id="p-name" placeholder="...">
         </div>
         <div class="input-item">
-            <span>Link</span>
+            <span id="txt-form-link">Link</span>
             <input type="text" id="p-link" placeholder="@contact">
         </div>
     </div>
-
-    <div style="margin: 24px 4px 12px; font-size: 13px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px;">Functionality</div>
+    <div id="txt-func-label" style="margin: 24px 4px 12px; font-size: 13px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px;">Functionality</div>
     <div id="feat-list" class="list-section"></div>
 </div>
 
@@ -290,6 +334,67 @@
     const tg = window.Telegram.WebApp;
     tg.expand();
     tg.headerColor = '#000000';
+
+    // Логика переключения языка
+    function toggleLang(lang) {
+        const body = document.body;
+        const btnRu = document.getElementById('btn-ru');
+        const btnEn = document.getElementById('btn-en');
+
+        if (lang === 'en') {
+            body.classList.add('lang-en');
+            btnEn.classList.add('active');
+            btnRu.classList.remove('active');
+            updateTexts('en');
+        } else {
+            body.classList.remove('lang-en');
+            btnRu.classList.add('active');
+            btnEn.classList.remove('active');
+            updateTexts('ru');
+        }
+        tg.HapticFeedback.selectionChanged();
+    }
+
+    function updateTexts(lang) {
+        const translations = {
+            ru: {
+                tagline: "Бизнес-инжиниринг нового поколения",
+                beautySub: "Экосистема услуг и управление удержанием",
+                cryptoSub: "Инфраструктура узлов Web3 и автоплатежи",
+                aiTitle: "AI и Кастомные решения",
+                aiSub: "Индивидуальная разработка архитектуры",
+                updates: "Обновления",
+                cases: "Архив кейсов",
+                formName: "Название",
+                formLink: "Контакт",
+                funcLabel: "Функционал"
+            },
+            en: {
+                tagline: "Next-Gen Business Engineering",
+                beautySub: "Service ecosystem & retention management",
+                cryptoSub: "Web3 node infra & automated payments",
+                aiTitle: "AI & Custom Solution",
+                aiSub: "Individual architectural development",
+                updates: "Updates",
+                cases: "Case Archive",
+                formName: "Name",
+                formLink: "Link",
+                funcLabel: "Functionality"
+            }
+        };
+
+        const t = translations[lang];
+        document.getElementById('txt-tagline').innerText = t.tagline;
+        document.getElementById('txt-beauty-sub').innerText = t.beautySub;
+        document.getElementById('txt-crypto-sub').innerText = t.cryptoSub;
+        document.getElementById('txt-ai-title').innerText = t.aiTitle;
+        document.getElementById('txt-ai-sub').innerText = t.aiSub;
+        document.getElementById('txt-updates').innerText = t.updates;
+        document.getElementById('txt-cases').innerText = t.cases;
+        document.getElementById('txt-form-name').innerText = t.formName;
+        document.getElementById('txt-form-link').innerText = t.formLink;
+        document.getElementById('txt-func-label').innerText = t.funcLabel;
+    }
 
     const data = {
         'Beauty': ['Booking Core', 'Client CRM', 'Wallet Passes', 'AI Scheduling'],
@@ -309,7 +414,6 @@
         tg.MainButton.text = "Continue";
         tg.MainButton.show();
         tg.BackButton.show();
-        
         tg.HapticFeedback.impactOccurred('medium');
     }
 
