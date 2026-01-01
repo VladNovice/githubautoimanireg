@@ -12,7 +12,7 @@
             --ios-blue: #0A84FF;
             --ios-gray: #8E8E93;
             --ios-text: #FFFFFF;
-            --ios-border: rgba(255, 255, 255, 0.15);
+            --ios-border: rgba(255, 255, 255, 0.12);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -23,42 +23,43 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
             padding: 0;
-            overflow-x: hidden;
+            overflow: hidden; /* Предотвращаем лишний скролл на главном */
         }
 
         .app-container {
-            padding: calc(env(safe-area-inset-top) + 20px) 20px 40px 20px;
-            max-width: 500px;
+            padding: calc(env(safe-area-inset-top) + 20px) 16px;
+            max-width: 600px;
             margin: 0 auto;
-        }
-
-        header { margin-bottom: 30px; }
-        h1 { font-size: 34px; font-weight: 800; margin: 0; letter-spacing: -1px; }
-        .subtitle { color: var(--ios-gray); font-size: 17px; margin-top: 5px; font-weight: 400; }
-
-        /* Стили фото-кнопок */
-        .category-stack {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            height: 100vh;
+        }
+
+        header { margin-bottom: 25px; }
+        h1 { font-size: 28px; font-weight: 700; margin: 0; letter-spacing: -0.5px; }
+        .subtitle { color: var(--ios-gray); font-size: 15px; margin-top: 4px; }
+
+        /* Горизонтальная сетка */
+        .category-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
             width: 100%;
         }
 
         .photo-card {
             position: relative;
             width: 100%;
-            height: 220px;
-            border-radius: 24px;
+            aspect-ratio: 0.8 / 1; /* Делаем карточки слегка вытянутыми по вертикали */
+            border-radius: 20px;
             overflow: hidden;
-            display: flex;
-            align-items: flex-end;
             border: 1px solid var(--ios-border);
-            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.2s ease;
             cursor: pointer;
         }
 
         .photo-card:active {
-            transform: scale(0.97);
+            transform: scale(0.95);
         }
 
         .photo-card img {
@@ -71,41 +72,36 @@
             z-index: 1;
         }
 
-        /* Градиент поверх фото для читаемости текста */
         .photo-card::after {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(180deg, rgba(0,0,0,0) 30%, rgba(0,0,0,0.8) 100%);
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.9) 100%);
             z-index: 2;
         }
 
         .card-content {
-            position: relative;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
             z-index: 3;
-            padding: 24px;
-            width: 100%;
+            padding: 15px;
         }
 
         .card-badge {
-            background: var(--ios-blue);
-            color: white;
-            padding: 4px 10px;
-            border-radius: 8px;
-            font-size: 12px;
+            font-size: 10px;
             font-weight: 700;
             text-transform: uppercase;
-            margin-bottom: 8px;
-            display: inline-block;
+            color: var(--ios-blue);
+            margin-bottom: 4px;
+            display: block;
         }
 
-        .card-title { font-size: 28px; font-weight: 700; margin: 0; }
-        .card-desc { font-size: 15px; color: rgba(255,255,255,0.7); margin-top: 4px; }
+        .card-title { font-size: 20px; font-weight: 700; margin: 0; }
+        .card-desc { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 2px; line-height: 1.2; }
 
-        /* Экран настройки */
+        /* Экран настройки (Slide-up эффект как в iOS) */
         #setup-screen {
             position: fixed;
             top: 0;
@@ -114,30 +110,29 @@
             height: 100%;
             background: var(--ios-bg);
             z-index: 100;
-            transform: translateX(100%);
+            transform: translateY(100%);
             transition: transform 0.4s cubic-bezier(0.1, 0.7, 0.1, 1);
-            padding: calc(env(safe-area-inset-top) + 20px) 20px;
+            padding: calc(env(safe-area-inset-top) + 20px) 16px;
             overflow-y: auto;
         }
 
-        #setup-screen.active { transform: translateX(0); }
+        #setup-screen.active { transform: translateY(0); }
 
         .ios-group-title {
             font-size: 13px;
             color: var(--ios-gray);
             text-transform: uppercase;
-            margin: 25px 0 8px 16px;
+            margin: 20px 0 8px 12px;
         }
 
         .ios-group {
             background: var(--ios-secondary-bg);
-            border-radius: 14px;
+            border-radius: 12px;
             overflow: hidden;
-            border: 0.5px solid var(--ios-border);
         }
 
         .ios-row {
-            padding: 14px 16px;
+            padding: 12px 16px;
             border-bottom: 0.5px solid var(--ios-border);
             display: flex;
             justify-content: space-between;
@@ -146,101 +141,102 @@
 
         .ios-row:last-child { border-bottom: none; }
 
-        .ios-row label { font-size: 17px; }
+        .ios-row label { font-size: 16px; }
         .ios-row input {
             background: transparent;
             border: none;
             color: var(--ios-blue);
-            font-size: 17px;
+            font-size: 16px;
             text-align: right;
             outline: none;
-            width: 60%;
+            width: 50%;
         }
 
         .ios-btn-main {
             background: var(--ios-blue);
             color: white;
             border: none;
-            border-radius: 16px;
-            padding: 18px;
+            border-radius: 14px;
+            padding: 16px;
             font-size: 17px;
             font-weight: 600;
             width: 100%;
-            margin-top: 30px;
-            transition: opacity 0.2s;
+            margin-top: 25px;
         }
-
-        .ios-btn-main:active { opacity: 0.7; }
 
         .mti-footer {
+            margin-top: auto;
+            padding: 20px 0;
             text-align: center;
-            margin-top: 40px;
-            font-size: 12px;
+            font-size: 11px;
             color: var(--ios-gray);
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            opacity: 0.5;
         }
+
+        .feature-icon { color: var(--ios-blue); margin-right: 10px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div id="main-screen" class="app-container">
+    <div class="app-container">
         <header>
             <h1>MTI Automation</h1>
-            <p class="subtitle">Выберите решение для бизнеса</p>
+            <p class="subtitle">Выберите направление</p>
         </header>
 
-        <div class="category-stack">
-            <!-- Кнопка Бьюти -->
-            <div class="photo-card" onclick="openSetup('Beauty', 'Бьюти-сфера')">
-                <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=800&q=80" alt="Beauty">
+        <div class="category-grid">
+            <!-- Бьюти -->
+            <div class="photo-card" onclick="openSetup('Beauty', 'Бьюти бот')">
+                <img src="https://images.unsplash.com/photo-1527799822344-42ad8c03ef95?q=80&w=500&auto=format&fit=crop" alt="Beauty">
                 <div class="card-content">
-                    <div class="card-badge">Premium</div>
+                    <span class="card-badge">Service</span>
                     <div class="card-title">Бьюти</div>
-                    <div class="card-desc">Запись, CRM и онлайн-оплата</div>
+                    <div class="card-desc">Запись и CRM</div>
                 </div>
             </div>
 
-            <!-- Кнопка Крипто -->
-            <div class="photo-card" onclick="openSetup('Crypto', 'Крипто-проекты')">
-                <img src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=800&q=80" alt="Crypto">
+            <!-- Крипто -->
+            <div class="photo-card" onclick="openSetup('Crypto', 'Крипто бот')">
+                <img src="https://images.unsplash.com/photo-1621761191319-c6fb62004040?q=80&w=500&auto=format&fit=crop" alt="Crypto">
                 <div class="card-content">
-                    <div class="card-badge" style="background: #FF9500;">Web3</div>
+                    <span class="card-badge">Web3</span>
                     <div class="card-title">Крипто</div>
-                    <div class="card-desc">DAO, сигналы и мониторинг</div>
+                    <div class="card-desc">DAO и сигналы</div>
                 </div>
             </div>
         </div>
 
-        <div class="mti-footer">MTI SOLUTIONS © 2024</div>
+        <div class="mti-footer">MTI SOLUTIONS</div>
     </div>
 
     <!-- Экран настройки -->
     <div id="setup-screen">
         <header>
             <h1 id="setup-title">Настройка</h1>
-            <p class="subtitle" id="setup-subtitle">Заполните данные для запуска</p>
+            <p class="subtitle">Конфигурация системы</p>
         </header>
 
-        <div class="ios-group-title">Конфигурация бота</div>
+        <div class="ios-group-title">Данные бота</div>
         <div class="ios-group">
             <div class="ios-row">
                 <label>Название</label>
-                <input type="text" id="proj-name" placeholder="Напр: MTI Beauty">
+                <input type="text" id="proj-name" placeholder="My Bot">
             </div>
             <div class="ios-row">
-                <label>API Токен</label>
-                <input type="text" id="bot-token" placeholder="из @BotFather">
+                <label>Токен</label>
+                <input type="text" id="bot-token" placeholder="API Key">
             </div>
         </div>
 
-        <div class="ios-group-title">Возможности решения</div>
+        <div class="ios-group-title">Функционал решения</div>
         <div class="ios-group" id="features-list">
-            <!-- Сюда JS добавит список функций -->
+            <!-- Заполняется из JS -->
         </div>
 
-        <button class="ios-btn-main" onclick="launchBot()">Создать проект</button>
-        <p style="text-align:center; color:var(--ios-gray); font-size:13px; margin-top:15px;">
-            Нажимая кнопку, вы запускаете бесплатный период 7 дней.
+        <button class="ios-btn-main" onclick="launchBot()">Запустить бесплатно</button>
+        <p style="text-align:center; color:var(--ios-gray); font-size:12px; margin-top:12px;">
+            7 дней пробный период, далее 1490₽/мес.
         </p>
     </div>
 
@@ -248,30 +244,33 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        const features = {
+        const data = {
             'Beauty': [
                 'Онлайн-запись 24/7',
-                'Напоминания клиентам',
-                'База клиентов (CRM)',
-                'Портфолио мастеров'
+                'Авто-напоминания',
+                'Учет материалов',
+                'Личный кабинет клиента'
             ],
             'Crypto': [
-                'Закрытые каналы доступа',
-                'Прием оплаты в USDT/TON',
-                'Парсинг сигналов',
-                'Управление DAO'
+                'Платные подписки',
+                'Прием платежей (USDT)',
+                'Копитрейдинг модуль',
+                'Уведомления о листингах'
             ]
         };
 
-        function openSetup(type, fullTitle) {
+        function openSetup(type, title) {
             const screen = document.getElementById('setup-screen');
-            document.getElementById('setup-title').innerText = fullTitle;
+            document.getElementById('setup-title').innerText = title;
             
-            // Заполняем список функций
             const list = document.getElementById('features-list');
             list.innerHTML = '';
-            features[type].forEach(f => {
-                list.innerHTML += `<div class="ios-row"><span>${f}</span><span style="color:var(--ios-blue)">✓</span></div>`;
+            data[type].forEach(item => {
+                list.innerHTML += `
+                    <div class="ios-row">
+                        <span>${item}</span>
+                        <span class="feature-icon">✓</span>
+                    </div>`;
             });
 
             screen.classList.add('active');
@@ -280,24 +279,18 @@
                 screen.classList.remove('active');
                 tg.BackButton.hide();
             });
-            tg.HapticFeedback.impactOccurred('medium');
+            tg.HapticFeedback.impactOccurred('light');
         }
 
         function launchBot() {
             const name = document.getElementById('proj-name').value;
             const token = document.getElementById('bot-token').value;
-            
             if(!name || !token) {
-                tg.showAlert("Пожалуйста, заполните все поля");
+                tg.showAlert("Заполните все поля");
                 return;
             }
-
             tg.HapticFeedback.notificationOccurred('success');
-            tg.sendData(JSON.stringify({
-                action: 'init',
-                proj_name: name,
-                bot_token: token
-            }));
+            tg.sendData(JSON.stringify({ name, token }));
             tg.close();
         }
     </script>
