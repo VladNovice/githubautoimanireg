@@ -12,8 +12,9 @@
             --ios-blue: #0A84FF;
             --ios-gray: #8E8E93;
             --ios-text: #FFFFFF;
-            --ios-border: rgba(255, 255, 255, 0.1);
+            --ios-border: rgba(255, 255, 255, 0.08);
             --accent-gradient: linear-gradient(135deg, #0A84FF 0%, #5E5CE6 100%);
+            --glass: rgba(255, 255, 255, 0.03);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -21,57 +22,61 @@
         body {
             background: var(--ios-bg);
             color: var(--ios-text);
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
+            min-height: 100vh;
         }
 
         .app-container {
-            padding: calc(env(safe-area-inset-top) + 20px) 16px calc(env(safe-area-inset-bottom) + 20px) 16px;
+            padding: calc(env(safe-area-inset-top) + 20px) 16px calc(env(safe-area-inset-bottom) + 16px) 16px;
             width: 100%;
             max-width: 500px;
             display: flex;
             flex-direction: column;
-            gap: 18px;
-            min-height: 100vh;
+            gap: 20px;
         }
 
-        header { margin-bottom: 0px; }
-        h1 { font-size: 28px; font-weight: 700; margin: 0; letter-spacing: -0.5px; }
-        .subtitle { color: var(--ios-gray); font-size: 15px; margin-top: 4px; }
+        header { margin-bottom: 5px; }
+        h1 { font-size: 32px; font-weight: 800; margin: 0; letter-spacing: -1px; }
+        .subtitle { color: var(--ios-gray); font-size: 16px; margin-top: 4px; font-weight: 400; }
 
-        /* Карточки */
+        /* УДЛИНЕННЫЕ КАРТОЧКИ */
         .category-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 14px;
         }
 
         .photo-card {
             position: relative;
-            height: 160px;
-            border-radius: 22px;
+            height: 240px; /* Увеличенная высота для солидности */
+            border-radius: 28px;
             overflow: hidden;
             border: 1px solid var(--ios-border);
-            transition: transform 0.1s ease;
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .photo-card:active { transform: scale(0.96); }
+        .photo-card:active { transform: scale(0.95); }
 
         .photo-card img {
             position: absolute;
             width: 100%; height: 100%;
             object-fit: cover;
             z-index: 1;
+            transition: transform 0.5s ease;
         }
+
+        .photo-card:hover img { transform: scale(1.05); }
 
         .photo-card::after {
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(180deg, rgba(0,0,0,0) 30%, rgba(0,0,0,0.8) 100%);
+            background: linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.9) 100%);
             z-index: 2;
         }
 
@@ -79,119 +84,147 @@
             position: absolute;
             bottom: 0; left: 0; right: 0;
             z-index: 3;
-            padding: 15px;
-            text-align: center;
+            padding: 20px;
+            text-align: left;
         }
 
-        .card-title { font-size: 19px; font-weight: 700; margin: 0; }
-        .card-desc { font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 2px; }
+        .card-title { font-size: 22px; font-weight: 700; margin: 0; }
+        .card-desc { font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 4px; line-height: 1.2; }
 
-        /* Ссылки */
+        /* ССЫЛКИ */
         .links-section {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
         }
 
         .wide-btn {
             background: var(--ios-secondary-bg);
-            border-radius: 14px;
-            height: 50px;
+            border-radius: 18px;
+            height: 56px;
             display: flex;
             align-items: center;
-            padding: 0 16px;
+            padding: 0 20px;
             justify-content: space-between;
-            border: 0.5px solid var(--ios-border);
+            border: 1px solid var(--ios-border);
         }
 
-        .btn-left { display: flex; align-items: center; gap: 12px; }
-        .btn-label { font-size: 15px; font-weight: 500; }
-        .chevron { color: var(--ios-gray); font-size: 16px; opacity: 0.4; }
+        .btn-label { font-size: 16px; font-weight: 600; letter-spacing: -0.2px; }
+        .chevron { color: var(--ios-gray); font-size: 20px; opacity: 0.3; }
 
-        /* ИННОВАЦИОННАЯ ПЛАШКА (FOOTER) */
-        .mti-innovation-badge {
-            margin-top: auto; /* Прижимает к низу */
+        /* ИННОВАЦИОННАЯ ПЛАШКА MTI */
+        .mti-brand-panel {
+            margin-top: auto;
             position: relative;
-            background: rgba(28, 28, 30, 0.6);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border-radius: 20px;
-            padding: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
             display: flex;
-            align-items: center;
-            gap: 15px;
+            flex-direction: column;
+            gap: 12px;
             overflow: hidden;
         }
 
-        /* Эффект свечения сзади */
-        .mti-innovation-badge::before {
+        /* Анимированный блик */
+        .mti-brand-panel::before {
             content: '';
             position: absolute;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            background: radial-gradient(circle at center, rgba(10, 132, 255, 0.1) 0%, transparent 70%);
-            z-index: 0;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            animation: shine 4s infinite linear;
         }
 
-        .tech-icon {
-            position: relative;
-            width: 40px; height: 40px;
+        @keyframes shine {
+            0% { left: -100%; }
+            20% { left: 100%; }
+            100% { left: 100%; }
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-box {
+            width: 32px; height: 32px;
             background: var(--accent-gradient);
-            border-radius: 10px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
-            box-shadow: 0 4px 15px rgba(10, 132, 255, 0.3);
-            z-index: 1;
+            font-weight: 900;
+            font-size: 16px;
+            box-shadow: 0 0 15px rgba(10, 132, 255, 0.4);
         }
 
-        .badge-info { z-index: 1; }
-        .badge-company { 
-            display: block; 
-            font-size: 14px; 
-            font-weight: 700; 
-            letter-spacing: 1px;
+        .brand-name {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: #fff;
+        }
+
+        .system-tag {
+            font-size: 10px;
+            background: rgba(255,255,255,0.1);
+            padding: 4px 8px;
+            border-radius: 6px;
+            color: var(--ios-gray);
             text-transform: uppercase;
-            background: linear-gradient(to right, #fff, #8E8E93);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .badge-status { 
-            display: flex; 
-            align-items: center; 
-            gap: 5px; 
-            font-size: 11px; 
-            color: var(--ios-gray); 
-            margin-top: 2px;
+            font-weight: 600;
         }
 
-        .pulse-dot {
-            width: 6px; height: 6px;
+        .panel-footer {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--ios-gray);
+        }
+
+        .status-indicator {
+            width: 8px; height: 8px;
             background: #32D74B;
             border-radius: 50%;
-            box-shadow: 0 0 8px #32D74B;
+            position: relative;
+        }
+
+        .status-indicator::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border: 1px solid #32D74B;
+            border-radius: 50%;
             animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
-            0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(1.2); }
-            100% { opacity: 1; transform: scale(1); }
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(2.5); opacity: 0; }
         }
 
-        /* Экран настройки */
+        /* ЭКРАН НАСТРОЙКИ */
         #setup-screen {
             position: fixed; inset: 0; background: var(--ios-bg); z-index: 100;
-            transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.1, 0.7, 0.1, 1);
             padding: calc(env(safe-area-inset-top) + 20px) 16px;
         }
         #setup-screen.active { transform: translateY(0); }
-        .ios-group { background: var(--ios-secondary-bg); border-radius: 14px; margin: 20px 0; overflow: hidden; }
-        .ios-row { padding: 14px 16px; border-bottom: 0.5px solid var(--ios-border); display: flex; justify-content: space-between; align-items: center; }
-        .ios-row input { background: transparent; border: none; color: var(--ios-blue); font-size: 17px; text-align: right; outline: none; width: 60%; }
-        .ios-btn-main { background: var(--ios-blue); color: white; border: none; border-radius: 14px; padding: 16px; font-size: 17px; font-weight: 600; width: 100%; }
+        .ios-group { background: var(--ios-secondary-bg); border-radius: 20px; margin: 20px 0; overflow: hidden; border: 1px solid var(--ios-border); }
+        .ios-row { padding: 16px; border-bottom: 1px solid var(--ios-border); display: flex; justify-content: space-between; align-items: center; }
+        .ios-row input { background: transparent; border: none; color: var(--ios-blue); font-size: 17px; text-align: right; outline: none; width: 60%; font-weight: 500; }
+        .ios-btn-main { background: var(--ios-blue); color: white; border: none; border-radius: 18px; padding: 18px; font-size: 17px; font-weight: 700; width: 100%; margin-top: 10px; box-shadow: 0 10px 20px rgba(10, 132, 255, 0.2); }
     </style>
 </head>
 <body>
@@ -199,70 +232,76 @@
     <div class="app-container">
         <header>
             <h1>MTI Automation</h1>
-            <p class="subtitle">Интеллектуальные решения</p>
+            <p class="subtitle">Экосистема автоматизации</p>
         </header>
 
+        <!-- УДЛИНЕННЫЕ КАРТОЧКИ -->
         <div class="category-grid">
             <div class="photo-card" onclick="openSetup('Beauty', 'Бьюти')">
-                <img src="https://images.unsplash.com/photo-1562322140-8baeeec9302f?q=80&w=500&auto=format&fit=crop">
+                <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=600&auto=format&fit=crop">
                 <div class="card-content">
                     <div class="card-title">Бьюти</div>
-                    <div class="card-desc">Digital-сервис</div>
+                    <div class="card-desc">Интеллектуальная запись и CRM</div>
                 </div>
             </div>
 
             <div class="photo-card" onclick="openSetup('Crypto', 'Крипто')">
-                <img src="https://images.unsplash.com/photo-1639762681057-408e52192e55?q=80&w=500&auto=format&fit=crop">
+                <img src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=600&auto=format&fit=crop">
                 <div class="card-content">
                     <div class="card-title">Крипто</div>
-                    <div class="card-desc">Web3 Экосистема</div>
+                    <div class="card-desc">Web3 решения и DAO модули</div>
                 </div>
             </div>
         </div>
 
+        <!-- ССЫЛКИ -->
         <div class="links-section">
             <div class="wide-btn" onclick="tg.openTelegramLink('https://t.me/mti_news')">
-                <div class="btn-left"><span class="btn-label">📢 Новостной поток</span></div>
+                <span class="btn-label">📢 Новостной канал</span>
                 <span class="chevron">›</span>
             </div>
             <div class="wide-btn" onclick="tg.openTelegramLink('https://t.me/mti_cases')">
-                <div class="btn-left"><span class="btn-label">🚀 Библиотека кейсов</span></div>
+                <span class="btn-label">🚀 Наши кейсы</span>
                 <span class="chevron">›</span>
             </div>
         </div>
 
-        <!-- ИННОВАЦИОННАЯ ПЛАШКА -->
-        <div class="mti-innovation-badge">
-            <div class="tech-icon">M</div>
-            <div class="badge-info">
-                <span class="badge-company">MTI SOLUTIONS</span>
-                <div class="badge-status">
-                    <span class="pulse-dot"></span>
-                    <span>Система активна: Next-Gen Platform</span>
+        <!-- ИННОВАЦИОННАЯ ПАНЕЛЬ -->
+        <div class="mti-brand-panel">
+            <div class="panel-header">
+                <div class="brand-logo">
+                    <div class="logo-box">M</div>
+                    <span class="brand-name">MTI SOLUTIONS</span>
                 </div>
+                <div class="system-tag">v2.0 Core</div>
+            </div>
+            <div class="panel-footer">
+                <div class="status-indicator"></div>
+                <span>Платформа активна и готова к работе</span>
             </div>
         </div>
     </div>
 
-    <!-- Экран настройки -->
+    <!-- ЭКРАН НАСТРОЙКИ -->
     <div id="setup-screen">
         <h1 id="setup-title">Настройка</h1>
         <div class="ios-group">
-            <div class="ios-row"><label>Название</label><input type="text" id="proj-name" placeholder="My Project"></div>
-            <div class="ios-row"><label>API Токен</label><input type="text" id="bot-token" placeholder="Token"></div>
+            <div class="ios-row"><label>Название</label><input type="text" id="proj-name" placeholder="Введите название"></div>
+            <div class="ios-row"><label>API Токен</label><input type="text" id="bot-token" placeholder="Token из BotFather"></div>
         </div>
         <div id="features-list" class="ios-group"></div>
-        <button class="ios-btn-main" onclick="launchBot()">Активировать</button>
+        <button class="ios-btn-main" onclick="launchBot()">Запустить платформу</button>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
         tg.headerColor = '#000000';
+        tg.backgroundColor = '#000000';
 
         const features = {
-            'Beauty': ['Smart-запись', 'CRM-аналитика', 'Push-уведомления'],
-            'Crypto': ['Web3 шлюз', 'USDT Автоплатежи', 'DAO Модуль']
+            'Beauty': ['Автоматизация записи', 'Умные уведомления', 'Аналитика продаж'],
+            'Crypto': ['USDT Автоплатежи', 'Управление доступом', 'Сигнальный модуль']
         };
 
         function openSetup(type, title) {
@@ -271,7 +310,7 @@
             const list = document.getElementById('features-list');
             list.innerHTML = '';
             features[type].forEach(f => {
-                list.innerHTML += `<div class="ios-row"><span>${f}</span><span style="color:var(--ios-blue)">✓</span></div>`;
+                list.innerHTML += `<div class="ios-row"><span>${f}</span><span style="color:var(--ios-blue); font-weight:bold;">✓</span></div>`;
             });
             screen.classList.add('active');
             tg.BackButton.show();
@@ -285,7 +324,7 @@
         function launchBot() {
             const name = document.getElementById('proj-name').value;
             const token = document.getElementById('bot-token').value;
-            if(!name || !token) { tg.showAlert("Введите данные"); return; }
+            if(!name || !token) { tg.showAlert("Пожалуйста, заполните все данные"); return; }
             tg.HapticFeedback.notificationOccurred('success');
             tg.sendData(JSON.stringify({ name, token }));
             tg.close();
