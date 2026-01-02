@@ -3,243 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>MTI | Next-Gen</title>
+    <title>MTI | Checkout</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
             --bg: #000000;
             --card: #1C1C1E;
-            --secondary-card: #2C2C2E;
             --accent: #007AFF;
             --text: #FFFFFF;
             --text-gray: #8E8E93;
             --border: rgba(255, 255, 255, 0.1);
-            --glass: rgba(255, 255, 255, 0.05);
-            --ios-blue: #007AFF;
+            --ios-green: #34C759;
         }
 
-        * { 
-            box-sizing: border-box; 
-            -webkit-tap-highlight-color: transparent;
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", sans-serif;
-        }
-
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
             background: var(--bg);
             color: var(--text);
             margin: 0;
-            padding: 0;
-            -webkit-font-smoothing: antialiased;
-            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+            overflow-x: hidden;
         }
 
         .container {
-            padding: calc(env(safe-area-inset-top) + 20px) 16px 40px;
+            padding: calc(env(safe-area-inset-top) + 20px) 16px 100px;
             max-width: 440px;
             margin: 0 auto;
         }
 
-        /* HEADER & LANG */
-        header { margin-bottom: 32px; }
-        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .logo { height: 38px; }
+        /* --- КАРТОЧКИ МОДУЛЕЙ --- */
+        .module-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+        .mod-card {
+            background: var(--card); border-radius: 20px; padding: 20px;
+            border: 0.5px solid var(--border); position: relative; overflow: hidden;
+        }
+        .mod-card.active { border-color: var(--accent); }
+        .mod-title { font-size: 17px; font-weight: 600; margin-bottom: 4px; }
+        .mod-price { font-size: 13px; color: var(--accent); font-weight: 500; }
 
-        .lang-selector {
-            position: relative; background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border-radius: 10px; padding: 2px; display: flex; width: 84px; height: 32px;
-            border: 0.5px solid rgba(255, 255, 255, 0.1);
+        /* --- CHECKOUT SCREEN (APPLE STYLE) --- */
+        #checkout-screen {
+            display: none; /* Показываем только если есть данные из бота */
+            animation: slideUp 0.5s cubic-bezier(0.2, 1, 0.3, 1);
         }
-        .lang-option {
-            flex: 1; display: flex; align-items: center; justify-content: center;
-            font-size: 12px; font-weight: 600; color: var(--text-gray);
-            position: relative; z-index: 2; transition: color 0.3s ease; cursor: pointer;
-        }
-        .lang-option.active { color: #fff; }
-        .lang-glider {
-            position: absolute; top: 2px; left: 2px; width: 40px; height: 28px;
-            background: rgba(255, 255, 255, 0.15); border-radius: 8px;
-            z-index: 1; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        body.lang-en .lang-glider { transform: translateX(40px); }
 
-        /* GRID */
-        .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
-        .tall-card {
-            background: var(--card); border-radius: 28px; height: 260px; padding: 24px;
-            display: flex; flex-direction: column; justify-content: space-between;
-            border: 0.5px solid var(--border); transition: all 0.2s ease;
-            overflow: hidden; position: relative;
-        }
-        .tall-card:active { transform: scale(0.97); }
-        .symbol { position: absolute; top: -20px; right: -30px; width: 180px; height: 180px; opacity: 0.15; pointer-events: none; transform: rotate(15deg); }
-        .card-label { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 6px; }
-        .card-sub { font-size: 13px; color: var(--text-gray); line-height: 1.3; }
+        @keyframes slideUp { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        .wide-card {
+        .receipt {
             background: var(--card); border-radius: 24px; padding: 24px;
-            border: 0.5px solid var(--border); margin-bottom: 24px;
-            display: flex; align-items: center; justify-content: space-between;
-        }
-        .ai-indicator {
-            width: 40px; height: 40px; border-radius: 50%;
-            background: conic-gradient(from 180deg at 50% 50%, #007AFF 0deg, #5856D6 120deg, #AF52DE 240deg, #007AFF 360deg);
-            filter: blur(8px); opacity: 0.5; position: absolute;
+            border: 0.5px solid var(--border); margin-bottom: 20px;
         }
 
-        .list-section { background: var(--card); border-radius: 16px; border: 0.5px solid var(--border); overflow: hidden; margin-bottom: 40px; }
-        .list-row { padding: 16px; display: flex; align-items: center; justify-content: space-between; text-decoration: none; color: inherit; }
-        .list-row:not(:last-child) { border-bottom: 0.5px solid var(--border); }
-
-        /* --- SETUP MODAL (APPLE STYLE) --- */
-        #setup {
-            position: fixed; inset: 0; background: var(--bg); z-index: 1000;
-            padding-top: calc(env(safe-area-inset-top) + 10px);
-            transform: translateY(100%); transition: transform 0.5s cubic-bezier(0.15, 0.4, 0.05, 1);
-            display: flex; flex-direction: column;
+        .receipt-header { text-align: center; margin-bottom: 24px; }
+        .receipt-icon { 
+            width: 64px; height: 64px; background: linear-gradient(135deg, #007AFF, #5856D6);
+            border-radius: 18px; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center;
+            font-size: 32px; box-shadow: 0 10px 20px rgba(0,122,255,0.3);
         }
-        #setup.active { transform: translateY(0); }
 
-        .setup-header { padding: 0 20px; margin-bottom: 20px; }
+        .receipt-title { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; }
+        .receipt-subtitle { color: var(--text-gray); font-size: 15px; margin-top: 4px; }
 
-        .progress-steps { display: flex; gap: 4px; margin-bottom: 24px; }
-        .dot { height: 3px; flex: 1; background: #3A3A3C; border-radius: 2px; transition: background 0.4s ease; }
-        .dot.active { background: var(--text-gray); }
-        .dot.completed { background: var(--ios-blue); }
+        .info-row {
+            display: flex; justify-content: space-between; padding: 12px 0;
+            border-bottom: 0.5px solid var(--border);
+        }
+        .info-label { color: var(--text-gray); font-size: 15px; }
+        .info-value { font-weight: 500; font-size: 15px; text-align: right; max-width: 60%; }
 
-        .step-title { font-size: 32px; font-weight: 700; letter-spacing: -1px; margin-bottom: 8px; color: #fff; }
-        .step-desc { font-size: 16px; color: var(--text-gray); line-height: 1.4; margin-bottom: 10px; }
-
-        .ios-group { background: var(--card); border-radius: 12px; margin: 0 16px 24px; overflow: hidden; }
-        .ios-item { display: flex; align-items: center; padding: 12px 16px; min-height: 48px; position: relative; }
-        .ios-item:not(:last-child)::after { content: ''; position: absolute; bottom: 0; right: 0; left: 56px; height: 0.5px; background: var(--border); }
+        /* PAYMENT SELECTOR */
+        .ios-group { background: var(--card); border-radius: 14px; overflow: hidden; margin-top: 24px; border: 0.5px solid var(--border); }
+        .ios-item {
+            display: flex; align-items: center; padding: 14px 16px;
+            background: var(--card); transition: background 0.2s;
+        }
+        .ios-item:active { background: #2C2C2E; }
+        .ios-item:not(:last-child) { border-bottom: 0.5px solid var(--border); }
         
-        .ios-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; margin-right: 12px; font-size: 16px; }
-        .ios-content { flex: 1; display: flex; flex-direction: column; }
-        .ios-label { font-size: 13px; color: var(--text-gray); margin-bottom: 2px; }
-        
-        .ios-input { background: none; border: none; color: #fff; font-size: 17px; padding: 0; width: 100%; outline: none; }
-        .ios-input::placeholder { color: #48484A; }
+        .radio-circle {
+            width: 20px; height: 20px; border: 2px solid var(--border);
+            border-radius: 50%; margin-right: 12px; position: relative;
+        }
+        .ios-item.selected .radio-circle { border-color: var(--accent); }
+        .ios-item.selected .radio-circle::after {
+            content: ''; position: absolute; inset: 3px;
+            background: var(--accent); border-radius: 50%;
+        }
 
-        /* AI Magic Textarea */
-        .ai-textarea-container { position: relative; background: var(--card); border-radius: 14px; padding: 16px; margin: 0 16px; border: 1px solid transparent; transition: border-color 0.3s ease; }
-        .ai-textarea-container:focus-within { border-color: rgba(0, 122, 255, 0.4); }
-        .ai-badge { display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, rgba(0, 122, 255, 0.15), rgba(175, 82, 222, 0.15)); padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; color: #AF52DE; margin-bottom: 12px; }
-        .ai-hint { font-size: 13px; color: var(--text-gray); margin-top: 12px; line-height: 1.4; }
-        
-        textarea.ios-input { height: 140px; line-height: 1.5; resize: none; }
-        select.ios-input { appearance: none; }
+        .pay-icon { font-size: 20px; margin-right: 12px; }
 
-        .steps-slider { display: flex; flex: 1; transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
-        .step-page { min-width: 100%; box-sizing: border-box; }
+        .footer-note {
+            text-align: center; color: var(--text-gray); font-size: 12px;
+            margin-top: 20px; padding: 0 20px; line-height: 1.4;
+        }
 
-        .status { text-align: center; font-size: 11px; color: #48484A; text-transform: uppercase; letter-spacing: 1px; }
-
+        /* Кнопка в стиле Apple Pay */
+        .apple-pay-btn {
+            position: fixed; bottom: calc(env(safe-area-inset-bottom) + 20px);
+            left: 16px; right: 16px; height: 54px;
+            background: #fff; color: #000; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 600; font-size: 17px; z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <header>
-        <div class="header-top">
-            <img src="mti,.png" alt="MTI" class="logo">
-            <div class="lang-selector">
-                <div class="lang-glider"></div>
-                <div class="lang-option active" id="btn-ru" onclick="toggleLang('ru')">RU</div>
-                <div class="lang-option" id="btn-en" onclick="toggleLang('en')">EN</div>
+    <!-- СЕКЦИЯ 1: КАТАЛОГ (Если пользователь просто зашел в приложение) -->
+    <div id="catalog-screen">
+        <header style="margin-bottom: 32px;">
+            <img src="mti,.png" alt="MTI" style="height: 32px; margin-bottom: 8px;">
+            <h1 style="font-size: 28px; margin: 0;">Инженерные решения</h1>
+        </header>
+
+        <div class="module-grid">
+            <div class="mod-card" onclick="startInBot('Beauty')">
+                <div class="mod-title">Beauty</div>
+                <div class="mod-price">от 2,900₽</div>
+            </div>
+            <div class="mod-card" onclick="startInBot('Crypto')">
+                <div class="mod-title">Crypto</div>
+                <div class="mod-price">от 4,500₽</div>
             </div>
         </div>
-        <div class="tagline" id="txt-tagline">Next-Gen Business Engineering</div>
-    </header>
+        
+        <p style="color: var(--text-gray); font-size: 14px; text-align: center;">
+            Выберите модуль, чтобы начать настройку в диалоге с ботом.
+        </p>
+    </div>
 
-    <main class="main-grid">
-        <div class="tall-card" onclick="openMod('Beauty')">
-            <div class="symbol"><svg viewBox="0 0 24 24" fill="white"><path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z"/></svg></div>
-            <div class="card-content">
-                <div class="card-label">Beauty</div>
-                <div class="card-sub" id="txt-beauty-sub">Service ecosystem & retention management</div>
+    <!-- СЕКЦИЯ 2: ОПЛАТА (Показывается при переходе из бота) -->
+    <div id="checkout-screen">
+        <div class="receipt">
+            <div class="receipt-header">
+                <div class="receipt-icon" id="res-icon">✨</div>
+                <div class="receipt-title" id="res-mod-name">Module Name</div>
+                <div class="receipt-subtitle">Подписка на систему</div>
+            </div>
+
+            <div class="info-row">
+                <span class="info-label">Проект</span>
+                <span class="info-value" id="res-project-name">—</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Локация</span>
+                <span class="info-value" id="res-location">—</span>
+            </div>
+            <div class="info-row" style="border: none;">
+                <span class="info-label" style="color: #fff; font-weight: 600;">Итого</span>
+                <span class="info-value" style="color: var(--ios-green); font-size: 18px; font-weight: 700;" id="res-total">0.00₽</span>
             </div>
         </div>
-        <div class="tall-card" onclick="openMod('Crypto')">
-            <div class="symbol"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M12 2L4 7V17L12 22L20 17V7L12 2Z"/><path d="M12 6V18M9 8H13.5C14.3284 8 15 8.67157 15 9.5C15 10.3284 14.3284 11 13.5 11H12M9 11H14.5C15.3284 11 16 11.6716 16 12.5C16 13.3284 15.3284 14 14.5 14H12"/></svg></div>
-            <div class="card-content">
-                <div class="card-label">Crypto</div>
-                <div class="card-sub" id="txt-crypto-sub">Web3 node infra & automated payments</div>
-            </div>
-        </div>
-    </main>
 
-    <div class="wide-card" onclick="openMod('AI')">
-        <div style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
-            <div class="ai-indicator"></div>
-            <div style="width: 12px; height: 12px; background: white; border-radius: 50%; z-index: 1;"></div>
-        </div>
-        <div style="flex: 1; margin: 0 16px;">
-            <div class="card-label" style="font-size: 18px; margin: 0;" id="txt-ai-title">AI & Custom Solution</div>
-            <div class="card-sub" id="txt-ai-sub">Individual architectural development</div>
-        </div>
-        <div class="chevron">›</div>
-    </div>
-
-    <div class="list-section">
-        <a href="https://t.me/mti_news" class="list-row"><span id="txt-updates">Updates</span><span style="color:#48484A">›</span></a>
-        <a href="https://t.me/mti_cases" class="list-row"><span id="txt-cases">Case Archive</span><span style="color:#48484A">›</span></a>
-    </div>
-    <footer class="status">Core engine 2.1 • Operational</footer>
-</div>
-
-<!-- SETUP MODAL -->
-<div id="setup">
-    <div class="setup-header">
-        <div class="progress-steps" id="progress-dots"></div>
-        <div class="step-title" id="step-title">Название</div>
-        <div class="step-desc" id="step-desc">Введите данные вашего проекта</div>
-    </div>
-
-    <div class="steps-slider" id="steps-slider">
-        <!-- Шаг 1: Общее -->
-        <div class="step-page">
-            <div class="ios-group">
-                <div class="ios-item">
-                    <div class="ios-icon" style="background: #5856D6;">🏢</div>
-                    <div class="ios-content">
-                        <span class="ios-label" id="txt-form-name">Название проекта</span>
-                        <input type="text" id="p-name" class="ios-input" placeholder="Напр: MTI Beauty">
-                    </div>
+        <div class="ios-group">
+            <div class="ios-item selected" onclick="selectPay('crypto')">
+                <div class="radio-circle"></div>
+                <span class="pay-icon">💎</span>
+                <div class="ios-content">
+                    <div style="font-weight: 500;">CryptoBot</div>
+                    <div style="font-size: 12px; color: var(--text-gray);">USDT, TON, BTC</div>
                 </div>
-                <div class="ios-item">
-                    <div class="ios-icon" style="background: #007AFF;">🔗</div>
-                    <div class="ios-content">
-                        <span class="ios-label" id="txt-form-link">Контакт (TG)</span>
-                        <input type="text" id="p-link" class="ios-input" placeholder="@username">
-                    </div>
+            </div>
+            <div class="ios-item" onclick="selectPay('card')">
+                <div class="radio-circle"></div>
+                <span class="pay-icon">💳</span>
+                <div class="ios-content">
+                    <div style="font-weight: 500;">Банковская карта</div>
+                    <div style="font-size: 12px; color: var(--text-gray);">РФ, МИР (YooKassa)</div>
                 </div>
             </div>
         </div>
 
-        <!-- Шаг 2: Контекстный (Адрес или API) -->
-        <div class="step-page" id="context-step-1"></div>
+        <div class="footer-note">
+            Нажимая кнопку оплаты, вы подтверждаете согласие с условиями обслуживания MTI Engineering.
+        </div>
 
-        <!-- Шаг 3: Прайс (Beauty) -->
-        <div class="step-page" id="context-step-2"></div>
-
-        <!-- Шаг 4: Оплата -->
-        <div class="step-page" id="final-step">
-            <div class="ios-group">
-                <div class="ios-item">
-                    <div class="ios-icon" style="background: #34C759;">💳</div>
-                    <div class="ios-content">
-                        <span class="ios-label" id="txt-form-method">Метод оплаты</span>
-                        <select id="p-method" class="ios-input">
-                            <option value="cryptobot">CryptoBot (USDT, TON)</option>
-                            <option value="yookassa">Банковская карта (RU)</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <p style="padding: 0 20px; font-size: 13px; color: #48484A; text-align: center;" id="txt-hint-pay">
-                Безопасная транзакция через сертифицированный шлюз
-            </p>
+        <div class="apple-pay-btn" onclick="processPayment()">
+            Оплатить
         </div>
     </div>
 </div>
@@ -248,208 +190,84 @@
     const tg = window.Telegram.WebApp;
     tg.expand();
     tg.headerColor = '#000000';
-    
-    let currentLang = 'ru';
-    let currentStep = 0;
-    let totalSteps = 4;
-    let activeModule = '';
+    tg.backgroundColor = '#000000';
 
-    function toggleLang(lang) {
-        currentLang = lang;
-        document.body.classList.toggle('lang-en', lang === 'en');
-        document.getElementById('btn-ru').classList.toggle('active', lang === 'ru');
-        document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-        updateTexts(lang);
+    let selectedMethod = 'crypto';
+    let currentData = null;
+
+    // 1. ПАРСИНГ ДАННЫХ ИЗ БОТА
+    // Бот должен присылать ссылку вида: https://t.me/bot/app?startapp=base64_json
+    const startParam = tg.initDataUnsafe.start_param;
+
+    if (startParam) {
+        try {
+            // Декодируем данные (предположим, бот прислал base64 или просто ID)
+            // Для теста можно использовать прямую проверку:
+            document.getElementById('catalog-screen').style.display = 'none';
+            document.getElementById('checkout-screen').style.display = 'block';
+            
+            // Пример того, как мы наполняем экран из параметров
+            // В реальности тут будет: const decoded = JSON.parse(atob(startParam));
+            fillCheckoutData({
+                module: 'Beauty',
+                name: 'MTI Studio',
+                location: 'Москва, Цветной б-р',
+                price: '2,900₽'
+            });
+        } catch (e) {
+            console.error("Ошибка парсинга данных", e);
+        }
+    }
+
+    function fillCheckoutData(data) {
+        currentData = data;
+        document.getElementById('res-mod-name').innerText = data.module;
+        document.getElementById('res-project-name').innerText = data.name;
+        document.getElementById('res-location').innerText = data.location;
+        document.getElementById('res-total').innerText = data.price;
+        document.getElementById('res-icon').innerText = data.module === 'Beauty' ? '💄' : '₿';
+    }
+
+    function selectPay(method) {
+        selectedMethod = method;
+        const items = document.querySelectorAll('.ios-item');
+        items.forEach(el => el.classList.remove('selected'));
+        event.currentTarget.classList.add('selected');
         tg.HapticFeedback.selectionChanged();
     }
 
-    function updateTexts(lang) {
-        const t = {
-            ru: {
-                tagline: "Бизнес-инжиниринг нового поколения",
-                beautySub: "Экосистема услуг и удержание",
-                cryptoSub: "Web3 узлы и автоплатежи",
-                aiTitle: "AI и Кастомные решения",
-                aiSub: "Индивидуальная архитектура",
-                updates: "Обновления",
-                cases: "Архив кейсов"
-            },
-            en: {
-                tagline: "Next-Gen Business Engineering",
-                beautySub: "Service ecosystem & retention",
-                cryptoSub: "Web3 node & payments",
-                aiTitle: "AI & Custom Solution",
-                aiSub: "Individual architecture",
-                updates: "Updates",
-                cases: "Case Archive"
-            }
-        }[lang];
-
-        for (let key in t) {
-            const el = document.getElementById('txt-' + key.replace(/([A-Z])/g, "-$1").toLowerCase());
-            if (el) el.innerText = t[key];
-        }
+    function startInBot(mod) {
+        // Если пользователь нажал на карточку в каталоге, закрываем приложение и отправляем команду боту
+        tg.sendData(JSON.stringify({action: 'start_setup', module: mod}));
+        tg.close();
     }
 
-    function openMod(id) {
-        activeModule = id;
-        currentStep = 0;
+    function processPayment() {
+        tg.HapticFeedback.notificationOccurred('success');
         
-        if (id === 'Beauty') totalSteps = 4;
-        else if (id === 'Crypto') totalSteps = 3;
-        else totalSteps = 2;
+        // Отправляем боту выбранный метод оплаты и данные
+        const paymentInfo = {
+            action: 'payment_init',
+            method: selectedMethod,
+            data: currentData
+        };
+        
+        tg.sendData(JSON.stringify(paymentInfo));
+        
+        // Показываем лоадер Telegram
+        tg.MainButton.showProgress();
+        setTimeout(() => tg.close(), 1000);
+    }
 
-        renderProgress();
-        setupStepContent();
-        updateStepUI();
-
-        document.getElementById('setup').classList.add('active');
+    // Настройка кнопки "Назад" если мы в Checkout
+    if (startParam) {
         tg.BackButton.show();
-        tg.MainButton.show();
-        tg.HapticFeedback.impactOccurred('medium');
-    }
-
-    function renderProgress() {
-        const container = document.getElementById('progress-dots');
-        container.innerHTML = '';
-        for (let i = 0; i < totalSteps; i++) {
-            const dot = document.createElement('div');
-            dot.className = `dot ${i === 0 ? 'active' : ''}`;
-            container.appendChild(dot);
-        }
-    }
-
-    function setupStepContent() {
-        const step2 = document.getElementById('context-step-1');
-        const step3 = document.getElementById('context-step-2');
-        const isRu = currentLang === 'ru';
-        
-        if (activeModule === 'Beauty') {
-            step2.innerHTML = `
-                <div class="ios-group">
-                    <div class="ios-item">
-                        <div class="ios-icon" style="background: #FF9500;">📍</div>
-                        <div class="ios-content">
-                            <span class="ios-label">${isRu ? 'Адрес' : 'Address'}</span>
-                            <input type="text" id="p-addr" class="ios-input" placeholder="${isRu ? 'Город, улица...' : 'Street, City...'}">
-                        </div>
-                    </div>
-                    <div class="ios-item">
-                        <div class="ios-icon" style="background: #FF3B30;">🕒</div>
-                        <div class="ios-content">
-                            <span class="ios-label">${isRu ? 'График' : 'Working Hours'}</span>
-                            <input type="text" id="p-hours" class="ios-input" placeholder="09:00 - 21:00">
-                        </div>
-                    </div>
-                </div>`;
-            
-            step3.innerHTML = `
-                <div class="ai-textarea-container">
-                    <div class="ai-badge">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/></svg>
-                        AI ENGINE READY
-                    </div>
-                    <textarea id="p-price" class="ios-input" placeholder="${isRu ? 'Стрижка — 1500\nМаникюр: 2000р...' : 'Haircut - 50\nNails - 40...'}"></textarea>
-                    <div class="ai-hint">
-                        ${isRu ? '✨ <b>Пишите в любом формате</b> — наш ИИ сам распознает услуги и цены, структурирует их и добавит в базу.' : '✨ <b>Write in any format</b> — our AI will automatically recognize services and prices.'}
-                    </div>
-                </div>`;
-        } else if (activeModule === 'Crypto') {
-            step2.innerHTML = `
-                <div class="ios-group">
-                    <div class="ios-item">
-                        <div class="ios-icon" style="background: #5856D6;">🔑</div>
-                        <div class="ios-content">
-                            <span class="ios-label">CryptoBot API Token</span>
-                            <input type="text" id="p-api" class="ios-input" placeholder="123456:AAH...">
-                        </div>
-                    </div>
-                </div>`;
-            step3.innerHTML = '';
-        } else {
-            step2.innerHTML = '';
-            step3.innerHTML = '';
-        }
-    }
-
-    function updateStepUI() {
-        const slider = document.getElementById('steps-slider');
-        slider.style.transform = `translateX(-${currentStep * 100}%)`;
-        
-        const dots = document.querySelectorAll('.dot');
-        dots.forEach((d, i) => {
-            d.classList.toggle('active', i === currentStep);
-            d.classList.toggle('completed', i < currentStep);
-        });
-
-        const title = document.getElementById('step-title');
-        const desc = document.getElementById('step-desc');
-        const isRu = (currentLang === 'ru');
-
-        if (currentStep === 0) {
-            title.innerText = isRu ? "Основы" : "Basics";
-            desc.innerText = isRu ? "Настроим базовую информацию" : "Let's set up basic info";
-        } else if (currentStep === totalSteps - 1) {
-            title.innerText = isRu ? "Оплата" : "Billing";
-            desc.innerText = isRu ? "Выберите способ оплаты подписки" : "Choose billing method";
-            tg.MainButton.text = isRu ? "Подтвердить" : "Confirm";
-        } else {
-            if (activeModule === 'Beauty') {
-                if (currentStep === 1) {
-                    title.innerText = isRu ? "Локация" : "Location";
-                    desc.innerText = isRu ? "Где вы находитесь?" : "Where is your salon?";
-                } else {
-                    title.innerText = isRu ? "Услуги" : "Services";
-                    desc.innerText = isRu ? "Ваш прайс-лист" : "Your price list";
-                }
-            } else {
-                title.innerText = isRu ? "Кошелек" : "Wallet";
-                desc.innerText = isRu ? "Настройка платежей" : "Payment setup";
-            }
-            tg.MainButton.text = isRu ? "Далее" : "Next";
-        }
-    }
-
-    tg.MainButton.onClick(() => {
-        if (currentStep < totalSteps - 1) {
-            if (currentStep === 0 && !document.getElementById('p-name').value) {
-                return tg.showAlert(currentLang === 'ru' ? "Введите название" : "Enter name");
-            }
-            currentStep++;
-            updateStepUI();
-            tg.HapticFeedback.selectionChanged();
-        } else {
-            const data = {
-                mod: activeModule,
-                name: document.getElementById('p-name').value,
-                link: document.getElementById('p-link').value,
-                method: document.getElementById('p-method').value
-            };
-            if (activeModule === 'Beauty') {
-                data.addr = document.getElementById('p-addr').value;
-                data.hours = document.getElementById('p-hours').value;
-                data.prices = document.getElementById('p-price').value;
-            }
-            if (activeModule === 'Crypto') data.api = document.getElementById('p-api').value;
-
-            tg.HapticFeedback.notificationOccurred('success');
-            tg.sendData(JSON.stringify(data));
-            tg.close();
-        }
-    });
-
-    tg.BackButton.onClick(() => {
-        if (currentStep > 0) {
-            currentStep--;
-            updateStepUI();
-        } else {
-            document.getElementById('setup').classList.remove('active');
-            tg.MainButton.hide();
+        tg.BackButton.onClick(() => {
+            document.getElementById('catalog-screen').style.display = 'block';
+            document.getElementById('checkout-screen').style.display = 'none';
             tg.BackButton.hide();
-        }
-    });
-
-    updateTexts('ru');
+        });
+    }
 </script>
 </body>
 </html>
