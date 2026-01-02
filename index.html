@@ -29,7 +29,7 @@
             margin: 0;
             padding: 0;
             -webkit-font-smoothing: antialiased;
-            overflow-x: hidden;
+            overflow: hidden;
         }
 
         .container {
@@ -38,11 +38,11 @@
             margin: 0 auto;
         }
 
+        /* HEADER & LANG */
         header { margin-bottom: 32px; }
-        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-right: 4px; }
-        .logo { height: 38px; display: block; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .logo { height: 38px; }
 
-        /* LANG SELECTOR */
         .lang-selector {
             position: relative; background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
@@ -57,24 +57,20 @@
         .lang-option.active { color: #fff; }
         .lang-glider {
             position: absolute; top: 2px; left: 2px; width: 40px; height: 28px;
-            background: rgba(255, 255, 255, 0.15); box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            border: 0.5px solid rgba(255, 255, 255, 0.1); border-radius: 8px;
+            background: rgba(255, 255, 255, 0.15); border-radius: 8px;
             z-index: 1; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         body.lang-en .lang-glider { transform: translateX(40px); }
 
-        .tagline { font-size: 15px; color: var(--text-gray); font-weight: 400; letter-spacing: -0.2px; padding-left: 2px; }
-
-        /* CARDS */
+        /* GRID */
         .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
         .tall-card {
-            background: var(--card); border-radius: 28px; height: 280px; padding: 24px;
+            background: var(--card); border-radius: 28px; height: 260px; padding: 24px;
             display: flex; flex-direction: column; justify-content: space-between;
             border: 0.5px solid var(--border); transition: all 0.2s ease;
             overflow: hidden; position: relative;
         }
         .symbol { position: absolute; top: -20px; right: -30px; width: 180px; height: 180px; opacity: 0.15; pointer-events: none; transform: rotate(15deg); }
-        .card-content { position: relative; z-index: 2; margin-top: auto; }
         .card-label { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 6px; }
         .card-sub { font-size: 13px; color: var(--text-gray); line-height: 1.3; }
 
@@ -92,50 +88,52 @@
         .list-section { background: var(--card); border-radius: 16px; border: 0.5px solid var(--border); overflow: hidden; margin-bottom: 40px; }
         .list-row { padding: 16px; display: flex; align-items: center; justify-content: space-between; text-decoration: none; color: inherit; }
         .list-row:not(:last-child) { border-bottom: 0.5px solid var(--border); }
-        .list-row:active, .tall-card:active, .wide-card:active { background: var(--secondary-card); }
-        .chevron { color: #48484A; font-weight: 300; }
 
-        /* MODAL / SETUP */
+        /* STEP SYSTEM */
         #setup {
             position: fixed; inset: 0; background: var(--bg); z-index: 1000;
-            padding: calc(env(safe-area-inset-top) + 20px) 16px;
-            transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.15, 0.4, 0.05, 1);
-            overflow-y: auto;
+            padding: calc(env(safe-area-inset-top) + 20px) 0;
+            transform: translateY(100%); transition: transform 0.5s cubic-bezier(0.15, 0.4, 0.05, 1);
+            display: flex; flex-direction: column;
         }
         #setup.active { transform: translateY(0); }
 
-        .section-label { margin: 24px 8px 10px; font-size: 13px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.6px; font-weight: 500; }
+        .setup-header { padding: 0 20px; margin-bottom: 24px; }
+        
+        /* Progress Dots */
+        .progress-steps { display: flex; gap: 6px; margin-bottom: 20px; padding: 0 4px; }
+        .dot { height: 4px; flex: 1; background: var(--glass); border-radius: 2px; transition: background 0.3s; }
+        .dot.active { background: var(--accent); }
 
-        .input-block { background: var(--card); border-radius: 18px; border: 0.5px solid var(--border); overflow: hidden; margin-bottom: 8px; }
-        
-        .input-item {
-            padding: 14px 16px; display: flex; align-items: center; gap: 12px;
-            transition: background 0.2s ease;
+        .steps-slider {
+            display: flex; flex: 1; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .input-item:not(:last-child) { border-bottom: 0.5px solid var(--border); }
-        
-        .input-icon {
-            width: 28px; height: 28px; background: var(--glass);
-            border-radius: 8px; display: flex; align-items: center; justify-content: center;
-            color: var(--accent); flex-shrink: 0;
+        .step-page {
+            min-width: 100%; padding: 0 20px; box-sizing: border-box;
         }
 
-        .input-content { flex: 1; display: flex; flex-direction: column; }
-        .input-label { font-size: 14px; color: var(--text-gray); margin-bottom: 2px; }
+        .step-title { font-size: 28px; font-weight: 700; letter-spacing: -1px; margin-bottom: 8px; }
+        .step-desc { font-size: 15px; color: var(--text-gray); margin-bottom: 24px; line-height: 1.4; }
 
+        .input-group { background: var(--card); border-radius: 18px; border: 0.5px solid var(--border); overflow: hidden; }
+        .input-field {
+            padding: 16px; display: flex; align-items: center; gap: 12px;
+        }
+        .input-field:not(:last-child) { border-bottom: 0.5px solid var(--border); }
+        
+        .field-icon { width: 32px; height: 32px; background: var(--glass); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--accent); }
+        
+        .field-content { flex: 1; }
+        .field-label { font-size: 12px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; display: block; }
+        
         input, select, textarea {
-            background: none; border: none; color: var(--text);
-            font-size: 17px; outline: none; width: 100%; padding: 0;
-            font-family: inherit;
+            background: none; border: none; color: #fff; font-size: 17px; width: 100%; outline: none; padding: 0;
         }
-        input::placeholder, textarea::placeholder { color: #48484A; }
+        textarea { height: 100px; resize: none; padding-top: 4px; }
         
-        textarea { height: 80px; resize: none; padding-top: 4px; line-height: 1.4; }
-        select { appearance: none; -webkit-appearance: none; color: var(--accent); font-weight: 500; }
-
-        .field-hint {
-            padding: 8px 16px 0; font-size: 12px; color: #5a5a5e;
-            line-height: 1.3; display: flex; align-items: center; gap: 4px;
+        .trust-badge {
+            margin-top: 20px; padding: 12px; background: rgba(52, 199, 89, 0.1);
+            border-radius: 12px; display: flex; align-items: center; gap: 10px; color: #34C759; font-size: 13px;
         }
 
         .status { text-align: center; font-size: 11px; color: #48484A; text-transform: uppercase; letter-spacing: 1px; }
@@ -159,22 +157,14 @@
 
     <main class="main-grid">
         <div class="tall-card" onclick="openMod('Beauty')">
-            <div class="symbol">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" fill="white"/></svg>
-            </div>
+            <div class="symbol"><svg viewBox="0 0 24 24" fill="white"><path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z"/></svg></div>
             <div class="card-content">
                 <div class="card-label">Beauty</div>
                 <div class="card-sub" id="txt-beauty-sub">Service ecosystem & retention management</div>
             </div>
         </div>
-
         <div class="tall-card" onclick="openMod('Crypto')">
-            <div class="symbol">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2L4 7V17L12 22L20 17V7L12 2Z" stroke="white" stroke-width="1.5"/>
-                    <path d="M12 6V18M9 8H13.5C14.3284 8 15 8.67157 15 9.5C15 10.3284 14.3284 11 13.5 11H12M9 11H14.5C15.3284 11 16 11.6716 16 12.5C16 13.3284 15.3284 14 14.5 14H12" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
-            </div>
+            <div class="symbol"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M12 2L4 7V17L12 22L20 17V7L12 2Z"/><path d="M12 6V18M9 8H13.5C14.3284 8 15 8.67157 15 9.5C15 10.3284 14.3284 11 13.5 11H12M9 11H14.5C15.3284 11 16 11.6716 16 12.5C16 13.3284 15.3284 14 14.5 14H12"/></svg></div>
             <div class="card-content">
                 <div class="card-label">Crypto</div>
                 <div class="card-sub" id="txt-crypto-sub">Web3 node infra & automated payments</div>
@@ -195,262 +185,285 @@
     </div>
 
     <div class="list-section">
-        <a href="https://t.me/mti_news" class="list-row">
-            <span class="list-title" id="txt-updates">Updates</span>
-            <span class="chevron">›</span>
-        </a>
-        <a href="https://t.me/mti_cases" class="list-row">
-            <span class="list-title" id="txt-cases">Case Archive</span>
-            <span class="chevron">›</span>
-        </a>
+        <a href="https://t.me/mti_news" class="list-row"><span id="txt-updates">Updates</span><span style="color:#48484A">›</span></a>
+        <a href="https://t.me/mti_cases" class="list-row"><span id="txt-cases">Case Archive</span><span style="color:#48484A">›</span></a>
     </div>
-
     <footer class="status">Core engine 2.1 • Operational</footer>
 </div>
 
-<!-- MODAL SYSTEM -->
+<!-- STEP MODAL -->
 <div id="setup">
-    <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-        <h1 id="m-title" style="font-size: 34px; letter-spacing: -1.2px; margin: 0;">Module</h1>
+    <div class="setup-header">
+        <div class="progress-steps" id="progress-dots"></div>
+        <div class="step-title" id="step-title">Module Name</div>
+        <div class="step-desc" id="step-desc">Description of the current step.</div>
     </div>
 
-    <div class="section-label" id="txt-sec-general">General Info</div>
-    <div class="input-block">
-        <div class="input-item">
-            <div class="input-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-            </div>
-            <div class="input-content">
-                <span class="input-label" id="txt-form-name">Project Name</span>
-                <input type="text" id="p-name" placeholder="e.g. My Business">
+    <div class="steps-slider" id="steps-slider">
+        <!-- Step 1: General -->
+        <div class="step-page">
+            <div class="input-group">
+                <div class="input-field">
+                    <div class="field-icon">👤</div>
+                    <div class="field-content">
+                        <span class="field-label" id="txt-form-name">Project Name</span>
+                        <input type="text" id="p-name" placeholder="e.g. MTI Studio">
+                    </div>
+                </div>
+                <div class="input-field">
+                    <div class="field-icon">🔗</div>
+                    <div class="field-content">
+                        <span class="field-label" id="txt-form-link">Contact</span>
+                        <input type="text" id="p-link" placeholder="@username">
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="input-item">
-            <div class="input-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-            </div>
-            <div class="input-content">
-                <span class="input-label" id="txt-form-link">Contact Link</span>
-                <input type="text" id="p-link" placeholder="@username">
-            </div>
-        </div>
-    </div>
 
-    <!-- BEAUTY SPECIFIC -->
-    <div id="beauty-fields" style="display: none;">
-        <div class="section-label" id="txt-sec-beauty">Business Details</div>
-        <div class="input-block">
-            <div class="input-item">
-                <div class="input-icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                </div>
-                <div class="input-content">
-                    <span class="input-label" id="txt-form-addr">Location Address</span>
-                    <input type="text" id="p-addr" placeholder="Street, City...">
-                </div>
-            </div>
-            <div class="input-item">
-                <div class="input-icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                </div>
-                <div class="input-content">
-                    <span class="input-label" id="txt-form-hours">Working Hours</span>
-                    <input type="text" id="p-hours" placeholder="Mon-Sun, 09:00 - 21:00">
-                </div>
-            </div>
-            <div class="input-item" style="align-items: flex-start;">
-                <div class="input-icon" style="margin-top: 4px;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-                </div>
-                <div class="input-content">
-                    <span class="input-label" id="txt-form-price">Services & Prices</span>
-                    <textarea id="p-price" placeholder="Haircut - 50&#10;Manicure - 30..."></textarea>
-                </div>
-            </div>
+        <!-- Step 2: Contextual (Beauty or Crypto) -->
+        <div class="step-page" id="context-step-1">
+            <!-- Content injected by JS -->
         </div>
-    </div>
 
-    <!-- CRYPTO SPECIFIC -->
-    <div id="crypto-fields" style="display: none;">
-        <div class="section-label" id="txt-sec-crypto">Automation</div>
-        <div class="input-block">
-            <div class="input-item">
-                <div class="input-icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                </div>
-                <div class="input-content">
-                    <span class="input-label" id="txt-form-api">CryptoBot API Token</span>
-                    <input type="text" id="p-api" placeholder="Paste your token here">
-                </div>
-            </div>
+        <!-- Step 3: Contextual (Beauty Price or Payment) -->
+        <div class="step-page" id="context-step-2">
+            <!-- Content injected by JS -->
         </div>
-        <div class="field-hint">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-            <span id="txt-hint-api">Token is used only for processing payments securely.</span>
-        </div>
-    </div>
 
-    <!-- PAYMENT -->
-    <div class="section-label" id="txt-sec-payment">Billing Method</div>
-    <div class="input-block">
-        <div class="input-item">
-            <div class="input-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+        <!-- Step 4: Payment (Final) -->
+        <div class="step-page" id="final-step">
+            <div class="input-group">
+                <div class="input-field">
+                    <div class="field-icon">💳</div>
+                    <div class="field-content">
+                        <span class="field-label" id="txt-form-method">Billing Method</span>
+                        <select id="p-method">
+                            <option value="cryptobot">CryptoBot (USDT, TON)</option>
+                            <option value="yookassa">YooKassa (Card, MIR)</option>
+                        </select>
+                    </div>
+                </div>
             </div>
-            <div class="input-content">
-                <span class="input-label" id="txt-form-method">Subscription Payment</span>
-                <select id="p-method">
-                    <option value="cryptobot">CryptoBot (USDT, TON, BTC)</option>
-                    <option value="yookassa">YooKassa (Visa, Master, MIR)</option>
-                </select>
+            <div class="trust-badge">
+                <span>🛡️</span>
+                <span id="txt-hint-pay">Secure checkout via official providers.</span>
             </div>
-            <div class="chevron">↕</div>
         </div>
     </div>
-    <div class="field-hint">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-        <span id="txt-hint-pay">Secure checkout via official providers.</span>
-    </div>
-
-    <div id="txt-func-label" class="section-label">Included Features</div>
-    <div id="feat-list" class="list-section"></div>
-    <div style="height: 120px;"></div>
 </div>
 
 <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
     tg.headerColor = '#000000';
+    
     let currentLang = 'ru';
+    let currentStep = 0;
+    let totalSteps = 3;
+    let activeModule = '';
 
     function toggleLang(lang) {
         currentLang = lang;
-        const body = document.body;
-        const btnRu = document.getElementById('btn-ru');
-        const btnEn = document.getElementById('btn-en');
-        if (lang === 'en') {
-            body.classList.add('lang-en');
-            btnEn.classList.add('active'); btnRu.classList.remove('active');
-            updateTexts('en');
-        } else {
-            body.classList.remove('lang-en');
-            btnRu.classList.add('active'); btnEn.classList.remove('active');
-            updateTexts('ru');
-        }
+        document.body.classList.toggle('lang-en', lang === 'en');
+        document.getElementById('btn-ru').classList.toggle('active', lang === 'ru');
+        document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+        updateTexts(lang);
         tg.HapticFeedback.selectionChanged();
     }
 
     function updateTexts(lang) {
-        const translations = {
+        const t = {
             ru: {
                 tagline: "Бизнес-инжиниринг нового поколения",
-                beautySub: "Экосистема услуг и управление удержанием",
-                cryptoSub: "Инфраструктура узлов Web3 и автоплатежи",
+                beautySub: "Экосистема услуг и удержание",
+                cryptoSub: "Web3 узлы и автоплатежи",
                 aiTitle: "AI и Кастомные решения",
-                aiSub: "Индивидуальная разработка архитектуры",
+                aiSub: "Индивидуальная архитектура",
                 updates: "Обновления",
                 cases: "Архив кейсов",
                 formName: "Название проекта",
-                formLink: "Контактная ссылка",
-                funcLabel: "Включенный функционал",
-                secGeneral: "Общая информация",
-                secBeauty: "Детали бизнеса",
-                secCrypto: "Автоматизация",
-                secPayment: "Метод оплаты",
-                formAddr: "Адрес локации",
-                formHours: "Режим работы",
-                formPrice: "Услуги и цены",
-                formApi: "Токен CryptoBot API",
-                formMethod: "Оплата подписки",
-                hintApi: "Токен используется только для безопасной обработки платежей.",
-                hintPay: "Безопасная оплата через официальных провайдеров."
+                formLink: "Контакт",
+                formMethod: "Способ оплаты",
+                hintPay: "Безопасная оплата через провайдеров.",
+                next: "Далее",
+                confirm: "Подтвердить",
+                step1Title: "Основы",
+                step1Desc: "Как будет называться ваш проект?",
+                stepBeautyTitle: "Локация",
+                stepBeautyDesc: "Где вы находитесь и как работаете?",
+                stepPriceTitle: "Услуги",
+                stepPriceDesc: "Ваш прайс-лист для клиентов.",
+                stepCryptoTitle: "Кошелек",
+                stepCryptoDesc: "Подключите CryptoBot для приема оплат.",
+                stepPayTitle: "Завершение",
+                stepPayDesc: "Выберите способ оплаты подписки."
             },
             en: {
                 tagline: "Next-Gen Business Engineering",
-                beautySub: "Service ecosystem & retention management",
-                cryptoSub: "Web3 node infra & automated payments",
+                beautySub: "Service ecosystem & retention",
+                cryptoSub: "Web3 node & payments",
                 aiTitle: "AI & Custom Solution",
-                aiSub: "Individual architectural development",
+                aiSub: "Individual architecture",
                 updates: "Updates",
                 cases: "Case Archive",
                 formName: "Project Name",
-                formLink: "Contact Link",
-                funcLabel: "Included Features",
-                secGeneral: "General Info",
-                secBeauty: "Business Details",
-                secCrypto: "Automation",
-                secPayment: "Billing Method",
-                formAddr: "Location Address",
-                formHours: "Working Hours",
-                formPrice: "Services & Prices",
-                formApi: "CryptoBot API Token",
-                formMethod: "Subscription Payment",
-                hintApi: "Token is used only for processing payments securely.",
-                hintPay: "Secure checkout via official providers."
+                formLink: "Contact",
+                formMethod: "Billing Method",
+                hintPay: "Secure checkout via providers.",
+                next: "Next",
+                confirm: "Confirm",
+                step1Title: "Basics",
+                step1Desc: "What is your project called?",
+                stepBeautyTitle: "Location",
+                stepBeautyDesc: "Where are you located?",
+                stepPriceTitle: "Services",
+                stepPriceDesc: "Your price list for clients.",
+                stepCryptoTitle: "Wallet",
+                stepCryptoDesc: "Connect CryptoBot to accept payments.",
+                stepPayTitle: "Finalize",
+                stepPayDesc: "Choose subscription billing method."
             }
-        };
+        }[lang];
 
-        const t = translations[lang];
         for (let key in t) {
             const el = document.getElementById('txt-' + key.replace(/([A-Z])/g, "-$1").toLowerCase());
             if (el) el.innerText = t[key];
         }
     }
 
-    const data = {
-        'Beauty': ['Booking Core', 'Client CRM', 'Wallet Passes', 'AI Scheduling'],
-        'Crypto': ['L2 Transactions', 'Asset Monitoring', 'Smart Contracts', 'Custody Solutions'],
-        'AI': ['Neural Assistant', 'Custom LLM RAG', 'Automated Workflows', 'Visual Processing']
-    };
-
     function openMod(id) {
-        document.getElementById('m-title').innerText = id;
-        const list = document.getElementById('feat-list');
-        list.innerHTML = '';
-        data[id].forEach(f => {
-            list.innerHTML += `<div class="list-row"><span style="font-size:16px;">${f}</span><span style="color:var(--accent); font-weight:bold;">✓</span></div>`;
-        });
-
-        document.getElementById('beauty-fields').style.display = (id === 'Beauty') ? 'block' : 'none';
-        document.getElementById('crypto-fields').style.display = (id === 'Crypto') ? 'block' : 'none';
+        activeModule = id;
+        currentStep = 0;
         
+        // Define steps based on module
+        if (id === 'Beauty') totalSteps = 4;
+        else if (id === 'Crypto') totalSteps = 3;
+        else totalSteps = 2;
+
+        renderProgress();
+        setupStepContent();
+        updateStepUI();
+
         document.getElementById('setup').classList.add('active');
-        tg.MainButton.text = (currentLang === 'ru' ? "Подтвердить и продолжить" : "Confirm & Continue");
-        tg.MainButton.show();
         tg.BackButton.show();
+        tg.MainButton.show();
         tg.HapticFeedback.impactOccurred('medium');
     }
 
-    tg.BackButton.onClick(() => {
-        document.getElementById('setup').classList.remove('active');
-        tg.MainButton.hide();
-        tg.BackButton.hide();
-    });
+    function renderProgress() {
+        const container = document.getElementById('progress-dots');
+        container.innerHTML = '';
+        for (let i = 0; i < totalSteps; i++) {
+            const dot = document.createElement('div');
+            dot.className = `dot ${i === 0 ? 'active' : ''}`;
+            container.appendChild(dot);
+        }
+    }
 
-    tg.MainButton.onClick(() => {
-        const pName = document.getElementById('p-name').value;
-        const moduleId = document.getElementById('m-title').innerText;
-        if(!pName) return tg.showAlert(currentLang === 'ru' ? "Пожалуйста, укажите название проекта" : "Please enter project name");
+    function setupStepContent() {
+        const step2 = document.getElementById('context-step-1');
+        const step3 = document.getElementById('context-step-2');
+        
+        if (activeModule === 'Beauty') {
+            step2.innerHTML = `
+                <div class="input-group">
+                    <div class="input-field"><div class="field-icon">📍</div><div class="field-content"><span class="field-label">Address</span><input type="text" id="p-addr" placeholder="Street, City"></div></div>
+                    <div class="input-field"><div class="field-icon">🕒</div><div class="field-content"><span class="field-label">Hours</span><input type="text" id="p-hours" placeholder="09:00 - 21:00"></div></div>
+                </div>`;
+            step3.innerHTML = `
+                <div class="input-group">
+                    <div class="input-field" style="align-items:flex-start"><div class="field-icon">💰</div><div class="field-content"><span class="field-label">Price List</span><textarea id="p-price" placeholder="Service - Price..."></textarea></div></div>
+                </div>`;
+        } else if (activeModule === 'Crypto') {
+            step2.innerHTML = `
+                <div class="input-group">
+                    <div class="input-field"><div class="field-icon">🔑</div><div class="field-content"><span class="field-label">CryptoBot API</span><input type="text" id="p-api" placeholder="Paste API Token"></div></div>
+                </div>
+                <div class="trust-badge" style="color:#007AFF; background:rgba(0,122,255,0.1)"><span>ℹ️</span><span>Token is used for automated payouts.</span></div>`;
+            step3.style.display = 'none';
+        } else {
+            step2.style.display = 'none';
+            step3.style.display = 'none';
+        }
+    }
 
-        if(moduleId === 'Crypto' && !document.getElementById('p-api').value) {
-            return tg.showAlert(currentLang === 'ru' ? "Необходим API токен для работы модуля" : "API Token is required for this module");
+    function updateStepUI() {
+        const slider = document.getElementById('steps-slider');
+        slider.style.transform = `translateX(-${currentStep * 100}%)`;
+        
+        const dots = document.querySelectorAll('.dot');
+        dots.forEach((d, i) => d.classList.toggle('active', i === currentStep));
+
+        // Update Title & Desc
+        const title = document.getElementById('step-title');
+        const desc = document.getElementById('step-desc');
+        const t = (currentLang === 'ru');
+
+        if (currentStep === 0) {
+            title.innerText = t ? "Основы" : "Basics";
+            desc.innerText = t ? "Как будет называться ваш проект?" : "What is your project called?";
+        } else if (currentStep === totalSteps - 1) {
+            title.innerText = t ? "Оплата" : "Billing";
+            desc.innerText = t ? "Выберите способ оплаты подписки." : "Choose subscription method.";
+            tg.MainButton.text = t ? "Подтвердить" : "Confirm";
+        } else {
+            if (activeModule === 'Beauty') {
+                if (currentStep === 1) {
+                    title.innerText = t ? "Локация" : "Location";
+                    desc.innerText = t ? "Где находится ваш салон?" : "Where is your salon located?";
+                } else {
+                    title.innerText = t ? "Услуги" : "Services";
+                    desc.innerText = t ? "Введите ваш прайс-лист." : "Enter your price list.";
+                }
+            } else {
+                title.innerText = t ? "Кошелек" : "Wallet";
+                desc.innerText = t ? "Подключите API для платежей." : "Connect API for payments.";
+            }
+            tg.MainButton.text = t ? "Далее" : "Next";
         }
 
-        const payload = {
-            mod: moduleId,
-            name: pName,
-            link: document.getElementById('p-link').value,
-            method: document.getElementById('p-method').value,
-            details: moduleId === 'Beauty' ? {
-                addr: document.getElementById('p-addr').value,
-                hours: document.getElementById('p-hours').value,
-                prices: document.getElementById('p-price').value
-            } : (moduleId === 'Crypto' ? { api: document.getElementById('p-api').value } : {})
-        };
+        if (currentStep < totalSteps - 1) tg.MainButton.text = t ? "Далее" : "Next";
+    }
 
-        tg.HapticFeedback.notificationOccurred('success');
-        tg.sendData(JSON.stringify(payload));
-        tg.close();
+    tg.MainButton.onClick(() => {
+        if (currentStep < totalSteps - 1) {
+            // Validation
+            if (currentStep === 0 && !document.getElementById('p-name').value) {
+                return tg.showAlert(currentLang === 'ru' ? "Введите название" : "Enter name");
+            }
+            currentStep++;
+            updateStepUI();
+            tg.HapticFeedback.selectionChanged();
+        } else {
+            // Final Submit
+            const data = {
+                mod: activeModule,
+                name: document.getElementById('p-name').value,
+                link: document.getElementById('p-link').value,
+                method: document.getElementById('p-method').value
+            };
+            if (activeModule === 'Beauty') {
+                data.addr = document.getElementById('p-addr').value;
+                data.hours = document.getElementById('p-hours').value;
+                data.prices = document.getElementById('p-price').value;
+            }
+            if (activeModule === 'Crypto') data.api = document.getElementById('p-api').value;
+
+            tg.HapticFeedback.notificationOccurred('success');
+            tg.sendData(JSON.stringify(data));
+            tg.close();
+        }
+    });
+
+    tg.BackButton.onClick(() => {
+        if (currentStep > 0) {
+            currentStep--;
+            updateStepUI();
+        } else {
+            document.getElementById('setup').classList.remove('active');
+            tg.MainButton.hide();
+            tg.BackButton.hide();
+        }
     });
 
     updateTexts('ru');
