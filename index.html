@@ -13,7 +13,6 @@
             --text: #FFFFFF;
             --text-gray: #8E8E93;
             --border: rgba(255, 255, 255, 0.1);
-            --ios-blue: #007AFF;
         }
 
         * { 
@@ -37,10 +36,10 @@
             margin: 0 auto;
         }
 
-        /* HEADER & GRID (Сохранено из оригинала) */
-        header { margin-bottom: 32px; }
+        /* HEADER */
+        header { margin-bottom: 24px; }
         .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .logo { height: 38px; }
+        .logo { height: 34px; }
 
         .lang-selector {
             position: relative; background: rgba(255, 255, 255, 0.08);
@@ -61,63 +60,68 @@
         }
         body.lang-en .lang-glider { transform: translateX(40px); }
 
-        .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+        /* GRID */
+        .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
         .tall-card {
-            background: var(--card); border-radius: 28px; height: 260px; padding: 24px;
+            background: var(--card); border-radius: 24px; height: 220px; padding: 20px;
             display: flex; flex-direction: column; justify-content: space-between;
             border: 0.5px solid var(--border); transition: all 0.2s ease;
             overflow: hidden; position: relative;
         }
-        .symbol { position: absolute; top: -20px; right: -30px; width: 180px; height: 180px; opacity: 0.15; pointer-events: none; transform: rotate(15deg); }
-        .card-label { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
-        .card-sub { font-size: 13px; color: var(--text-gray); line-height: 1.3; margin-top: 6px; }
+        .symbol { position: absolute; top: -10px; right: -20px; width: 140px; height: 140px; opacity: 0.1; pointer-events: none; transform: rotate(15deg); }
+        .card-label { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+        .card-sub { font-size: 12px; color: var(--text-gray); line-height: 1.3; margin-top: 4px; }
 
         .wide-card {
-            background: var(--card); border-radius: 24px; padding: 24px;
-            border: 0.5px solid var(--border); margin-bottom: 24px;
+            background: var(--card); border-radius: 20px; padding: 20px;
+            border: 0.5px solid var(--border); margin-bottom: 20px;
             display: flex; align-items: center; justify-content: space-between;
         }
         .ai-indicator {
-            width: 40px; height: 40px; border-radius: 50%;
+            width: 36px; height: 36px; border-radius: 50%;
             background: conic-gradient(from 180deg at 50% 50%, #007AFF 0deg, #5856D6 120deg, #AF52DE 240deg, #007AFF 360deg);
-            filter: blur(8px); opacity: 0.5; position: absolute;
+            filter: blur(6px); opacity: 0.5; position: absolute;
         }
 
         /* --- PRESENTATION MODAL --- */
         .modal {
             position: fixed; inset: 0; background: var(--bg); z-index: 1000;
-            transform: translateY(100%); transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.15, 0.4, 0.05, 1);
             overflow-y: auto; display: flex; flex-direction: column;
-            padding-bottom: 100px;
         }
         .modal.active { transform: translateY(0); }
 
-        .pres-container { padding: 0 20px; }
+        /* Pull bar like iOS */
+        .modal-handle {
+            width: 36px; height: 5px; background: rgba(255,255,255,0.2);
+            border-radius: 3px; margin: 12px auto; flex-shrink: 0;
+        }
+
+        .pres-container { padding: 0 24px 120px; }
         
-        /* Секция презентации */
-        .pres-block { margin-top: 60px; }
-        .pres-header-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; }
-        .pres-title { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }
-        .pres-detail { font-size: 14px; color: var(--text-gray); font-weight: 400; }
+        .hero-title { font-size: 38px; font-weight: 800; letter-spacing: -1.5px; margin: 20px 0 8px; line-height: 1.1; }
+        .hero-sub { font-size: 16px; color: var(--text-gray); margin-bottom: 32px; line-height: 1.4; }
+
+        .pres-block { margin-top: 32px; }
+        .pres-header-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: 12px; }
+        .pres-title { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+        .pres-detail { font-size: 13px; color: var(--text-gray); font-weight: 400; text-transform: uppercase; letter-spacing: 0.5px; }
         
         .pres-image-box {
-            width: 100%; border-radius: 20px; overflow: hidden;
+            width: 100%; border-radius: 16px; overflow: hidden;
             background: #1c1c1e; border: 0.5px solid var(--border);
-            aspect-ratio: 16/10; display: flex; align-items: center; justify-content: center;
-            color: #3a3a3c; font-size: 12px; text-transform: uppercase; letter-spacing: 2px;
-            margin-bottom: 20px;
+            aspect-ratio: 4/5; /* ВЕРТИКАЛЬНОЕ ФОТО */
+            display: flex; align-items: center; justify-content: center;
+            color: #3a3a3c; font-size: 11px; text-transform: uppercase; letter-spacing: 2px;
+            margin-bottom: 16px;
         }
         .pres-image-box img { width: 100%; height: 100%; object-fit: cover; }
 
-        .pres-text { font-size: 16px; color: var(--text-gray); line-height: 1.5; margin-bottom: 40px; }
+        .pres-text { font-size: 15px; color: var(--text-gray); line-height: 1.5; margin-bottom: 24px; }
 
-        /* Специальный заголовок первого экрана */
-        .hero-title { font-size: 48px; font-weight: 800; letter-spacing: -2px; margin: 40px 0 10px; line-height: 1; }
-        .hero-sub { font-size: 18px; color: var(--text-gray); margin-bottom: 40px; }
-
-        .list-section { background: var(--card); border-radius: 16px; border: 0.5px solid var(--border); overflow: hidden; margin-bottom: 40px; }
-        .list-row { padding: 16px; display: flex; align-items: center; justify-content: space-between; text-decoration: none; color: inherit; }
-        .status { text-align: center; font-size: 11px; color: #48484A; text-transform: uppercase; letter-spacing: 1px; }
+        .list-section { background: var(--card); border-radius: 16px; border: 0.5px solid var(--border); overflow: hidden; margin-bottom: 32px; }
+        .list-row { padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; text-decoration: none; color: inherit; font-size: 15px; }
+        .status { text-align: center; font-size: 10px; color: #48484A; text-transform: uppercase; letter-spacing: 1px; padding-bottom: 20px; }
 
     </style>
 </head>
@@ -133,7 +137,7 @@
                 <div class="lang-option" onclick="toggleLang('en')">EN</div>
             </div>
         </div>
-        <div class="tagline" id="txt-tagline">Next-Gen Business Engineering</div>
+        <div class="tagline" id="txt-tagline" style="font-size: 13px; color: var(--text-gray);">Next-Gen Business Engineering</div>
     </header>
 
     <main class="main-grid">
@@ -154,15 +158,15 @@
     </main>
 
     <div class="wide-card" onclick="showDetails('AI')">
-        <div style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+        <div style="position: relative; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
             <div class="ai-indicator"></div>
-            <div style="width: 12px; height: 12px; background: white; border-radius: 50%; z-index: 1;"></div>
+            <div style="width: 10px; height: 10px; background: white; border-radius: 50%; z-index: 1;"></div>
         </div>
-        <div style="flex: 1; margin: 0 16px;">
-            <div class="card-label" style="font-size: 18px; margin: 0;" id="txt-ai-title">AI & Custom Solution</div>
-            <div class="card-sub" id="txt-ai-sub">Individual architectural development</div>
+        <div style="flex: 1; margin: 0 14px;">
+            <div class="card-label" style="font-size: 17px; margin: 0;" id="txt-ai-title">AI & Custom Solution</div>
+            <div class="card-sub" id="txt-ai-sub" style="margin:0">Individual architectural development</div>
         </div>
-        <div class="chevron" style="color: #48484A">›</div>
+        <div class="chevron" style="color: #48484A; font-size: 20px;">›</div>
     </div>
 
     <div class="list-section">
@@ -174,6 +178,7 @@
 
 <!-- MODAL: PRESENTATION -->
 <div id="product-modal" class="modal">
+    <div class="modal-handle"></div>
     <div class="pres-container" id="modal-content">
         <!-- Content injected by JS -->
     </div>
@@ -191,56 +196,56 @@
         Beauty: {
             ru: {
                 hero: "Beauty",
-                sub: "Экосистема для бизнеса в сфере услуг",
+                sub: "Экосистема для бизнеса в сфере услуг. Автоматизация, которая приносит прибыль.",
                 blocks: [
-                    { title: "Запись", detail: "24/7", text: "Интеллектуальная система бронирования, которая работает внутри Telegram.", img: "PHOTO_PLACEHOLDER" },
-                    { title: "Retention", detail: "Smart", text: "Бот сам напомнит клиенту о визите или предложит записаться снова через месяц.", img: "PHOTO_PLACEHOLDER" },
-                    { title: "Аналитика", detail: "Real-time", text: "Все показатели вашего салона в одном удобном дашборде.", img: "PHOTO_PLACEHOLDER" }
+                    { title: "Запись", detail: "24/7", text: "Интеллектуальная система бронирования, работающая прямо внутри Telegram. Без лишних приложений.", img: "PHOTO_PLACEHOLDER" },
+                    { title: "Retention", detail: "Smart AI", text: "Бот анализирует поведение клиентов и сам напоминает о визите в нужный момент.", img: "PHOTO_PLACEHOLDER" },
+                    { title: "Дашборд", detail: "Control", text: "Полная аналитика выручки, мастеров и возвращаемости в вашем кармане.", img: "PHOTO_PLACEHOLDER" }
                 ]
             },
             en: {
                 hero: "Beauty",
-                sub: "Business ecosystem for service industry",
+                sub: "Business ecosystem for service industry. Automation that drives profit.",
                 blocks: [
-                    { title: "Booking", detail: "24/7", text: "Intelligent booking system operating right inside Telegram.", img: "PHOTO_PLACEHOLDER" },
-                    { title: "Retention", detail: "Smart", text: "The bot reminds clients about visits or suggests re-booking automatically.", img: "PHOTO_PLACEHOLDER" },
-                    { title: "Analytics", detail: "Real-time", text: "All your salon metrics in one clean dashboard.", img: "PHOTO_PLACEHOLDER" }
+                    { title: "Booking", detail: "24/7", text: "Intelligent booking system operating inside Telegram. No extra apps needed.", img: "PHOTO_PLACEHOLDER" },
+                    { title: "Retention", detail: "Smart AI", text: "The bot analyzes client behavior and sends reminders at the perfect time.", img: "PHOTO_PLACEHOLDER" },
+                    { title: "Dashboard", detail: "Control", text: "Full analytics of revenue, staff, and retention right in your pocket.", img: "PHOTO_PLACEHOLDER" }
                 ]
             }
         },
         Crypto: {
             ru: {
                 hero: "Crypto",
-                sub: "Инфраструктура платежей нового поколения",
+                sub: "Инфраструктура платежей и узлов для Web3 проектов любого масштаба.",
                 blocks: [
-                    { title: "Узлы", detail: "Web3", text: "Собственные ноды для максимально быстрых транзакций без посредников.", img: "PHOTO_PLACEHOLDER" },
-                    { title: "Авто-выплаты", detail: "Instant", text: "Распределяйте прибыль между партнерами автоматически.", img: "PHOTO_PLACEHOLDER" }
+                    { title: "Узлы", detail: "Private", text: "Собственные ноды обеспечивают безопасность и скорость транзакций.", img: "PHOTO_PLACEHOLDER" },
+                    { title: "Выплаты", detail: "Auto", text: "Автоматическое распределение входящих платежей между кошельками.", img: "PHOTO_PLACEHOLDER" }
                 ]
             },
             en: {
                 hero: "Crypto",
-                sub: "Next-gen payment infrastructure",
+                sub: "Payment and node infrastructure for Web3 projects of any scale.",
                 blocks: [
-                    { title: "Nodes", detail: "Web3", text: "Private nodes for lightning-fast transactions without intermediaries.", img: "PHOTO_PLACEHOLDER" },
-                    { title: "Auto-payouts", detail: "Instant", text: "Distribute profits among partners automatically.", img: "PHOTO_PLACEHOLDER" }
+                    { title: "Nodes", detail: "Private", text: "Private nodes ensure security and maximum transaction speed.", img: "PHOTO_PLACEHOLDER" },
+                    { title: "Payouts", detail: "Auto", text: "Automatic distribution of incoming payments between multiple wallets.", img: "PHOTO_PLACEHOLDER" }
                 ]
             }
         },
         AI: {
             ru: {
                 hero: "AI Custom",
-                sub: "Индивидуальный бизнес-инжиниринг",
+                sub: "Индивидуальный инжиниринг нейросетевых решений под ваш запрос.",
                 blocks: [
-                    { title: "LLM", detail: "Custom", text: "Обучаем нейросети на данных вашей компании для решения специфических задач.", img: "PHOTO_PLACEHOLDER" },
-                    { title: "Ассистенты", detail: "Voice/Text", text: "ИИ, который знает ваш продукт лучше, чем любой менеджер.", img: "PHOTO_PLACEHOLDER" }
+                    { title: "LLM", detail: "Tuning", text: "Обучаем модели на базе ваших документов для идеальных ответов.", img: "PHOTO_PLACEHOLDER" },
+                    { title: "Voice", detail: "Next-Gen", text: "Голосовые ассистенты, которые звучат как живой человек.", img: "PHOTO_PLACEHOLDER" }
                 ]
             },
             en: {
                 hero: "AI Custom",
-                sub: "Individual business engineering",
+                sub: "Individual engineering of neural network solutions for your needs.",
                 blocks: [
-                    { title: "LLM", detail: "Custom", text: "We train neural networks on your data to solve specific business tasks.", img: "PHOTO_PLACEHOLDER" },
-                    { title: "Assistants", detail: "Voice/Text", text: "AI that knows your product better than any manager.", img: "PHOTO_PLACEHOLDER" }
+                    { title: "LLM", detail: "Tuning", text: "We train models based on your documents for perfect responses.", img: "PHOTO_PLACEHOLDER" },
+                    { title: "Voice", detail: "Next-Gen", text: "Voice assistants that sound indistinguishable from a real person.", img: "PHOTO_PLACEHOLDER" }
                 ]
             }
         }
@@ -264,7 +269,7 @@
                         <div class="pres-detail">${block.detail}</div>
                     </div>
                     <div class="pres-image-box">
-                        ${block.img === 'PHOTO_PLACEHOLDER' ? 'Product Image' : `<img src="${block.img}">`}
+                        ${block.img === 'PHOTO_PLACEHOLDER' ? 'Product View' : `<img src="${block.img}">`}
                     </div>
                     <p class="pres-text">${block.text}</p>
                 </div>
