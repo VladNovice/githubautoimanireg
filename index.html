@@ -1,183 +1,194 @@
-<style>
-    /* ОБНОВЛЕННЫЕ СТИЛИ ДЛЯ SETUP */
-    :root {
-        --bg: #000000;
-        --card: #1C1C1E;
-        --secondary-card: #2C2C2E;
-        --accent: #007AFF;
-        --text: #FFFFFF;
-        --text-gray: #8E8E93;
-        --border: rgba(255, 255, 255, 0.1);
-        --glass: rgba(255, 255, 255, 0.05);
-        --ios-blue: #007AFF;
-    }
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>MTI | Next-Gen</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg: #000000;
+            --card: #1C1C1E;
+            --secondary-card: #2C2C2E;
+            --accent: #007AFF;
+            --text: #FFFFFF;
+            --text-gray: #8E8E93;
+            --border: rgba(255, 255, 255, 0.1);
+            --glass: rgba(255, 255, 255, 0.05);
+            --ios-blue: #007AFF;
+        }
 
-    #setup {
-        position: fixed;
-        inset: 0;
-        background: var(--bg);
-        z-index: 1000;
-        padding-top: calc(env(safe-area-inset-top) + 10px);
-        transform: translateY(100%);
-        transition: transform 0.5s cubic-bezier(0.15, 0.4, 0.05, 1);
-        display: flex;
-        flex-direction: column;
-    }
+        * { 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", sans-serif;
+        }
 
-    #setup.active { transform: translateY(0); }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden;
+        }
 
-    .setup-header {
-        padding: 0 20px;
-        margin-bottom: 20px;
-    }
+        .container {
+            padding: calc(env(safe-area-inset-top) + 20px) 16px 40px;
+            max-width: 440px;
+            margin: 0 auto;
+        }
 
-    /* iOS Style Progress Bar */
-    .progress-steps {
-        display: flex;
-        gap: 4px;
-        margin-bottom: 24px;
-    }
-    .dot {
-        height: 3px;
-        flex: 1;
-        background: #3A3A3C;
-        border-radius: 2px;
-        transition: background 0.4s ease;
-    }
-    .dot.active { background: var(--text-gray); }
-    .dot.completed { background: var(--ios-blue); }
+        /* HEADER & LANG */
+        header { margin-bottom: 32px; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .logo { height: 38px; }
 
-    .step-title {
-        font-size: 32px;
-        font-weight: 700;
-        letter-spacing: -1px;
-        margin-bottom: 8px;
-        color: #fff;
-    }
+        .lang-selector {
+            position: relative; background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border-radius: 10px; padding: 2px; display: flex; width: 84px; height: 32px;
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+        }
+        .lang-option {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 600; color: var(--text-gray);
+            position: relative; z-index: 2; transition: color 0.3s ease; cursor: pointer;
+        }
+        .lang-option.active { color: #fff; }
+        .lang-glider {
+            position: absolute; top: 2px; left: 2px; width: 40px; height: 28px;
+            background: rgba(255, 255, 255, 0.15); border-radius: 8px;
+            z-index: 1; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        body.lang-en .lang-glider { transform: translateX(40px); }
 
-    .step-desc {
-        font-size: 16px;
-        color: var(--text-gray);
-        line-height: 1.4;
-        margin-bottom: 10px;
-    }
+        /* GRID */
+        .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+        .tall-card {
+            background: var(--card); border-radius: 28px; height: 260px; padding: 24px;
+            display: flex; flex-direction: column; justify-content: space-between;
+            border: 0.5px solid var(--border); transition: all 0.2s ease;
+            overflow: hidden; position: relative;
+        }
+        .tall-card:active { transform: scale(0.97); }
+        .symbol { position: absolute; top: -20px; right: -30px; width: 180px; height: 180px; opacity: 0.15; pointer-events: none; transform: rotate(15deg); }
+        .card-label { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 6px; }
+        .card-sub { font-size: 13px; color: var(--text-gray); line-height: 1.3; }
 
-    /* iOS Inset Grouped List Style */
-    .ios-group {
-        background: var(--card);
-        border-radius: 12px;
-        margin: 0 16px 24px;
-        overflow: hidden;
-    }
+        .wide-card {
+            background: var(--card); border-radius: 24px; padding: 24px;
+            border: 0.5px solid var(--border); margin-bottom: 24px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .ai-indicator {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: conic-gradient(from 180deg at 50% 50%, #007AFF 0deg, #5856D6 120deg, #AF52DE 240deg, #007AFF 360deg);
+            filter: blur(8px); opacity: 0.5; position: absolute;
+        }
 
-    .ios-item {
-        display: flex;
-        align-items: center;
-        padding: 12px 16px;
-        min-height: 48px;
-        position: relative;
-    }
+        .list-section { background: var(--card); border-radius: 16px; border: 0.5px solid var(--border); overflow: hidden; margin-bottom: 40px; }
+        .list-row { padding: 16px; display: flex; align-items: center; justify-content: space-between; text-decoration: none; color: inherit; }
+        .list-row:not(:last-child) { border-bottom: 0.5px solid var(--border); }
 
-    .ios-item:not(:last-child)::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        left: 56px;
-        height: 0.5px;
-        background: var(--border);
-    }
+        /* --- SETUP MODAL (APPLE STYLE) --- */
+        #setup {
+            position: fixed; inset: 0; background: var(--bg); z-index: 1000;
+            padding-top: calc(env(safe-area-inset-top) + 10px);
+            transform: translateY(100%); transition: transform 0.5s cubic-bezier(0.15, 0.4, 0.05, 1);
+            display: flex; flex-direction: column;
+        }
+        #setup.active { transform: translateY(0); }
 
-    .ios-icon {
-        width: 28px;
-        height: 28px;
-        border-radius: 6px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-right: 12px;
-        font-size: 16px;
-    }
+        .setup-header { padding: 0 20px; margin-bottom: 20px; }
 
-    .ios-content {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-    }
+        .progress-steps { display: flex; gap: 4px; margin-bottom: 24px; }
+        .dot { height: 3px; flex: 1; background: #3A3A3C; border-radius: 2px; transition: background 0.4s ease; }
+        .dot.active { background: var(--text-gray); }
+        .dot.completed { background: var(--ios-blue); }
 
-    .ios-label {
-        font-size: 13px;
-        color: var(--text-gray);
-        margin-bottom: 2px;
-    }
+        .step-title { font-size: 32px; font-weight: 700; letter-spacing: -1px; margin-bottom: 8px; color: #fff; }
+        .step-desc { font-size: 16px; color: var(--text-gray); line-height: 1.4; margin-bottom: 10px; }
 
-    .ios-input {
-        background: none;
-        border: none;
-        color: #fff;
-        font-size: 17px;
-        padding: 0;
-        width: 100%;
-        outline: none;
-    }
+        .ios-group { background: var(--card); border-radius: 12px; margin: 0 16px 24px; overflow: hidden; }
+        .ios-item { display: flex; align-items: center; padding: 12px 16px; min-height: 48px; position: relative; }
+        .ios-item:not(:last-child)::after { content: ''; position: absolute; bottom: 0; right: 0; left: 56px; height: 0.5px; background: var(--border); }
+        
+        .ios-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; margin-right: 12px; font-size: 16px; }
+        .ios-content { flex: 1; display: flex; flex-direction: column; }
+        .ios-label { font-size: 13px; color: var(--text-gray); margin-bottom: 2px; }
+        
+        .ios-input { background: none; border: none; color: #fff; font-size: 17px; padding: 0; width: 100%; outline: none; }
+        .ios-input::placeholder { color: #48484A; }
 
-    .ios-input::placeholder { color: #48484A; }
+        /* AI Magic Textarea */
+        .ai-textarea-container { position: relative; background: var(--card); border-radius: 14px; padding: 16px; margin: 0 16px; border: 1px solid transparent; transition: border-color 0.3s ease; }
+        .ai-textarea-container:focus-within { border-color: rgba(0, 122, 255, 0.4); }
+        .ai-badge { display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, rgba(0, 122, 255, 0.15), rgba(175, 82, 222, 0.15)); padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; color: #AF52DE; margin-bottom: 12px; }
+        .ai-hint { font-size: 13px; color: var(--text-gray); margin-top: 12px; line-height: 1.4; }
+        
+        textarea.ios-input { height: 140px; line-height: 1.5; resize: none; }
+        select.ios-input { appearance: none; }
 
-    /* AI Magic Textarea */
-    .ai-textarea-container {
-        position: relative;
-        background: var(--card);
-        border-radius: 14px;
-        padding: 16px;
-        margin: 0 16px;
-        border: 1px solid transparent;
-        transition: border-color 0.3s ease;
-    }
+        .steps-slider { display: flex; flex: 1; transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
+        .step-page { min-width: 100%; box-sizing: border-box; }
 
-    .ai-textarea-container:focus-within {
-        border-color: rgba(0, 122, 255, 0.4);
-    }
+        .status { text-align: center; font-size: 11px; color: #48484A; text-transform: uppercase; letter-spacing: 1px; }
 
-    .ai-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        background: linear-gradient(135deg, rgba(0, 122, 255, 0.15), rgba(175, 82, 222, 0.15));
-        padding: 6px 12px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 600;
-        color: #AF52DE;
-        margin-bottom: 12px;
-    }
+    </style>
+</head>
+<body>
 
-    .ai-hint {
-        font-size: 13px;
-        color: var(--text-gray);
-        margin-top: 12px;
-        line-height: 1.4;
-    }
+<div class="container">
+    <header>
+        <div class="header-top">
+            <img src="mti,.png" alt="MTI" class="logo">
+            <div class="lang-selector">
+                <div class="lang-glider"></div>
+                <div class="lang-option active" id="btn-ru" onclick="toggleLang('ru')">RU</div>
+                <div class="lang-option" id="btn-en" onclick="toggleLang('en')">EN</div>
+            </div>
+        </div>
+        <div class="tagline" id="txt-tagline">Next-Gen Business Engineering</div>
+    </header>
 
-    textarea.ios-input {
-        height: 140px;
-        line-height: 1.5;
-        resize: none;
-    }
+    <main class="main-grid">
+        <div class="tall-card" onclick="openMod('Beauty')">
+            <div class="symbol"><svg viewBox="0 0 24 24" fill="white"><path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z"/></svg></div>
+            <div class="card-content">
+                <div class="card-label">Beauty</div>
+                <div class="card-sub" id="txt-beauty-sub">Service ecosystem & retention management</div>
+            </div>
+        </div>
+        <div class="tall-card" onclick="openMod('Crypto')">
+            <div class="symbol"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M12 2L4 7V17L12 22L20 17V7L12 2Z"/><path d="M12 6V18M9 8H13.5C14.3284 8 15 8.67157 15 9.5C15 10.3284 14.3284 11 13.5 11H12M9 11H14.5C15.3284 11 16 11.6716 16 12.5C16 13.3284 15.3284 14 14.5 14H12"/></svg></div>
+            <div class="card-content">
+                <div class="card-label">Crypto</div>
+                <div class="card-sub" id="txt-crypto-sub">Web3 node infra & automated payments</div>
+            </div>
+        </div>
+    </main>
 
-    select.ios-input {
-        appearance: none;
-        background: url("data:image/svg+xml,%3Csvg width='10' height='16' viewBox='0 0 10 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3 Jacques%3Cpath d='M2 4L6 8L2 12' stroke='%2348484A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right center;
-    }
+    <div class="wide-card" onclick="openMod('AI')">
+        <div style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+            <div class="ai-indicator"></div>
+            <div style="width: 12px; height: 12px; background: white; border-radius: 50%; z-index: 1;"></div>
+        </div>
+        <div style="flex: 1; margin: 0 16px;">
+            <div class="card-label" style="font-size: 18px; margin: 0;" id="txt-ai-title">AI & Custom Solution</div>
+            <div class="card-sub" id="txt-ai-sub">Individual architectural development</div>
+        </div>
+        <div class="chevron">›</div>
+    </div>
 
-    /* Плавность слайдера */
-    .steps-slider {
-        display: flex;
-        flex: 1;
-        transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-    }
-</style>
+    <div class="list-section">
+        <a href="https://t.me/mti_news" class="list-row"><span id="txt-updates">Updates</span><span style="color:#48484A">›</span></a>
+        <a href="https://t.me/mti_cases" class="list-row"><span id="txt-cases">Case Archive</span><span style="color:#48484A">›</span></a>
+    </div>
+    <footer class="status">Core engine 2.1 • Operational</footer>
+</div>
 
-<!-- ОБНОВЛЕННЫЙ HTML МОДАЛКИ -->
+<!-- SETUP MODAL -->
 <div id="setup">
     <div class="setup-header">
         <div class="progress-steps" id="progress-dots"></div>
@@ -206,7 +217,7 @@
             </div>
         </div>
 
-        <!-- Шаг 2: Контекстный (Beauty или Crypto) -->
+        <!-- Шаг 2: Контекстный (Адрес или API) -->
         <div class="step-page" id="context-step-1"></div>
 
         <!-- Шаг 3: Прайс (Beauty) -->
@@ -234,7 +245,80 @@
 </div>
 
 <script>
-    // ОБНОВЛЕННАЯ ФУНКЦИЯ ГЕНЕРАЦИИ КОНТЕНТА ШАГОВ
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+    tg.headerColor = '#000000';
+    
+    let currentLang = 'ru';
+    let currentStep = 0;
+    let totalSteps = 4;
+    let activeModule = '';
+
+    function toggleLang(lang) {
+        currentLang = lang;
+        document.body.classList.toggle('lang-en', lang === 'en');
+        document.getElementById('btn-ru').classList.toggle('active', lang === 'ru');
+        document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+        updateTexts(lang);
+        tg.HapticFeedback.selectionChanged();
+    }
+
+    function updateTexts(lang) {
+        const t = {
+            ru: {
+                tagline: "Бизнес-инжиниринг нового поколения",
+                beautySub: "Экосистема услуг и удержание",
+                cryptoSub: "Web3 узлы и автоплатежи",
+                aiTitle: "AI и Кастомные решения",
+                aiSub: "Индивидуальная архитектура",
+                updates: "Обновления",
+                cases: "Архив кейсов"
+            },
+            en: {
+                tagline: "Next-Gen Business Engineering",
+                beautySub: "Service ecosystem & retention",
+                cryptoSub: "Web3 node & payments",
+                aiTitle: "AI & Custom Solution",
+                aiSub: "Individual architecture",
+                updates: "Updates",
+                cases: "Case Archive"
+            }
+        }[lang];
+
+        for (let key in t) {
+            const el = document.getElementById('txt-' + key.replace(/([A-Z])/g, "-$1").toLowerCase());
+            if (el) el.innerText = t[key];
+        }
+    }
+
+    function openMod(id) {
+        activeModule = id;
+        currentStep = 0;
+        
+        if (id === 'Beauty') totalSteps = 4;
+        else if (id === 'Crypto') totalSteps = 3;
+        else totalSteps = 2;
+
+        renderProgress();
+        setupStepContent();
+        updateStepUI();
+
+        document.getElementById('setup').classList.add('active');
+        tg.BackButton.show();
+        tg.MainButton.show();
+        tg.HapticFeedback.impactOccurred('medium');
+    }
+
+    function renderProgress() {
+        const container = document.getElementById('progress-dots');
+        container.innerHTML = '';
+        for (let i = 0; i < totalSteps; i++) {
+            const dot = document.createElement('div');
+            dot.className = `dot ${i === 0 ? 'active' : ''}`;
+            container.appendChild(dot);
+        }
+    }
+
     function setupStepContent() {
         const step2 = document.getElementById('context-step-1');
         const step3 = document.getElementById('context-step-2');
@@ -267,7 +351,7 @@
                     </div>
                     <textarea id="p-price" class="ios-input" placeholder="${isRu ? 'Стрижка — 1500\nМаникюр: 2000р...' : 'Haircut - 50\nNails - 40...'}"></textarea>
                     <div class="ai-hint">
-                        ${isRu ? '✨ <b>Пишите в любом формате</b> — наш ИИ сам распознает услуги и цены, структурирует их и добавит в базу.' : '✨ <b>Write in any format</b> — our AI will automatically recognize services and prices to structure your database.'}
+                        ${isRu ? '✨ <b>Пишите в любом формате</b> — наш ИИ сам распознает услуги и цены, структурирует их и добавит в базу.' : '✨ <b>Write in any format</b> — our AI will automatically recognize services and prices.'}
                     </div>
                 </div>`;
         } else if (activeModule === 'Crypto') {
@@ -280,15 +364,14 @@
                             <input type="text" id="p-api" class="ios-input" placeholder="123456:AAH...">
                         </div>
                     </div>
-                </div>
-                <p style="padding: 0 20px; font-size: 13px; color: #8E8E93;">
-                    ${isRu ? 'Токен необходим для автоматизации выплат и проверки транзакций.' : 'Token is required for automated payouts and transaction verification.'}
-                </p>`;
+                </div>`;
+            step3.innerHTML = '';
+        } else {
+            step2.innerHTML = '';
             step3.innerHTML = '';
         }
     }
 
-    // Добавь в updateStepUI обновление состояния точек (completed)
     function updateStepUI() {
         const slider = document.getElementById('steps-slider');
         slider.style.transform = `translateX(-${currentStep * 100}%)`;
@@ -303,13 +386,12 @@
         const desc = document.getElementById('step-desc');
         const isRu = (currentLang === 'ru');
 
-        // Логика заголовков
         if (currentStep === 0) {
             title.innerText = isRu ? "Основы" : "Basics";
             desc.innerText = isRu ? "Настроим базовую информацию" : "Let's set up basic info";
         } else if (currentStep === totalSteps - 1) {
             title.innerText = isRu ? "Оплата" : "Billing";
-            desc.innerText = isRu ? "Выберите тарифный план" : "Choose your plan";
+            desc.innerText = isRu ? "Выберите способ оплаты подписки" : "Choose billing method";
             tg.MainButton.text = isRu ? "Подтвердить" : "Confirm";
         } else {
             if (activeModule === 'Beauty') {
@@ -327,4 +409,47 @@
             tg.MainButton.text = isRu ? "Далее" : "Next";
         }
     }
+
+    tg.MainButton.onClick(() => {
+        if (currentStep < totalSteps - 1) {
+            if (currentStep === 0 && !document.getElementById('p-name').value) {
+                return tg.showAlert(currentLang === 'ru' ? "Введите название" : "Enter name");
+            }
+            currentStep++;
+            updateStepUI();
+            tg.HapticFeedback.selectionChanged();
+        } else {
+            const data = {
+                mod: activeModule,
+                name: document.getElementById('p-name').value,
+                link: document.getElementById('p-link').value,
+                method: document.getElementById('p-method').value
+            };
+            if (activeModule === 'Beauty') {
+                data.addr = document.getElementById('p-addr').value;
+                data.hours = document.getElementById('p-hours').value;
+                data.prices = document.getElementById('p-price').value;
+            }
+            if (activeModule === 'Crypto') data.api = document.getElementById('p-api').value;
+
+            tg.HapticFeedback.notificationOccurred('success');
+            tg.sendData(JSON.stringify(data));
+            tg.close();
+        }
+    });
+
+    tg.BackButton.onClick(() => {
+        if (currentStep > 0) {
+            currentStep--;
+            updateStepUI();
+        } else {
+            document.getElementById('setup').classList.remove('active');
+            tg.MainButton.hide();
+            tg.BackButton.hide();
+        }
+    });
+
+    updateTexts('ru');
 </script>
+</body>
+</html>
