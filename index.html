@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>MTI Admin Panel</title>
+    <title>MTI</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
@@ -14,13 +14,12 @@
             --text: #FFFFFF;
             --text-gray: #8E8E93;
             --border: rgba(255, 255, 255, 0.1);
-            --input-bg: #2C2C2E;
         }
 
         * { 
             box-sizing: border-box; 
             -webkit-tap-highlight-color: transparent;
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", sans-serif;
         }
 
         body {
@@ -28,83 +27,225 @@
             color: var(--text);
             margin: 0;
             padding: 0;
+            -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
         }
 
         .container {
-            padding: calc(env(safe-area-inset-top) + 20px) 16px 100px;
+            padding: calc(env(safe-area-inset-top) + 20px) 16px 40px;
             max-width: 440px;
             margin: 0 auto;
         }
 
-        /* Header */
-        header { margin-bottom: 32px; }
-        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .logo { height: 32px; }
+        /* HEADER & LANG FIX */
+        header {
+            margin-bottom: 32px;
+        }
 
-        /* Lang Switcher */
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-right: 4px;
+        }
+
+        .logo {
+            height: 38px;
+            display: block;
+        }
+
+        /* ИДЕАЛЬНЫЙ ПЕРЕКЛЮЧАТЕЛЬ */
         .lang-selector {
-            position: relative; background: rgba(255, 255, 255, 0.08);
-            border-radius: 10px; padding: 2px; display: flex; width: 84px; height: 32px;
+            position: relative;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 10px;
+            padding: 2px;
+            display: flex;
+            width: 84px; /* Фиксированная ширина */
+            height: 32px;
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
         }
+
         .lang-option {
-            flex: 1; display: flex; align-items: center; justify-content: center;
-            font-size: 12px; font-weight: 600; color: var(--text-gray); z-index: 2; cursor: pointer;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-gray);
+            position: relative;
+            z-index: 2;
+            transition: color 0.3s ease;
+            cursor: pointer;
         }
-        .lang-option.active { color: #fff; }
+
+        .lang-option.active {
+            color: #fff;
+        }
+
         .lang-glider {
-            position: absolute; top: 2px; left: 2px; width: 40px; height: 28px;
-            background: rgba(255, 255, 255, 0.15); border-radius: 8px; z-index: 1;
-            transition: transform 0.3s ease;
-        }
-        body.lang-en .lang-glider { transform: translateX(40px); }
-
-        /* Cards */
-        .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-        .card {
-            background: var(--card); border-radius: 24px; padding: 20px;
-            border: 0.5px solid var(--border); transition: 0.2s; position: relative; overflow: hidden;
-        }
-        .card:active { background: var(--secondary-card); }
-        .card-label { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
-        .card-sub { font-size: 12px; color: var(--text-gray); line-height: 1.2; }
-
-        /* Setup Screen (Full Screen Modal) */
-        #setup-screen {
-            position: fixed; inset: 0; background: var(--bg); z-index: 1000;
-            padding: calc(env(safe-area-inset-top) + 10px) 16px;
-            transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.15, 0.4, 0.05, 1);
-            overflow-y: auto;
-        }
-        #setup-screen.active { transform: translateY(0); }
-
-        .section-title {
-            font-size: 13px; color: var(--text-gray); text-transform: uppercase;
-            margin: 24px 4px 8px; letter-spacing: 0.5px;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 40px; /* (84px - 4px) / 2 */
+            height: 28px;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            z-index: 1;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .input-group {
-            background: var(--card); border-radius: 14px; overflow: hidden;
+        body.lang-en .lang-glider {
+            transform: translateX(40px);
+        }
+
+        .tagline {
+            font-size: 15px;
+            color: var(--text-gray);
+            font-weight: 400;
+            letter-spacing: -0.2px;
+            padding-left: 2px;
+        }
+
+        /* GRID & CARDS */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .tall-card {
+            background: var(--card);
+            border-radius: 28px;
+            height: 280px; 
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             border: 0.5px solid var(--border);
+            transition: all 0.2s ease;
+            overflow: hidden;
+            position: relative;
         }
 
-        .input-row {
-            display: flex; align-items: center; padding: 12px 16px;
-            border-bottom: 0.5px solid var(--border);
+        .symbol {
+            position: absolute;
+            top: -20px;
+            right: -30px;
+            width: 180px;
+            height: 180px;
+            opacity: 0.15;
+            pointer-events: none;
+            transform: rotate(15deg);
         }
-        .input-row:last-child { border-bottom: none; }
-        .input-row label { flex: 1; font-size: 16px; }
-        .input-row input, .input-row select, .input-row textarea {
+
+        .card-content {
+            position: relative;
+            z-index: 2;
+            margin-top: auto;
+        }
+
+        .card-label {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
+        }
+
+        .card-sub {
+            font-size: 13px;
+            color: var(--text-gray);
+            line-height: 1.3;
+        }
+
+        /* AI CARD */
+        .wide-card {
+            background: var(--card);
+            border-radius: 24px;
+            padding: 24px;
+            border: 0.5px solid var(--border);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+        }
+
+        .ai-indicator {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: conic-gradient(from 180deg at 50% 50%, #007AFF 0deg, #5856D6 120deg, #AF52DE 240deg, #007AFF 360deg);
+            filter: blur(8px);
+            opacity: 0.5;
+            position: absolute;
+        }
+
+        .list-section {
+            background: var(--card);
+            border-radius: 16px;
+            border: 0.5px solid var(--border);
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .list-row {
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .list-row:not(:last-child) { border-bottom: 0.5px solid var(--border); }
+        .list-row:active, .tall-card:active, .wide-card:active { background: var(--secondary-card); }
+
+        .list-title { font-size: 17px; letter-spacing: -0.4px; }
+        .chevron { color: #48484A; font-weight: 300; }
+
+        /* Setup Screen */
+        #setup {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            z-index: 1000;
+            padding: calc(env(safe-area-inset-top) + 20px) 20px;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.15, 0.4, 0.05, 1);
+        }
+        #setup.active { transform: translateY(0); }
+
+        .input-block {
+            background: var(--card);
+            border-radius: 14px;
+            margin-top: 24px;
+        }
+
+        .input-item {
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .input-item:not(:last-child) { border-bottom: 0.5px solid var(--border); }
+
+        input {
             background: none; border: none; color: var(--accent);
-            text-align: right; font-size: 16px; outline: none; width: 60%;
+            text-align: right; font-size: 17px; outline: none; width: 60%;
         }
-        textarea { text-align: left !important; width: 100% !important; height: 80px; padding-top: 8px; }
 
-        /* Checkbox styling */
-        .checkbox-row { justify-content: space-between; cursor: pointer; }
-        .checkbox-row input { width: auto; }
-
-        .hint { font-size: 12px; color: var(--text-gray); padding: 8px 16px; }
+        .status {
+            text-align: center; font-size: 11px; color: #48484A; 
+            text-transform: uppercase; letter-spacing: 1px;
+        }
 
     </style>
 </head>
@@ -114,249 +255,189 @@
     <header>
         <div class="header-top">
             <img src="mti,.png" alt="MTI" class="logo">
+            <!-- ПЕРЕКЛЮЧАТЕЛЬ -->
             <div class="lang-selector">
                 <div class="lang-glider"></div>
                 <div class="lang-option active" id="btn-ru" onclick="toggleLang('ru')">RU</div>
                 <div class="lang-option" id="btn-en" onclick="toggleLang('en')">EN</div>
             </div>
         </div>
-        <div id="txt-tagline" style="color: var(--text-gray);">Next-Gen Business Engineering</div>
+        <div class="tagline" id="txt-tagline">Next-Gen Business Engineering</div>
     </header>
 
-    <div class="main-grid">
-        <div class="card" onclick="openSetup('Beauty')">
-            <div class="card-label">Beauty</div>
-            <div class="card-sub" id="txt-beauty-sub">Запись, услуги и CRM</div>
+    <main class="main-grid">
+        <div class="tall-card" onclick="openMod('Beauty')">
+            <div class="symbol">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" fill="white"/>
+                </svg>
+            </div>
+            <div class="card-content">
+                <div class="card-label">Beauty</div>
+                <div class="card-sub" id="txt-beauty-sub">Service ecosystem & retention management</div>
+            </div>
         </div>
-        <div class="card" onclick="openSetup('Crypto')">
-            <div class="card-label">Crypto</div>
-            <div class="card-sub" id="txt-crypto-sub">Подписки и CryptoBot</div>
+
+        <div class="tall-card" onclick="openMod('Crypto')">
+            <div class="symbol">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L4 7V17L12 22L20 17V7L12 2Z" stroke="white" stroke-width="1.5"/>
+                    <path d="M12 6V18M9 8H13.5C14.3284 8 15 8.67157 15 9.5C15 10.3284 14.3284 11 13.5 11H12M9 11H14.5C15.3284 11 16 11.6716 16 12.5C16 13.3284 15.3284 14 14.5 14H12" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <div class="card-content">
+                <div class="card-label">Crypto</div>
+                <div class="card-sub" id="txt-crypto-sub">Web3 node infra & automated payments</div>
+            </div>
         </div>
+    </main>
+
+    <div class="wide-card" onclick="openMod('AI')">
+        <div style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+            <div class="ai-indicator"></div>
+            <div style="width: 12px; height: 12px; background: white; border-radius: 50%; z-index: 1;"></div>
+        </div>
+        <div style="flex: 1; margin: 0 16px;">
+            <div class="card-label" style="font-size: 18px; margin: 0;" id="txt-ai-title">AI & Custom Solution</div>
+            <div class="card-sub" id="txt-ai-sub">Individual architectural development</div>
+        </div>
+        <div class="chevron">›</div>
     </div>
 
-    <div class="card" style="margin-bottom: 12px;" onclick="openSetup('AI')">
-        <div class="card-label">AI & Custom</div>
-        <div class="card-sub" id="txt-ai-sub">Индивидуальные решения под ключ</div>
+    <div class="list-section">
+        <a href="https://t.me/mti_news" class="list-row">
+            <span class="list-title" id="txt-updates">Updates</span>
+            <span class="chevron">›</span>
+        </a>
+        <a href="https://t.me/mti_cases" class="list-row">
+            <span class="list-title" id="txt-cases">Case Archive</span>
+            <span class="chevron">›</span>
+        </a>
     </div>
 
-    <div class="section-title" id="txt-resources">Ресурсы</div>
-    <div class="input-group">
-        <a href="https://t.me/mti_news" class="input-row" style="text-decoration: none; color: inherit;">
-            <label>MTI News</label><span style="color: var(--text-gray)">›</span>
-        </a>
-        <a href="https://t.me/mti_cases" class="input-row" style="text-decoration: none; color: inherit;">
-            <label>Case Archive</label><span style="color: var(--text-gray)">›</span>
-        </a>
-    </div>
+    <footer class="status">
+        Core engine 2.1 • Operational
+    </footer>
 </div>
 
-<!-- ЭКРАН НАСТРОЙКИ -->
-<div id="setup-screen">
-    <h1 id="setup-title" style="font-size: 32px; margin: 10px 0 20px;">Module</h1>
-
-    <!-- БЛОК 1: ПОДКЛЮЧЕНИЕ -->
-    <div class="section-title" id="txt-sec-auth">Подключение</div>
-    <div class="input-group">
-        <div class="input-row">
-            <label>Bot Token</label>
-            <input type="text" id="inp-token" placeholder="712345:AAH...">
+<!-- MODAL SYSTEM -->
+<div id="setup">
+    <div style="display:flex; justify-content: space-between; align-items: center;">
+        <h1 id="m-title" style="font-size: 34px; letter-spacing: -1.2px; margin: 0;">Module</h1>
+    </div>
+    <div class="input-block">
+        <div class="input-item">
+            <span id="txt-form-name">Name</span>
+            <input type="text" id="p-name" placeholder="...">
         </div>
-        <div class="input-row">
-            <label id="txt-bot-name">Имя бота</label>
-            <input type="text" id="inp-botname" placeholder="@my_bot">
+        <div class="input-item">
+            <span id="txt-form-link">Link</span>
+            <input type="text" id="p-link" placeholder="@contact">
         </div>
     </div>
-    <div class="hint">Получите токен у @BotFather</div>
-
-    <!-- БЛОК 2: ДИНАМИЧЕСКИЕ НАСТРОЙКИ (заполняются через JS) -->
-    <div class="section-title" id="txt-sec-config">Конфигурация</div>
-    <div class="input-group" id="dynamic-fields">
-        <!-- Сюда JS добавит поля -->
-    </div>
-
-    <!-- БЛОК 3: ДИЗАЙН И БРЕНДИНГ -->
-    <div class="section-title" id="txt-sec-design">Дизайн и Брендинг</div>
-    <div class="input-group">
-        <div class="input-row checkbox-row" onclick="toggleCheck('chk-avatar')">
-            <label id="txt-design-ava">Аватарка и описание</label>
-            <input type="checkbox" id="chk-avatar">
-        </div>
-        <div class="input-row checkbox-row" onclick="toggleCheck('chk-welcome')">
-            <label id="txt-design-welcome">Приветственный баннер</label>
-            <input type="checkbox" id="chk-welcome">
-        </div>
-        <div class="input-row checkbox-row" onclick="toggleCheck('chk-info')">
-            <label id="txt-design-info">Инфографика услуг</label>
-            <input type="checkbox" id="chk-info">
-        </div>
-    </div>
-    <div class="hint" id="txt-design-hint">Мы подготовим профессиональный визуал для вашего бренда</div>
-
-    <div style="height: 100px;"></div>
+    <div id="txt-func-label" style="margin: 24px 4px 12px; font-size: 13px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px;">Functionality</div>
+    <div id="feat-list" class="list-section"></div>
 </div>
 
 <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
-
-    let currentMod = '';
-
-    const translations = {
-        ru: {
-            tagline: "Бизнес-инжиниринг нового поколения",
-            beautySub: "Запись, услуги и CRM",
-            cryptoSub: "Подписки и CryptoBot",
-            aiSub: "Индивидуальные решения под ключ",
-            resources: "Ресурсы",
-            secAuth: "Подключение",
-            secConfig: "Конфигурация",
-            secDesign: "Дизайн и Брендинг",
-            botName: "Имя бота",
-            designAva: "Аватарка и описание",
-            designWelcome: "Приветственный баннер",
-            designInfo: "Инфографика услуг",
-            designHint: "Мы подготовим профессиональный визуал для вашего бренда",
-            btnSave: "Сохранить и запустить",
-            placeholderServices: "Маникюр: 1500\nПедикюр: 2000",
-            labelServices: "Список услуг",
-            labelPrice: "Цена (USDT)",
-            labelChannel: "ID Канала"
-        },
-        en: {
-            tagline: "Next-Gen Business Engineering",
-            beautySub: "Booking, Services & CRM",
-            cryptoSub: "Subscriptions & CryptoBot",
-            aiSub: "Custom Turnkey Solutions",
-            resources: "Resources",
-            secAuth: "Connection",
-            secConfig: "Configuration",
-            secDesign: "Design & Branding",
-            botName: "Bot Username",
-            designAva: "Avatar & Bio",
-            designWelcome: "Welcome Banner",
-            designInfo: "Service Infographics",
-            designHint: "We will create professional visuals for your brand",
-            btnSave: "Save & Launch",
-            placeholderServices: "Manicure: 50\nPedicure: 70",
-            labelServices: "Service List",
-            labelPrice: "Price (USDT)",
-            labelChannel: "Channel ID"
-        }
-    };
+    tg.headerColor = '#000000';
 
     function toggleLang(lang) {
-        document.body.classList.toggle('lang-en', lang === 'en');
-        document.getElementById('btn-ru').classList.toggle('active', lang === 'ru');
-        document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-        updateTexts(lang);
+        const body = document.body;
+        const btnRu = document.getElementById('btn-ru');
+        const btnEn = document.getElementById('btn-en');
+
+        if (lang === 'en') {
+            body.classList.add('lang-en');
+            btnEn.classList.add('active');
+            btnRu.classList.remove('active');
+            updateTexts('en');
+        } else {
+            body.classList.remove('lang-en');
+            btnRu.classList.add('active');
+            btnEn.classList.remove('active');
+            updateTexts('ru');
+        }
         tg.HapticFeedback.selectionChanged();
     }
 
     function updateTexts(lang) {
+        const translations = {
+            ru: {
+                tagline: "Бизнес-инжиниринг нового поколения",
+                beautySub: "Экосистема услуг и управление удержанием",
+                cryptoSub: "Инфраструктура узлов Web3 и автоплатежи",
+                aiTitle: "AI и Кастомные решения",
+                aiSub: "Индивидуальная разработка архитектуры",
+                updates: "Обновления",
+                cases: "Архив кейсов",
+                formName: "Название",
+                formLink: "Контакт",
+                funcLabel: "Функционал"
+            },
+            en: {
+                tagline: "Next-Gen Business Engineering",
+                beautySub: "Service ecosystem & retention management",
+                cryptoSub: "Web3 node infra & automated payments",
+                aiTitle: "AI & Custom Solution",
+                aiSub: "Individual architectural development",
+                updates: "Updates",
+                cases: "Case Archive",
+                formName: "Name",
+                formLink: "Link",
+                funcLabel: "Functionality"
+            }
+        };
+
         const t = translations[lang];
         document.getElementById('txt-tagline').innerText = t.tagline;
         document.getElementById('txt-beauty-sub').innerText = t.beautySub;
         document.getElementById('txt-crypto-sub').innerText = t.cryptoSub;
+        document.getElementById('txt-ai-title').innerText = t.aiTitle;
         document.getElementById('txt-ai-sub').innerText = t.aiSub;
-        document.getElementById('txt-resources').innerText = t.resources;
-        document.getElementById('txt-sec-auth').innerText = t.secAuth;
-        document.getElementById('txt-sec-config').innerText = t.secConfig;
-        document.getElementById('txt-sec-design').innerText = t.secDesign;
-        document.getElementById('txt-bot-name').innerText = t.botName;
-        document.getElementById('txt-design-ava').innerText = t.designAva;
-        document.getElementById('txt-design-welcome').innerText = t.designWelcome;
-        document.getElementById('txt-design-info').innerText = t.designInfo;
-        document.getElementById('txt-design-hint').innerText = t.designHint;
-        if(tg.MainButton.isVisible) tg.MainButton.setText(t.btnSave);
+        document.getElementById('txt-updates').innerText = t.updates;
+        document.getElementById('txt-cases').innerText = t.cases;
+        document.getElementById('txt-form-name').innerText = t.formName;
+        document.getElementById('txt-form-link').innerText = t.formLink;
+        document.getElementById('txt-func-label').innerText = t.funcLabel;
     }
 
-    function openSetup(mod) {
-        currentMod = mod;
-        document.getElementById('setup-title').innerText = mod + ' Module';
-        const fields = document.getElementById('dynamic-fields');
-        fields.innerHTML = '';
+    const data = {
+        'Beauty': ['Booking Core', 'Client CRM', 'Wallet Passes', 'AI Scheduling'],
+        'Crypto': ['L2 Transactions', 'Asset Monitoring', 'Smart Contracts', 'Custody Solutions'],
+        'AI': ['Neural Assistant', 'Custom LLM RAG', 'Automated Workflows', 'Visual Processing']
+    };
 
-        const lang = document.body.classList.contains('lang-en') ? 'en' : 'ru';
-        const t = translations[lang];
-
-        if (mod === 'Beauty') {
-            fields.innerHTML = `
-                <div class="input-row" style="flex-direction: column; align-items: flex-start;">
-                    <label style="margin-bottom: 8px;">${t.labelServices}</label>
-                    <textarea id="cfg-services" placeholder="${t.placeholderServices}"></textarea>
-                </div>
-                <div class="input-row">
-                    <label>Рабочее время</label>
-                    <input type="text" id="cfg-hours" placeholder="10:00 - 20:00">
-                </div>
-            `;
-        } else if (mod === 'Crypto') {
-            fields.innerHTML = `
-                <div class="input-row">
-                    <label>${t.labelPrice}</label>
-                    <input type="number" id="cfg-price" placeholder="50">
-                </div>
-                <div class="input-row">
-                    <label>${t.labelChannel}</label>
-                    <input type="text" id="cfg-channel" placeholder="-100...">
-                </div>
-            `;
-        } else {
-            fields.innerHTML = `<div class="hint">Опишите вашу задачу в сообщении после сохранения, и мы свяжемся для разработки архитектуры.</div>`;
-        }
-
-        document.getElementById('setup-screen').classList.add('active');
-        tg.MainButton.setText(t.btnSave);
+    function openMod(id) {
+        document.getElementById('m-title').innerText = id;
+        const list = document.getElementById('feat-list');
+        list.innerHTML = '';
+        data[id].forEach(f => {
+            list.innerHTML += `<div class="list-row"><span style="font-size:16px;">${f}</span><span style="color:var(--accent)">✓</span></div>`;
+        });
+        
+        document.getElementById('setup').classList.add('active');
+        tg.MainButton.text = "Continue";
         tg.MainButton.show();
         tg.BackButton.show();
         tg.HapticFeedback.impactOccurred('medium');
     }
 
-    function toggleCheck(id) {
-        const el = document.getElementById(id);
-        el.checked = !el.checked;
-        tg.HapticFeedback.selectionChanged();
-    }
-
     tg.BackButton.onClick(() => {
-        document.getElementById('setup-screen').classList.remove('active');
+        document.getElementById('setup').classList.remove('active');
         tg.MainButton.hide();
         tg.BackButton.hide();
     });
 
     tg.MainButton.onClick(() => {
-        const data = {
-            module: currentMod,
-            token: document.getElementById('inp-token').value,
-            botName: document.getElementById('inp-botname').value,
-            config: {},
-            design: {
-                avatar: document.getElementById('chk-avatar').checked,
-                welcome: document.getElementById('chk-welcome').checked,
-                infographics: document.getElementById('chk-info').checked
-            }
-        };
-
-        if (currentMod === 'Beauty') {
-            data.config.services = document.getElementById('cfg-services').value;
-            data.config.hours = document.getElementById('cfg-hours').value;
-        } else if (currentMod === 'Crypto') {
-            data.config.price = document.getElementById('cfg-price').value;
-            data.config.channelId = document.getElementById('cfg-channel').value;
-        }
-
-        if (!data.token) {
-            tg.showAlert("Пожалуйста, введите Bot Token");
-            return;
-        }
-
+        const p = document.getElementById('p-name').value;
+        if(!p) return tg.showAlert("Enter project name");
         tg.HapticFeedback.notificationOccurred('success');
-        tg.sendData(JSON.stringify(data));
+        tg.sendData(JSON.stringify({mod: document.getElementById('m-title').innerText, name: p}));
+        tg.close();
     });
-
-    // Инициализация
-    updateTexts('ru');
 </script>
-
 </body>
 </html>
