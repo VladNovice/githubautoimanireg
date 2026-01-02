@@ -9,12 +9,10 @@
         :root {
             --bg: #000000;
             --card: #1C1C1E;
-            --secondary-card: #2C2C2E;
             --accent: #007AFF;
             --text: #FFFFFF;
             --text-gray: #8E8E93;
             --border: rgba(255, 255, 255, 0.1);
-            --glass: rgba(255, 255, 255, 0.05);
             --ios-blue: #007AFF;
         }
 
@@ -30,7 +28,7 @@
             margin: 0;
             padding: 0;
             -webkit-font-smoothing: antialiased;
-            overflow: hidden;
+            overflow-x: hidden;
         }
 
         .container {
@@ -39,6 +37,7 @@
             margin: 0 auto;
         }
 
+        /* HEADER & GRID (Сохранено из оригинала) */
         header { margin-bottom: 32px; }
         .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .logo { height: 38px; }
@@ -69,10 +68,9 @@
             border: 0.5px solid var(--border); transition: all 0.2s ease;
             overflow: hidden; position: relative;
         }
-        .tall-card:active { transform: scale(0.97); }
         .symbol { position: absolute; top: -20px; right: -30px; width: 180px; height: 180px; opacity: 0.15; pointer-events: none; transform: rotate(15deg); }
-        .card-label { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 6px; }
-        .card-sub { font-size: 13px; color: var(--text-gray); line-height: 1.3; }
+        .card-label { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+        .card-sub { font-size: 13px; color: var(--text-gray); line-height: 1.3; margin-top: 6px; }
 
         .wide-card {
             background: var(--card); border-radius: 24px; padding: 24px;
@@ -85,37 +83,42 @@
             filter: blur(8px); opacity: 0.5; position: absolute;
         }
 
-        .list-section { background: var(--card); border-radius: 16px; border: 0.5px solid var(--border); overflow: hidden; margin-bottom: 40px; }
-        .list-row { padding: 16px; display: flex; align-items: center; justify-content: space-between; text-decoration: none; color: inherit; }
-        .list-row:not(:last-child) { border-bottom: 0.5px solid var(--border); }
-
-        /* --- MODALS (PRODUCT & PAYMENT) --- */
+        /* --- PRESENTATION MODAL --- */
         .modal {
             position: fixed; inset: 0; background: var(--bg); z-index: 1000;
-            padding-top: calc(env(safe-area-inset-top) + 10px);
-            transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.15, 0.4, 0.05, 1);
-            display: flex; flex-direction: column; overflow-y: auto;
+            transform: translateY(100%); transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            overflow-y: auto; display: flex; flex-direction: column;
+            padding-bottom: 100px;
         }
         .modal.active { transform: translateY(0); }
 
-        .modal-header { padding: 20px; }
-        .modal-title { font-size: 34px; font-weight: 800; letter-spacing: -1px; margin-bottom: 8px; }
-        .modal-desc { font-size: 17px; color: var(--text-gray); line-height: 1.4; margin-bottom: 24px; }
-
-        .feature-list { padding: 0 20px; margin-bottom: 30px; }
-        .feature-item { display: flex; align-items: flex-start; margin-bottom: 20px; }
-        .feature-icon { width: 32px; height: 32px; margin-right: 16px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
-        .feature-text h4 { margin: 0 0 4px 0; font-size: 17px; font-weight: 600; }
-        .feature-text p { margin: 0; font-size: 14px; color: var(--text-gray); line-height: 1.4; }
-
-        .ios-group { background: var(--card); border-radius: 14px; margin: 0 16px 24px; overflow: hidden; }
-        .ios-item { display: flex; align-items: center; padding: 14px 16px; min-height: 52px; position: relative; }
-        .ios-item:not(:last-child)::after { content: ''; position: absolute; bottom: 0; left: 16px; right: 0; height: 0.5px; background: var(--border); }
+        .pres-container { padding: 0 20px; }
         
-        .ios-input { background: none; border: none; color: #fff; font-size: 17px; padding: 0; width: 100%; outline: none; }
-        select.ios-input { appearance: none; width: 100%; }
+        /* Секция презентации */
+        .pres-block { margin-top: 60px; }
+        .pres-header-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; }
+        .pres-title { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }
+        .pres-detail { font-size: 14px; color: var(--text-gray); font-weight: 400; }
+        
+        .pres-image-box {
+            width: 100%; border-radius: 20px; overflow: hidden;
+            background: #1c1c1e; border: 0.5px solid var(--border);
+            aspect-ratio: 16/10; display: flex; align-items: center; justify-content: center;
+            color: #3a3a3c; font-size: 12px; text-transform: uppercase; letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+        .pres-image-box img { width: 100%; height: 100%; object-fit: cover; }
 
-        .status { text-align: center; font-size: 11px; color: #48484A; text-transform: uppercase; letter-spacing: 1px; padding-bottom: 20px; }
+        .pres-text { font-size: 16px; color: var(--text-gray); line-height: 1.5; margin-bottom: 40px; }
+
+        /* Специальный заголовок первого экрана */
+        .hero-title { font-size: 48px; font-weight: 800; letter-spacing: -2px; margin: 40px 0 10px; line-height: 1; }
+        .hero-sub { font-size: 18px; color: var(--text-gray); margin-bottom: 40px; }
+
+        .list-section { background: var(--card); border-radius: 16px; border: 0.5px solid var(--border); overflow: hidden; margin-bottom: 40px; }
+        .list-row { padding: 16px; display: flex; align-items: center; justify-content: space-between; text-decoration: none; color: inherit; }
+        .status { text-align: center; font-size: 11px; color: #48484A; text-transform: uppercase; letter-spacing: 1px; }
+
     </style>
 </head>
 <body>
@@ -126,8 +129,8 @@
             <img src="mti,.png" alt="MTI" class="logo">
             <div class="lang-selector">
                 <div class="lang-glider"></div>
-                <div class="lang-option active" id="btn-ru" onclick="toggleLang('ru')">RU</div>
-                <div class="lang-option" id="btn-en" onclick="toggleLang('en')">EN</div>
+                <div class="lang-option active" onclick="toggleLang('ru')">RU</div>
+                <div class="lang-option" onclick="toggleLang('en')">EN</div>
             </div>
         </div>
         <div class="tagline" id="txt-tagline">Next-Gen Business Engineering</div>
@@ -138,14 +141,14 @@
             <div class="symbol"><svg viewBox="0 0 24 24" fill="white"><path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z"/></svg></div>
             <div class="card-content">
                 <div class="card-label">Beauty</div>
-                <div class="card-sub" id="txt-beauty-sub">Service ecosystem & retention management</div>
+                <div class="card-sub" id="txt-beauty-sub">Service ecosystem & retention</div>
             </div>
         </div>
         <div class="tall-card" onclick="showDetails('Crypto')">
             <div class="symbol"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M12 2L4 7V17L12 22L20 17V7L12 2Z"/><path d="M12 6V18M9 8H13.5C14.3284 8 15 8.67157 15 9.5C15 10.3284 14.3284 11 13.5 11H12M9 11H14.5C15.3284 11 16 11.6716 16 12.5C16 13.3284 15.3284 14 14.5 14H12"/></svg></div>
             <div class="card-content">
                 <div class="card-label">Crypto</div>
-                <div class="card-sub" id="txt-crypto-sub">Web3 node infra & automated payments</div>
+                <div class="card-sub" id="txt-crypto-sub">Web3 node & payments</div>
             </div>
         </div>
     </main>
@@ -159,7 +162,7 @@
             <div class="card-label" style="font-size: 18px; margin: 0;" id="txt-ai-title">AI & Custom Solution</div>
             <div class="card-sub" id="txt-ai-sub">Individual architectural development</div>
         </div>
-        <div class="chevron">›</div>
+        <div class="chevron" style="color: #48484A">›</div>
     </div>
 
     <div class="list-section">
@@ -169,44 +172,11 @@
     <footer class="status">Core engine 2.1 • Operational</footer>
 </div>
 
-<!-- MODAL: PRODUCT DETAILS -->
+<!-- MODAL: PRESENTATION -->
 <div id="product-modal" class="modal">
-    <div class="modal-header">
-        <div class="modal-title" id="det-title">Product</div>
-        <div class="modal-desc" id="det-desc">Description</div>
+    <div class="pres-container" id="modal-content">
+        <!-- Content injected by JS -->
     </div>
-    <div class="feature-list" id="det-features">
-        <!-- Dynamic features -->
-    </div>
-    <div class="ios-group">
-        <div class="ios-item">
-            <div style="flex:1; font-weight: 600;" id="txt-sub-label">Subscription Plan</div>
-            <div style="color: var(--ios-blue); font-weight: 600;">$49 / mo</div>
-        </div>
-    </div>
-    <div style="height: 100px;"></div> <!-- Spacer -->
-</div>
-
-<!-- MODAL: PAYMENT -->
-<div id="payment-modal" class="modal">
-    <div class="modal-header">
-        <div class="modal-title" id="pay-title">Billing</div>
-        <div class="modal-desc" id="pay-desc">Choose your payment method</div>
-    </div>
-    <div class="ios-group">
-        <div class="ios-item">
-            <div class="ios-content">
-                <span class="ios-label" id="txt-form-method">Method</span>
-                <select id="p-method" class="ios-input">
-                    <option value="cryptobot">CryptoBot (USDT, TON)</option>
-                    <option value="yookassa">Bank Card (RU)</option>
-                </select>
-            </div>
-        </div>
-    </div>
-    <p style="padding: 0 20px; font-size: 13px; color: #48484A; text-align: center;" id="txt-hint-pay">
-        Secure transaction via certified gateway
-    </p>
 </div>
 
 <script>
@@ -220,61 +190,57 @@
     const products = {
         Beauty: {
             ru: {
-                title: "MTI Beauty",
-                desc: "Полная автоматизация вашего салона или студии.",
-                features: [
-                    { icon: "📅", t: "Онлайн-запись", d: "Интеграция с ТГ ботом для записи клиентов 24/7." },
-                    { icon: "🤖", t: "ИИ-Прайс", d: "Автоматическое распознавание услуг из текста." },
-                    { icon: "📊", t: "Retention", d: "Система напоминаний и возврата клиентов." }
+                hero: "Beauty",
+                sub: "Экосистема для бизнеса в сфере услуг",
+                blocks: [
+                    { title: "Запись", detail: "24/7", text: "Интеллектуальная система бронирования, которая работает внутри Telegram.", img: "PHOTO_PLACEHOLDER" },
+                    { title: "Retention", detail: "Smart", text: "Бот сам напомнит клиенту о визите или предложит записаться снова через месяц.", img: "PHOTO_PLACEHOLDER" },
+                    { title: "Аналитика", detail: "Real-time", text: "Все показатели вашего салона в одном удобном дашборде.", img: "PHOTO_PLACEHOLDER" }
                 ]
             },
             en: {
-                title: "MTI Beauty",
-                desc: "Complete automation for your salon or studio.",
-                features: [
-                    { icon: "📅", t: "Online Booking", d: "24/7 client booking via Telegram bot." },
-                    { icon: "🤖", t: "AI Price", d: "Automatic service recognition from text." },
-                    { icon: "📊", t: "Retention", d: "Smart reminder and loyalty system." }
+                hero: "Beauty",
+                sub: "Business ecosystem for service industry",
+                blocks: [
+                    { title: "Booking", detail: "24/7", text: "Intelligent booking system operating right inside Telegram.", img: "PHOTO_PLACEHOLDER" },
+                    { title: "Retention", detail: "Smart", text: "The bot reminds clients about visits or suggests re-booking automatically.", img: "PHOTO_PLACEHOLDER" },
+                    { title: "Analytics", detail: "Real-time", text: "All your salon metrics in one clean dashboard.", img: "PHOTO_PLACEHOLDER" }
                 ]
             }
         },
         Crypto: {
             ru: {
-                title: "MTI Crypto",
-                desc: "Инфраструктура для приема платежей в Web3.",
-                features: [
-                    { icon: "⚡", t: "Авто-выплаты", d: "Мгновенное распределение средств на кошельки." },
-                    { icon: "🛡️", t: "Безопасность", d: "Некастодиальное хранение и защита узлов." },
-                    { icon: "💎", t: "Multi-asset", d: "Поддержка TON, USDT (TRC20/BEP20)." }
+                hero: "Crypto",
+                sub: "Инфраструктура платежей нового поколения",
+                blocks: [
+                    { title: "Узлы", detail: "Web3", text: "Собственные ноды для максимально быстрых транзакций без посредников.", img: "PHOTO_PLACEHOLDER" },
+                    { title: "Авто-выплаты", detail: "Instant", text: "Распределяйте прибыль между партнерами автоматически.", img: "PHOTO_PLACEHOLDER" }
                 ]
             },
             en: {
-                title: "MTI Crypto",
-                desc: "Infrastructure for Web3 payments.",
-                features: [
-                    { icon: "⚡", t: "Auto-payouts", d: "Instant fund distribution to wallets." },
-                    { icon: "🛡️", t: "Security", d: "Non-custodial storage and node protection." },
-                    { icon: "💎", t: "Multi-asset", d: "Support for TON, USDT (TRC20/BEP20)." }
+                hero: "Crypto",
+                sub: "Next-gen payment infrastructure",
+                blocks: [
+                    { title: "Nodes", detail: "Web3", text: "Private nodes for lightning-fast transactions without intermediaries.", img: "PHOTO_PLACEHOLDER" },
+                    { title: "Auto-payouts", detail: "Instant", text: "Distribute profits among partners automatically.", img: "PHOTO_PLACEHOLDER" }
                 ]
             }
         },
         AI: {
             ru: {
-                title: "Custom AI",
-                desc: "Индивидуальная разработка нейросетевых решений.",
-                features: [
-                    { icon: "🧠", t: "LLM Тюнинг", d: "Обучение модели на данных вашей компании." },
-                    { icon: "📞", t: "AI Ассистент", d: "Голосовые и текстовые боты с памятью контекста." },
-                    { icon: "⚙️", t: "API Интеграция", d: "Связка с вашей CRM или ERP системой." }
+                hero: "AI Custom",
+                sub: "Индивидуальный бизнес-инжиниринг",
+                blocks: [
+                    { title: "LLM", detail: "Custom", text: "Обучаем нейросети на данных вашей компании для решения специфических задач.", img: "PHOTO_PLACEHOLDER" },
+                    { title: "Ассистенты", detail: "Voice/Text", text: "ИИ, который знает ваш продукт лучше, чем любой менеджер.", img: "PHOTO_PLACEHOLDER" }
                 ]
             },
             en: {
-                title: "Custom AI",
-                desc: "Individual neural network development.",
-                features: [
-                    { icon: "🧠", t: "LLM Tuning", d: "Training models on your company data." },
-                    { icon: "📞", t: "AI Assistant", d: "Voice and text bots with context memory." },
-                    { icon: "⚙️", t: "API Integration", d: "Connection with your CRM or ERP." }
+                hero: "AI Custom",
+                sub: "Individual business engineering",
+                blocks: [
+                    { title: "LLM", detail: "Custom", text: "We train neural networks on your data to solve specific business tasks.", img: "PHOTO_PLACEHOLDER" },
+                    { title: "Assistants", detail: "Voice/Text", text: "AI that knows your product better than any manager.", img: "PHOTO_PLACEHOLDER" }
                 ]
             }
         }
@@ -283,43 +249,44 @@
     function showDetails(id) {
         activeModule = id;
         const data = products[id][currentLang];
+        const container = document.getElementById('modal-content');
         
-        document.getElementById('det-title').innerText = data.title;
-        document.getElementById('det-desc').innerText = data.desc;
-        
-        const featCont = document.getElementById('det-features');
-        featCont.innerHTML = data.features.map(f => `
-            <div class="feature-item">
-                <div class="feature-icon">${f.icon}</div>
-                <div class="feature-text">
-                    <h4>${f.t}</h4>
-                    <p>${f.d}</p>
-                </div>
-            </div>
-        `).join('');
+        let html = `
+            <h1 class="hero-title">${data.hero}</h1>
+            <p class="hero-sub">${data.sub}</p>
+        `;
 
+        data.blocks.forEach(block => {
+            html += `
+                <div class="pres-block">
+                    <div class="pres-header-row">
+                        <div class="pres-title">${block.title}</div>
+                        <div class="pres-detail">${block.detail}</div>
+                    </div>
+                    <div class="pres-image-box">
+                        ${block.img === 'PHOTO_PLACEHOLDER' ? 'Product Image' : `<img src="${block.img}">`}
+                    </div>
+                    <p class="pres-text">${block.text}</p>
+                </div>
+            `;
+        });
+
+        container.innerHTML = html;
         document.getElementById('product-modal').classList.add('active');
         
-        tg.MainButton.text = currentLang === 'ru' ? "Подключить" : "Connect Now";
+        tg.MainButton.text = currentLang === 'ru' ? "ПОДКЛЮЧИТЬ" : "CONNECT";
         tg.MainButton.show();
         tg.BackButton.show();
         tg.HapticFeedback.impactOccurred('medium');
     }
 
-    // Кнопка "Подключить" отправляет данные боту для начала диалога
     tg.MainButton.onClick(() => {
-        if (document.getElementById('payment-modal').classList.contains('active')) {
-            // Если мы на экране оплаты
-            const method = document.getElementById('p-method').value;
-            tg.sendData(JSON.stringify({ action: 'payment_confirm', method: method }));
-        } else {
-            // Если мы на экране описания
-            tg.sendData(JSON.stringify({ action: 'start_setup', module: activeModule }));
-        }
+        tg.HapticFeedback.notificationOccurred('success');
+        tg.sendData(JSON.stringify({ action: 'start_setup', module: activeModule }));
     });
 
     tg.BackButton.onClick(() => {
-        document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
+        document.getElementById('product-modal').classList.remove('active');
         tg.MainButton.hide();
         tg.BackButton.hide();
     });
@@ -327,8 +294,9 @@
     function toggleLang(lang) {
         currentLang = lang;
         document.body.classList.toggle('lang-en', lang === 'en');
-        document.getElementById('btn-ru').classList.toggle('active', lang === 'ru');
-        document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+        const options = document.querySelectorAll('.lang-option');
+        options[0].classList.toggle('active', lang === 'ru');
+        options[1].classList.toggle('active', lang === 'en');
         updateTexts(lang);
         if (activeModule) showDetails(activeModule);
         tg.HapticFeedback.selectionChanged();
@@ -343,10 +311,7 @@
                 aiTitle: "AI и Кастомные решения",
                 aiSub: "Индивидуальная архитектура",
                 updates: "Обновления",
-                cases: "Архив кейсов",
-                subLabel: "Подписка",
-                payTitle: "Оплата",
-                payDesc: "Выберите способ оплаты"
+                cases: "Архив кейсов"
             },
             en: {
                 tagline: "Next-Gen Business Engineering",
@@ -355,10 +320,7 @@
                 aiTitle: "AI & Custom Solution",
                 aiSub: "Individual architecture",
                 updates: "Updates",
-                cases: "Case Archive",
-                subLabel: "Subscription",
-                payTitle: "Billing",
-                payDesc: "Choose payment method"
+                cases: "Case Archive"
             }
         }[lang];
 
@@ -368,21 +330,7 @@
         }
     }
 
-    // Проверка входа для оплаты (через startapp параметр от бота)
-    function checkStartParam() {
-        const startParam = tg.initDataUnsafe.start_param;
-        if (startParam && startParam.startsWith('pay_')) {
-            const mod = startParam.replace('pay_', '');
-            document.getElementById('pay-title').innerText = (currentLang === 'ru' ? "Оплата: " : "Pay: ") + mod;
-            document.getElementById('payment-modal').classList.add('active');
-            tg.MainButton.text = currentLang === 'ru' ? "Оплатить" : "Pay Now";
-            tg.MainButton.show();
-            tg.BackButton.show();
-        }
-    }
-
     updateTexts('ru');
-    checkStartParam();
 </script>
 </body>
 </html>
