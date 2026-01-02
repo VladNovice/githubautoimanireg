@@ -7,146 +7,285 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
-            --bg: #000000; --card: #1C1C1E; --accent: #007AFF; --text: #FFFFFF;
-            --text-gray: #8E8E93; --border: rgba(255, 255, 255, 0.1);
+            --bg: #000000;
+            --card: #1C1C1E;
+            --secondary-card: #2C2C2E;
+            --accent: #007AFF;
+            --text: #FFFFFF;
+            --text-gray: #8E8E93;
+            --border: rgba(255, 255, 255, 0.1);
+            --glass: rgba(255, 255, 255, 0.05);
+            --ios-blue: #007AFF;
         }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, system-ui, sans-serif; }
-        body { background: var(--bg); color: var(--text); margin: 0; padding: 0; overflow: hidden; }
-        .container { padding: calc(env(safe-area-inset-top) + 20px) 16px; max-width: 440px; margin: 0 auto; }
-        
-        /* Header & Lang */
+
+        * { 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden;
+        }
+
+        .container {
+            padding: calc(env(safe-area-inset-top) + 20px) 16px 40px;
+            max-width: 440px;
+            margin: 0 auto;
+        }
+
         header { margin-bottom: 32px; }
-        .header-top { display: flex; justify-content: space-between; align-items: center; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .logo { height: 38px; }
-        .lang-selector { position: relative; background: rgba(255,255,255,0.1); border-radius: 10px; display: flex; width: 84px; height: 32px; padding: 2px; }
-        .lang-option { flex: 1; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: var(--text-gray); z-index: 2; cursor: pointer; }
+
+        .lang-selector {
+            position: relative; background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border-radius: 10px; padding: 2px; display: flex; width: 84px; height: 32px;
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+        }
+        .lang-option {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 600; color: var(--text-gray);
+            position: relative; z-index: 2; transition: color 0.3s ease; cursor: pointer;
+        }
         .lang-option.active { color: #fff; }
-        .lang-glider { position: absolute; top: 2px; left: 2px; width: 40px; height: 28px; background: rgba(255,255,255,0.2); border-radius: 8px; transition: 0.3s; }
+        .lang-glider {
+            position: absolute; top: 2px; left: 2px; width: 40px; height: 28px;
+            background: rgba(255, 255, 255, 0.15); border-radius: 8px;
+            z-index: 1; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
         body.lang-en .lang-glider { transform: translateX(40px); }
 
-        /* Grid */
         .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
-        .tall-card { background: var(--card); border-radius: 28px; height: 240px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; border: 0.5px solid var(--border); position: relative; overflow: hidden; }
-        .symbol { position: absolute; top: -10px; right: -20px; width: 150px; opacity: 0.1; transform: rotate(15deg); }
-        .card-label { font-size: 22px; font-weight: 700; }
-        .card-sub { font-size: 13px; color: var(--text-gray); }
+        .tall-card {
+            background: var(--card); border-radius: 28px; height: 260px; padding: 24px;
+            display: flex; flex-direction: column; justify-content: space-between;
+            border: 0.5px solid var(--border); transition: all 0.2s ease;
+            overflow: hidden; position: relative;
+        }
+        .tall-card:active { transform: scale(0.97); }
+        .symbol { position: absolute; top: -20px; right: -30px; width: 180px; height: 180px; opacity: 0.15; pointer-events: none; transform: rotate(15deg); }
+        .card-label { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 6px; }
+        .card-sub { font-size: 13px; color: var(--text-gray); line-height: 1.3; }
 
-        .wide-card { background: var(--card); border-radius: 24px; padding: 20px; border: 0.5px solid var(--border); display: flex; align-items: center; margin-bottom: 20px; }
-        .ai-indicator { width: 40px; height: 40px; border-radius: 50%; background: conic-gradient(#007AFF, #AF52DE, #007AFF); filter: blur(8px); opacity: 0.6; position: absolute; }
+        .wide-card {
+            background: var(--card); border-radius: 24px; padding: 24px;
+            border: 0.5px solid var(--border); margin-bottom: 24px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .ai-indicator {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: conic-gradient(from 180deg at 50% 50%, #007AFF 0deg, #5856D6 120deg, #AF52DE 240deg, #007AFF 360deg);
+            filter: blur(8px); opacity: 0.5; position: absolute;
+        }
 
-        /* Payment UI */
-        #payment-screen { position: fixed; inset: 0; background: var(--bg); z-index: 1000; display: none; flex-direction: column; padding-top: 40px; }
-        #payment-screen.active { display: flex; }
-        .price-big { font-size: 56px; font-weight: 800; text-align: center; margin: 40px 0; }
-        .ios-group { background: var(--card); border-radius: 12px; margin: 0 16px; overflow: hidden; }
-        .ios-item { padding: 16px; display: flex; align-items: center; border-bottom: 0.5px solid var(--border); }
-        .ios-label { flex: 1; font-size: 17px; }
-        select { background: none; border: none; color: var(--accent); font-size: 17px; outline: none; }
+        .list-section { background: var(--card); border-radius: 16px; border: 0.5px solid var(--border); overflow: hidden; margin-bottom: 40px; }
+        .list-row { padding: 16px; display: flex; align-items: center; justify-content: space-between; text-decoration: none; color: inherit; }
+        .list-row:not(:last-child) { border-bottom: 0.5px solid var(--border); }
+
+        /* --- SETUP MODAL --- */
+        #setup {
+            position: fixed; inset: 0; background: var(--bg); z-index: 1000;
+            padding-top: calc(env(safe-area-inset-top) + 10px);
+            transform: translateY(100%); transition: transform 0.5s cubic-bezier(0.15, 0.4, 0.05, 1);
+            display: flex; flex-direction: column;
+        }
+        #setup.active { transform: translateY(0); }
+
+        .setup-header { padding: 0 20px; margin-bottom: 20px; }
+        .step-title { font-size: 32px; font-weight: 700; letter-spacing: -1px; margin-bottom: 8px; color: #fff; }
+        .step-desc { font-size: 16px; color: var(--text-gray); line-height: 1.4; margin-bottom: 10px; }
+
+        .ios-group { background: var(--card); border-radius: 12px; margin: 0 16px 24px; overflow: hidden; }
+        .ios-item { display: flex; align-items: center; padding: 12px 16px; min-height: 48px; position: relative; }
+        
+        .ios-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; margin-right: 12px; font-size: 16px; }
+        .ios-content { flex: 1; display: flex; flex-direction: column; }
+        .ios-label { font-size: 13px; color: var(--text-gray); margin-bottom: 2px; }
+        
+        .ios-input { background: none; border: none; color: #fff; font-size: 17px; padding: 0; width: 100%; outline: none; }
+        select.ios-input { appearance: none; }
+
+        .status { text-align: center; font-size: 11px; color: #48484A; text-transform: uppercase; letter-spacing: 1px; }
     </style>
 </head>
 <body>
 
-<div class="container" id="main-menu">
+<div class="container">
     <header>
         <div class="header-top">
             <img src="mti,.png" alt="MTI" class="logo">
-            <div class="lang-selector" onclick="toggleLang()">
+            <div class="lang-selector">
                 <div class="lang-glider"></div>
-                <div class="lang-option active" id="btn-ru">RU</div>
-                <div class="lang-option" id="btn-en">EN</div>
+                <div class="lang-option active" id="btn-ru" onclick="toggleLang('ru')">RU</div>
+                <div class="lang-option" id="btn-en" onclick="toggleLang('en')">EN</div>
             </div>
         </div>
-        <p id="txt-tagline">Next-Gen Business Engineering</p>
+        <div class="tagline" id="txt-tagline">Next-Gen Business Engineering</div>
     </header>
 
-    <div class="main-grid">
-        <div class="tall-card" onclick="sendToBot('setup_beauty')">
-            <div class="symbol">⭐</div>
-            <div>
+    <main class="main-grid">
+        <div class="tall-card" onclick="selectModule('Beauty')">
+            <div class="symbol"><svg viewBox="0 0 24 24" fill="white"><path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z"/></svg></div>
+            <div class="card-content">
                 <div class="card-label">Beauty</div>
-                <div class="card-sub" id="txt-beauty-sub">Service ecosystem</div>
+                <div class="card-sub" id="txt-beauty-sub">Service ecosystem & retention management</div>
             </div>
         </div>
-        <div class="tall-card" onclick="sendToBot('setup_crypto')">
-            <div class="symbol">₿</div>
-            <div>
+        <div class="tall-card" onclick="selectModule('Crypto')">
+            <div class="symbol"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M12 2L4 7V17L12 22L20 17V7L12 2Z"/><path d="M12 6V18M9 8H13.5C14.3284 8 15 8.67157 15 9.5C15 10.3284 14.3284 11 13.5 11H12M9 11H14.5C15.3284 11 16 11.6716 16 12.5C16 13.3284 15.3284 14 14.5 14H12"/></svg></div>
+            <div class="card-content">
                 <div class="card-label">Crypto</div>
-                <div class="card-sub" id="txt-crypto-sub">Web3 node infra</div>
+                <div class="card-sub" id="txt-crypto-sub">Web3 node infra & automated payments</div>
             </div>
         </div>
+    </main>
+
+    <div class="wide-card" onclick="selectModule('AI')">
+        <div style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+            <div class="ai-indicator"></div>
+            <div style="width: 12px; height: 12px; background: white; border-radius: 50%; z-index: 1;"></div>
+        </div>
+        <div style="flex: 1; margin: 0 16px;">
+            <div class="card-label" style="font-size: 18px; margin: 0;" id="txt-ai-title">AI & Custom Solution</div>
+            <div class="card-sub" id="txt-ai-sub">Individual architectural development</div>
+        </div>
+        <div class="chevron">›</div>
     </div>
 
-    <div class="wide-card" onclick="sendToBot('setup_ai')">
-        <div style="position:relative; width:40px; height:40px; margin-right:15px;">
-            <div class="ai-indicator"></div>
-        </div>
-        <div>
-            <div class="card-label" style="font-size:18px">AI & Custom</div>
-            <div class="card-sub">Individual architecture</div>
-        </div>
+    <div class="list-section">
+        <a href="https://t.me/mti_news" class="list-row"><span id="txt-updates">Updates</span><span style="color:#48484A">›</span></a>
+        <a href="https://t.me/mti_cases" class="list-row"><span id="txt-cases">Case Archive</span><span style="color:#48484A">›</span></a>
     </div>
+    <footer class="status">Core engine 2.1 • Operational</footer>
 </div>
 
-<!-- Экран оплаты -->
-<div id="payment-screen">
-    <div style="text-align:center; color:var(--text-gray)" id="txt-pay-for">Оплата подписки</div>
-    <div class="price-big" id="pay-amount">49.00$</div>
-    
+<!-- MODAL: ONLY FOR PAYMENT -->
+<div id="setup">
+    <div class="setup-header">
+        <div class="step-title" id="pay-title">Оплата</div>
+        <div class="step-desc" id="pay-desc">Выберите способ оплаты подписки</div>
+    </div>
+
     <div class="ios-group">
         <div class="ios-item">
-            <span class="ios-label">Метод оплаты</span>
-            <select id="pay-method">
-                <option value="cryptobot">CryptoBot</option>
-                <option value="stars">Telegram Stars</option>
-                <option value="card">Банковская карта</option>
-            </select>
+            <div class="ios-icon" style="background: #34C759;">💳</div>
+            <div class="ios-content">
+                <span class="ios-label" id="txt-form-method">Метод оплаты</span>
+                <select id="p-method" class="ios-input">
+                    <option value="cryptobot">CryptoBot (USDT, TON)</option>
+                    <option value="yookassa">Банковская карта (RU)</option>
+                </select>
+            </div>
         </div>
     </div>
+    <p style="padding: 0 20px; font-size: 13px; color: #48484A; text-align: center;" id="txt-hint-pay">
+        Безопасная транзакция через сертифицированный шлюз
+    </p>
 </div>
 
 <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
-
+    tg.headerColor = '#000000';
+    
     let currentLang = 'ru';
 
-    // 1. Отправка команды боту для начала настройки
-    function sendToBot(command) {
+    // 1. Логика выбора модуля (отправка боту для начала диалога)
+    function selectModule(id) {
         tg.HapticFeedback.impactOccurred('medium');
-        tg.sendData(command); // Бот получит это сообщение
-        tg.close();
+        // Отправляем боту информацию, какой модуль настраивать
+        tg.sendData(JSON.stringify({
+            action: 'start_setup',
+            module: id
+        }));
+        // После sendData приложение обычно закрывается само, если открыто через KeyboardButton
     }
 
-    // 2. Проверка: не открыли ли нас для оплаты?
-    // Ссылка будет вида: t.me/bot/app?startapp=pay_49_beauty
-    const startParam = tg.initDataUnsafe.start_param;
-    if (startParam && startParam.startsWith('pay')) {
-        const [_, amount, module] = startParam.split('_');
-        showPayment(amount, module);
+    // 2. Логика оплаты (если бот вернул пользователя сюда через startapp)
+    function checkIncomingAction() {
+        const params = new URLSearchParams(window.location.search);
+        const startParam = tg.initDataUnsafe.start_param;
+
+        // Если бот прислал ссылку вида t.me/bot/app?startapp=pay_Beauty
+        if (startParam && startParam.startsWith('pay_')) {
+            const module = startParam.replace('pay_', '');
+            openPaymentSheet(module);
+        }
     }
 
-    function showPayment(amount, module) {
-        document.getElementById('main-menu').style.display = 'none';
-        const screen = document.getElementById('payment-screen');
-        screen.classList.add('active');
-        document.getElementById('pay-amount').innerText = amount + '$';
-        document.getElementById('txt-pay-for').innerText = "Модуль: " + module.toUpperCase();
-
-        tg.MainButton.setText("ОПЛАТИТЬ");
+    function openPaymentSheet(module) {
+        document.getElementById('setup').classList.add('active');
+        tg.MainButton.text = currentLang === 'ru' ? "Оплатить" : "Pay Now";
         tg.MainButton.show();
+        tg.BackButton.show();
+        
+        const desc = document.getElementById('pay-desc');
+        desc.innerText = (currentLang === 'ru' ? "Активация модуля: " : "Activating module: ") + module;
     }
 
     tg.MainButton.onClick(() => {
-        const method = document.getElementById('pay-method').value;
-        tg.sendData("pay_confirm_" + method);
-        tg.HapticFeedback.notificationOccurred('success');
+        const method = document.getElementById('p-method').value;
+        tg.sendData(JSON.stringify({
+            action: 'payment_confirm',
+            method: method
+        }));
     });
 
-    function toggleLang() {
-        currentLang = currentLang === 'ru' ? 'en' : 'ru';
-        document.body.classList.toggle('lang-en');
+    tg.BackButton.onClick(() => {
+        document.getElementById('setup').classList.remove('active');
+        tg.MainButton.hide();
+        tg.BackButton.hide();
+    });
+
+    // --- Вспомогательные функции (язык) ---
+    function toggleLang(lang) {
+        currentLang = lang;
+        document.body.classList.toggle('lang-en', lang === 'en');
+        document.getElementById('btn-ru').classList.toggle('active', lang === 'ru');
+        document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+        updateTexts(lang);
         tg.HapticFeedback.selectionChanged();
     }
+
+    function updateTexts(lang) {
+        const t = {
+            ru: {
+                tagline: "Бизнес-инжиниринг нового поколения",
+                beautySub: "Экосистема услуг и удержание",
+                cryptoSub: "Web3 узлы и автоплатежи",
+                aiTitle: "AI и Кастомные решения",
+                aiSub: "Индивидуальная архитектура",
+                updates: "Обновления",
+                cases: "Архив кейсов"
+            },
+            en: {
+                tagline: "Next-Gen Business Engineering",
+                beautySub: "Service ecosystem & retention",
+                cryptoSub: "Web3 node & payments",
+                aiTitle: "AI & Custom Solution",
+                aiSub: "Individual architecture",
+                updates: "Updates",
+                cases: "Case Archive"
+            }
+        }[lang];
+
+        for (let key in t) {
+            const el = document.getElementById('txt-' + key.replace(/([A-Z])/g, "-$1").toLowerCase());
+            if (el) el.innerText = t[key];
+        }
+    }
+
+    // Инициализация
+    updateTexts('ru');
+    checkIncomingAction();
+
 </script>
 </body>
 </html>
