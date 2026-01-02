@@ -3,185 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>MTI | Checkout</title>
+    <title>MTI | Next-Gen</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
-            --bg: #000000;
-            --card: #1C1C1E;
-            --accent: #007AFF;
-            --text: #FFFFFF;
-            --text-gray: #8E8E93;
-            --border: rgba(255, 255, 255, 0.1);
-            --ios-green: #34C759;
+            --bg: #000000; --card: #1C1C1E; --accent: #007AFF; --text: #FFFFFF;
+            --text-gray: #8E8E93; --border: rgba(255, 255, 255, 0.1);
         }
-
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body {
-            background: var(--bg);
-            color: var(--text);
-            margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
-            overflow-x: hidden;
-        }
-
-        .container {
-            padding: calc(env(safe-area-inset-top) + 20px) 16px 100px;
-            max-width: 440px;
-            margin: 0 auto;
-        }
-
-        /* --- КАРТОЧКИ МОДУЛЕЙ --- */
-        .module-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
-        .mod-card {
-            background: var(--card); border-radius: 20px; padding: 20px;
-            border: 0.5px solid var(--border); position: relative; overflow: hidden;
-        }
-        .mod-card.active { border-color: var(--accent); }
-        .mod-title { font-size: 17px; font-weight: 600; margin-bottom: 4px; }
-        .mod-price { font-size: 13px; color: var(--accent); font-weight: 500; }
-
-        /* --- CHECKOUT SCREEN (APPLE STYLE) --- */
-        #checkout-screen {
-            display: none; /* Показываем только если есть данные из бота */
-            animation: slideUp 0.5s cubic-bezier(0.2, 1, 0.3, 1);
-        }
-
-        @keyframes slideUp { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-        .receipt {
-            background: var(--card); border-radius: 24px; padding: 24px;
-            border: 0.5px solid var(--border); margin-bottom: 20px;
-        }
-
-        .receipt-header { text-align: center; margin-bottom: 24px; }
-        .receipt-icon { 
-            width: 64px; height: 64px; background: linear-gradient(135deg, #007AFF, #5856D6);
-            border-radius: 18px; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center;
-            font-size: 32px; box-shadow: 0 10px 20px rgba(0,122,255,0.3);
-        }
-
-        .receipt-title { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; }
-        .receipt-subtitle { color: var(--text-gray); font-size: 15px; margin-top: 4px; }
-
-        .info-row {
-            display: flex; justify-content: space-between; padding: 12px 0;
-            border-bottom: 0.5px solid var(--border);
-        }
-        .info-label { color: var(--text-gray); font-size: 15px; }
-        .info-value { font-weight: 500; font-size: 15px; text-align: right; max-width: 60%; }
-
-        /* PAYMENT SELECTOR */
-        .ios-group { background: var(--card); border-radius: 14px; overflow: hidden; margin-top: 24px; border: 0.5px solid var(--border); }
-        .ios-item {
-            display: flex; align-items: center; padding: 14px 16px;
-            background: var(--card); transition: background 0.2s;
-        }
-        .ios-item:active { background: #2C2C2E; }
-        .ios-item:not(:last-child) { border-bottom: 0.5px solid var(--border); }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, system-ui, sans-serif; }
+        body { background: var(--bg); color: var(--text); margin: 0; padding: 0; overflow: hidden; }
+        .container { padding: calc(env(safe-area-inset-top) + 20px) 16px; max-width: 440px; margin: 0 auto; }
         
-        .radio-circle {
-            width: 20px; height: 20px; border: 2px solid var(--border);
-            border-radius: 50%; margin-right: 12px; position: relative;
-        }
-        .ios-item.selected .radio-circle { border-color: var(--accent); }
-        .ios-item.selected .radio-circle::after {
-            content: ''; position: absolute; inset: 3px;
-            background: var(--accent); border-radius: 50%;
-        }
+        /* Header & Lang */
+        header { margin-bottom: 32px; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; }
+        .logo { height: 38px; }
+        .lang-selector { position: relative; background: rgba(255,255,255,0.1); border-radius: 10px; display: flex; width: 84px; height: 32px; padding: 2px; }
+        .lang-option { flex: 1; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: var(--text-gray); z-index: 2; cursor: pointer; }
+        .lang-option.active { color: #fff; }
+        .lang-glider { position: absolute; top: 2px; left: 2px; width: 40px; height: 28px; background: rgba(255,255,255,0.2); border-radius: 8px; transition: 0.3s; }
+        body.lang-en .lang-glider { transform: translateX(40px); }
 
-        .pay-icon { font-size: 20px; margin-right: 12px; }
+        /* Grid */
+        .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+        .tall-card { background: var(--card); border-radius: 28px; height: 240px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; border: 0.5px solid var(--border); position: relative; overflow: hidden; }
+        .symbol { position: absolute; top: -10px; right: -20px; width: 150px; opacity: 0.1; transform: rotate(15deg); }
+        .card-label { font-size: 22px; font-weight: 700; }
+        .card-sub { font-size: 13px; color: var(--text-gray); }
 
-        .footer-note {
-            text-align: center; color: var(--text-gray); font-size: 12px;
-            margin-top: 20px; padding: 0 20px; line-height: 1.4;
-        }
+        .wide-card { background: var(--card); border-radius: 24px; padding: 20px; border: 0.5px solid var(--border); display: flex; align-items: center; margin-bottom: 20px; }
+        .ai-indicator { width: 40px; height: 40px; border-radius: 50%; background: conic-gradient(#007AFF, #AF52DE, #007AFF); filter: blur(8px); opacity: 0.6; position: absolute; }
 
-        /* Кнопка в стиле Apple Pay */
-        .apple-pay-btn {
-            position: fixed; bottom: calc(env(safe-area-inset-bottom) + 20px);
-            left: 16px; right: 16px; height: 54px;
-            background: #fff; color: #000; border-radius: 14px;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 600; font-size: 17px; z-index: 100;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
+        /* Payment UI */
+        #payment-screen { position: fixed; inset: 0; background: var(--bg); z-index: 1000; display: none; flex-direction: column; padding-top: 40px; }
+        #payment-screen.active { display: flex; }
+        .price-big { font-size: 56px; font-weight: 800; text-align: center; margin: 40px 0; }
+        .ios-group { background: var(--card); border-radius: 12px; margin: 0 16px; overflow: hidden; }
+        .ios-item { padding: 16px; display: flex; align-items: center; border-bottom: 0.5px solid var(--border); }
+        .ios-label { flex: 1; font-size: 17px; }
+        select { background: none; border: none; color: var(--accent); font-size: 17px; outline: none; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <!-- СЕКЦИЯ 1: КАТАЛОГ (Если пользователь просто зашел в приложение) -->
-    <div id="catalog-screen">
-        <header style="margin-bottom: 32px;">
-            <img src="mti,.png" alt="MTI" style="height: 32px; margin-bottom: 8px;">
-            <h1 style="font-size: 28px; margin: 0;">Инженерные решения</h1>
-        </header>
-
-        <div class="module-grid">
-            <div class="mod-card" onclick="startInBot('Beauty')">
-                <div class="mod-title">Beauty</div>
-                <div class="mod-price">от 2,900₽</div>
-            </div>
-            <div class="mod-card" onclick="startInBot('Crypto')">
-                <div class="mod-title">Crypto</div>
-                <div class="mod-price">от 4,500₽</div>
+<div class="container" id="main-menu">
+    <header>
+        <div class="header-top">
+            <img src="mti,.png" alt="MTI" class="logo">
+            <div class="lang-selector" onclick="toggleLang()">
+                <div class="lang-glider"></div>
+                <div class="lang-option active" id="btn-ru">RU</div>
+                <div class="lang-option" id="btn-en">EN</div>
             </div>
         </div>
-        
-        <p style="color: var(--text-gray); font-size: 14px; text-align: center;">
-            Выберите модуль, чтобы начать настройку в диалоге с ботом.
-        </p>
+        <p id="txt-tagline">Next-Gen Business Engineering</p>
+    </header>
+
+    <div class="main-grid">
+        <div class="tall-card" onclick="sendToBot('setup_beauty')">
+            <div class="symbol">⭐</div>
+            <div>
+                <div class="card-label">Beauty</div>
+                <div class="card-sub" id="txt-beauty-sub">Service ecosystem</div>
+            </div>
+        </div>
+        <div class="tall-card" onclick="sendToBot('setup_crypto')">
+            <div class="symbol">₿</div>
+            <div>
+                <div class="card-label">Crypto</div>
+                <div class="card-sub" id="txt-crypto-sub">Web3 node infra</div>
+            </div>
+        </div>
     </div>
 
-    <!-- СЕКЦИЯ 2: ОПЛАТА (Показывается при переходе из бота) -->
-    <div id="checkout-screen">
-        <div class="receipt">
-            <div class="receipt-header">
-                <div class="receipt-icon" id="res-icon">✨</div>
-                <div class="receipt-title" id="res-mod-name">Module Name</div>
-                <div class="receipt-subtitle">Подписка на систему</div>
-            </div>
-
-            <div class="info-row">
-                <span class="info-label">Проект</span>
-                <span class="info-value" id="res-project-name">—</span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">Локация</span>
-                <span class="info-value" id="res-location">—</span>
-            </div>
-            <div class="info-row" style="border: none;">
-                <span class="info-label" style="color: #fff; font-weight: 600;">Итого</span>
-                <span class="info-value" style="color: var(--ios-green); font-size: 18px; font-weight: 700;" id="res-total">0.00₽</span>
-            </div>
+    <div class="wide-card" onclick="sendToBot('setup_ai')">
+        <div style="position:relative; width:40px; height:40px; margin-right:15px;">
+            <div class="ai-indicator"></div>
         </div>
-
-        <div class="ios-group">
-            <div class="ios-item selected" onclick="selectPay('crypto')">
-                <div class="radio-circle"></div>
-                <span class="pay-icon">💎</span>
-                <div class="ios-content">
-                    <div style="font-weight: 500;">CryptoBot</div>
-                    <div style="font-size: 12px; color: var(--text-gray);">USDT, TON, BTC</div>
-                </div>
-            </div>
-            <div class="ios-item" onclick="selectPay('card')">
-                <div class="radio-circle"></div>
-                <span class="pay-icon">💳</span>
-                <div class="ios-content">
-                    <div style="font-weight: 500;">Банковская карта</div>
-                    <div style="font-size: 12px; color: var(--text-gray);">РФ, МИР (YooKassa)</div>
-                </div>
-            </div>
+        <div>
+            <div class="card-label" style="font-size:18px">AI & Custom</div>
+            <div class="card-sub">Individual architecture</div>
         </div>
+    </div>
+</div>
 
-        <div class="footer-note">
-            Нажимая кнопку оплаты, вы подтверждаете согласие с условиями обслуживания MTI Engineering.
-        </div>
-
-        <div class="apple-pay-btn" onclick="processPayment()">
-            Оплатить
+<!-- Экран оплаты -->
+<div id="payment-screen">
+    <div style="text-align:center; color:var(--text-gray)" id="txt-pay-for">Оплата подписки</div>
+    <div class="price-big" id="pay-amount">49.00$</div>
+    
+    <div class="ios-group">
+        <div class="ios-item">
+            <span class="ios-label">Метод оплаты</span>
+            <select id="pay-method">
+                <option value="cryptobot">CryptoBot</option>
+                <option value="stars">Telegram Stars</option>
+                <option value="card">Банковская карта</option>
+            </select>
         </div>
     </div>
 </div>
@@ -189,84 +107,45 @@
 <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
-    tg.headerColor = '#000000';
-    tg.backgroundColor = '#000000';
 
-    let selectedMethod = 'crypto';
-    let currentData = null;
+    let currentLang = 'ru';
 
-    // 1. ПАРСИНГ ДАННЫХ ИЗ БОТА
-    // Бот должен присылать ссылку вида: https://t.me/bot/app?startapp=base64_json
-    const startParam = tg.initDataUnsafe.start_param;
-
-    if (startParam) {
-        try {
-            // Декодируем данные (предположим, бот прислал base64 или просто ID)
-            // Для теста можно использовать прямую проверку:
-            document.getElementById('catalog-screen').style.display = 'none';
-            document.getElementById('checkout-screen').style.display = 'block';
-            
-            // Пример того, как мы наполняем экран из параметров
-            // В реальности тут будет: const decoded = JSON.parse(atob(startParam));
-            fillCheckoutData({
-                module: 'Beauty',
-                name: 'MTI Studio',
-                location: 'Москва, Цветной б-р',
-                price: '2,900₽'
-            });
-        } catch (e) {
-            console.error("Ошибка парсинга данных", e);
-        }
-    }
-
-    function fillCheckoutData(data) {
-        currentData = data;
-        document.getElementById('res-mod-name').innerText = data.module;
-        document.getElementById('res-project-name').innerText = data.name;
-        document.getElementById('res-location').innerText = data.location;
-        document.getElementById('res-total').innerText = data.price;
-        document.getElementById('res-icon').innerText = data.module === 'Beauty' ? '💄' : '₿';
-    }
-
-    function selectPay(method) {
-        selectedMethod = method;
-        const items = document.querySelectorAll('.ios-item');
-        items.forEach(el => el.classList.remove('selected'));
-        event.currentTarget.classList.add('selected');
-        tg.HapticFeedback.selectionChanged();
-    }
-
-    function startInBot(mod) {
-        // Если пользователь нажал на карточку в каталоге, закрываем приложение и отправляем команду боту
-        tg.sendData(JSON.stringify({action: 'start_setup', module: mod}));
+    // 1. Отправка команды боту для начала настройки
+    function sendToBot(command) {
+        tg.HapticFeedback.impactOccurred('medium');
+        tg.sendData(command); // Бот получит это сообщение
         tg.close();
     }
 
-    function processPayment() {
-        tg.HapticFeedback.notificationOccurred('success');
-        
-        // Отправляем боту выбранный метод оплаты и данные
-        const paymentInfo = {
-            action: 'payment_init',
-            method: selectedMethod,
-            data: currentData
-        };
-        
-        tg.sendData(JSON.stringify(paymentInfo));
-        
-        // Показываем лоадер Telegram
-        tg.MainButton.showProgress();
-        setTimeout(() => tg.close(), 1000);
+    // 2. Проверка: не открыли ли нас для оплаты?
+    // Ссылка будет вида: t.me/bot/app?startapp=pay_49_beauty
+    const startParam = tg.initDataUnsafe.start_param;
+    if (startParam && startParam.startsWith('pay')) {
+        const [_, amount, module] = startParam.split('_');
+        showPayment(amount, module);
     }
 
-    // Настройка кнопки "Назад" если мы в Checkout
-    if (startParam) {
-        tg.BackButton.show();
-        tg.BackButton.onClick(() => {
-            document.getElementById('catalog-screen').style.display = 'block';
-            document.getElementById('checkout-screen').style.display = 'none';
-            tg.BackButton.hide();
-        });
+    function showPayment(amount, module) {
+        document.getElementById('main-menu').style.display = 'none';
+        const screen = document.getElementById('payment-screen');
+        screen.classList.add('active');
+        document.getElementById('pay-amount').innerText = amount + '$';
+        document.getElementById('txt-pay-for').innerText = "Модуль: " + module.toUpperCase();
+
+        tg.MainButton.setText("ОПЛАТИТЬ");
+        tg.MainButton.show();
+    }
+
+    tg.MainButton.onClick(() => {
+        const method = document.getElementById('pay-method').value;
+        tg.sendData("pay_confirm_" + method);
+        tg.HapticFeedback.notificationOccurred('success');
+    });
+
+    function toggleLang() {
+        currentLang = currentLang === 'ru' ? 'en' : 'ru';
+        document.body.classList.toggle('lang-en');
+        tg.HapticFeedback.selectionChanged();
     }
 </script>
 </body>
