@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>MTI</title>
+    <title>MTI Engineering</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
@@ -32,221 +32,84 @@
         }
 
         .container {
-            padding: calc(env(safe-area-inset-top) + 20px) 16px 40px;
+            padding: calc(env(safe-area-inset-top) + 20px) 16px 120px;
             max-width: 440px;
             margin: 0 auto;
         }
 
-        /* HEADER & LANG FIX */
-        header {
-            margin-bottom: 32px;
-        }
+        header { margin-bottom: 32px; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .logo { height: 32px; font-weight: 800; font-size: 24px; letter-spacing: -1px; }
 
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            padding-right: 4px;
-        }
-
-        .logo {
-            height: 38px;
-            display: block;
-        }
-
-        /* ИДЕАЛЬНЫЙ ПЕРЕКЛЮЧАТЕЛЬ */
+        /* LANG SWITCHER */
         .lang-selector {
             position: relative;
             background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
             border-radius: 10px;
             padding: 2px;
             display: flex;
-            width: 84px; /* Фиксированная ширина */
+            width: 84px;
             height: 32px;
-            border: 0.5px solid rgba(255, 255, 255, 0.1);
+            border: 0.5px solid var(--border);
         }
+        .lang-option { flex: 1; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: var(--text-gray); z-index: 2; cursor: pointer; }
+        .lang-option.active { color: #fff; }
+        .lang-glider { position: absolute; top: 2px; left: 2px; width: 40px; height: 28px; background: rgba(255, 255, 255, 0.15); border-radius: 8px; z-index: 1; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        body.lang-en .lang-glider { transform: translateX(40px); }
 
-        .lang-option {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-gray);
-            position: relative;
-            z-index: 2;
-            transition: color 0.3s ease;
-            cursor: pointer;
-        }
-
-        .lang-option.active {
-            color: #fff;
-        }
-
-        .lang-glider {
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 40px; /* (84px - 4px) / 2 */
-            height: 28px;
-            background: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            border: 0.5px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            z-index: 1;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        body.lang-en .lang-glider {
-            transform: translateX(40px);
-        }
-
-        .tagline {
-            font-size: 15px;
-            color: var(--text-gray);
-            font-weight: 400;
-            letter-spacing: -0.2px;
-            padding-left: 2px;
-        }
-
-        /* GRID & CARDS */
-        .main-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin-bottom: 16px;
-        }
-
+        /* CARDS */
+        .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
         .tall-card {
-            background: var(--card);
-            border-radius: 28px;
-            height: 280px; 
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            border: 0.5px solid var(--border);
-            transition: all 0.2s ease;
-            overflow: hidden;
-            position: relative;
+            background: var(--card); border-radius: 28px; height: 240px; padding: 20px;
+            display: flex; flex-direction: column; justify-content: flex-end;
+            border: 0.5px solid var(--border); position: relative; overflow: hidden;
         }
+        .symbol { position: absolute; top: -10px; right: -10px; width: 120px; height: 120px; opacity: 0.1; }
+        .card-label { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+        .card-sub { font-size: 12px; color: var(--text-gray); line-height: 1.3; }
 
-        .symbol {
-            position: absolute;
-            top: -20px;
-            right: -30px;
-            width: 180px;
-            height: 180px;
-            opacity: 0.15;
-            pointer-events: none;
-            transform: rotate(15deg);
-        }
-
-        .card-content {
-            position: relative;
-            z-index: 2;
-            margin-top: auto;
-        }
-
-        .card-label {
-            font-size: 22px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            margin-bottom: 6px;
-        }
-
-        .card-sub {
-            font-size: 13px;
-            color: var(--text-gray);
-            line-height: 1.3;
-        }
-
-        /* AI CARD */
         .wide-card {
-            background: var(--card);
-            border-radius: 24px;
-            padding: 24px;
-            border: 0.5px solid var(--border);
-            margin-bottom: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: all 0.2s ease;
+            background: var(--card); border-radius: 24px; padding: 20px;
+            border: 0.5px solid var(--border); margin-bottom: 16px;
+            display: flex; align-items: center; justify-content: space-between;
         }
 
-        .ai-indicator {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: conic-gradient(from 180deg at 50% 50%, #007AFF 0deg, #5856D6 120deg, #AF52DE 240deg, #007AFF 360deg);
-            filter: blur(8px);
-            opacity: 0.5;
-            position: absolute;
-        }
+        /* LISTS */
+        .list-section { background: var(--card); border-radius: 16px; border: 0.5px solid var(--border); overflow: hidden; margin-bottom: 24px; }
+        .list-row { padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; text-decoration: none; color: inherit; border-bottom: 0.5px solid var(--border); }
+        .list-row:last-child { border-bottom: none; }
 
-        .list-section {
-            background: var(--card);
-            border-radius: 16px;
-            border: 0.5px solid var(--border);
-            overflow: hidden;
-            margin-bottom: 40px;
-        }
-
-        .list-row {
-            padding: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .list-row:not(:last-child) { border-bottom: 0.5px solid var(--border); }
-        .list-row:active, .tall-card:active, .wide-card:active { background: var(--secondary-card); }
-
-        .list-title { font-size: 17px; letter-spacing: -0.4px; }
-        .chevron { color: #48484A; font-weight: 300; }
-
-        /* Setup Screen */
+        /* MODAL SETUP */
         #setup {
-            position: fixed;
-            inset: 0;
-            background: var(--bg);
-            z-index: 1000;
+            position: fixed; inset: 0; background: var(--bg); z-index: 1000;
             padding: calc(env(safe-area-inset-top) + 20px) 20px;
-            transform: translateY(100%);
-            transition: transform 0.4s cubic-bezier(0.15, 0.4, 0.05, 1);
+            transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.15, 0.4, 0.05, 1);
+            overflow-y: auto;
         }
         #setup.active { transform: translateY(0); }
 
-        .input-block {
-            background: var(--card);
-            border-radius: 14px;
-            margin-top: 24px;
-        }
-
-        .input-item {
-            padding: 14px 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .input-item:not(:last-child) { border-bottom: 0.5px solid var(--border); }
-
-        input {
+        .input-block { background: var(--card); border-radius: 14px; margin-top: 20px; border: 0.5px solid var(--border); }
+        .input-item { padding: 12px 16px; display: flex; flex-direction: column; border-bottom: 0.5px solid var(--border); }
+        .input-item:last-child { border-bottom: none; }
+        .input-item label { font-size: 11px; color: var(--text-gray); text-transform: uppercase; margin-bottom: 4px; }
+        
+        input, textarea, select {
             background: none; border: none; color: var(--accent);
-            text-align: right; font-size: 17px; outline: none; width: 60%;
+            font-size: 17px; outline: none; width: 100%; padding: 0;
         }
+        textarea { height: 80px; resize: none; font-family: inherit; }
 
-        .status {
-            text-align: center; font-size: 11px; color: #48484A; 
-            text-transform: uppercase; letter-spacing: 1px;
+        /* PAYMENT SELECTOR */
+        .pay-selector { display: flex; gap: 8px; margin-top: 12px; }
+        .pay-option { 
+            flex: 1; padding: 12px; background: var(--secondary-card); border-radius: 12px; 
+            text-align: center; font-size: 13px; border: 1px solid transparent; transition: 0.2s;
         }
+        .pay-option.active { border-color: var(--accent); background: rgba(0, 122, 255, 0.1); }
 
+        .section-title { margin: 24px 0 8px 4px; font-size: 13px; color: var(--text-gray); text-transform: uppercase; }
+
+        .status { text-align: center; font-size: 11px; color: #48484A; margin-top: 20px; }
     </style>
 </head>
 <body>
@@ -254,143 +117,136 @@
 <div class="container">
     <header>
         <div class="header-top">
-            <img src="mti,.png" alt="MTI" class="logo">
-            <!-- ПЕРЕКЛЮЧАТЕЛЬ -->
+            <div class="logo">MTI</div>
             <div class="lang-selector">
                 <div class="lang-glider"></div>
                 <div class="lang-option active" id="btn-ru" onclick="toggleLang('ru')">RU</div>
                 <div class="lang-option" id="btn-en" onclick="toggleLang('en')">EN</div>
             </div>
         </div>
-        <div class="tagline" id="txt-tagline">Next-Gen Business Engineering</div>
+        <div class="tagline" id="txt-tagline" style="color: var(--text-gray);">Next-Gen Business Engineering</div>
     </header>
 
     <main class="main-grid">
         <div class="tall-card" onclick="openMod('Beauty')">
-            <div class="symbol">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" fill="white"/>
-                </svg>
-            </div>
-            <div class="card-content">
-                <div class="card-label">Beauty</div>
-                <div class="card-sub" id="txt-beauty-sub">Service ecosystem & retention management</div>
-            </div>
+            <div class="symbol">🌸</div>
+            <div class="card-label">Beauty</div>
+            <div class="card-sub" id="txt-beauty-sub">Ecosystem & Retention</div>
         </div>
 
         <div class="tall-card" onclick="openMod('Crypto')">
-            <div class="symbol">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2L4 7V17L12 22L20 17V7L12 2Z" stroke="white" stroke-width="1.5"/>
-                    <path d="M12 6V18M9 8H13.5C14.3284 8 15 8.67157 15 9.5C15 10.3284 14.3284 11 13.5 11H12M9 11H14.5C15.3284 11 16 11.6716 16 12.5C16 13.3284 15.3284 14 14.5 14H12" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
-            </div>
-            <div class="card-content">
-                <div class="card-label">Crypto</div>
-                <div class="card-sub" id="txt-crypto-sub">Web3 node infra & automated payments</div>
-            </div>
+            <div class="symbol">₿</div>
+            <div class="card-label">Crypto</div>
+            <div class="card-sub" id="txt-crypto-sub">Node Infra & Payments</div>
         </div>
     </main>
 
     <div class="wide-card" onclick="openMod('AI')">
-        <div style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
-            <div class="ai-indicator"></div>
-            <div style="width: 12px; height: 12px; background: white; border-radius: 50%; z-index: 1;"></div>
+        <div style="flex: 1;">
+            <div class="card-label" id="txt-ai-title">AI Solutions</div>
+            <div class="card-sub" id="txt-ai-sub">Custom Architecture</div>
         </div>
-        <div style="flex: 1; margin: 0 16px;">
-            <div class="card-label" style="font-size: 18px; margin: 0;" id="txt-ai-title">AI & Custom Solution</div>
-            <div class="card-sub" id="txt-ai-sub">Individual architectural development</div>
-        </div>
-        <div class="chevron">›</div>
+        <div style="color: var(--accent);">›</div>
     </div>
 
     <div class="list-section">
-        <a href="https://t.me/mti_news" class="list-row">
-            <span class="list-title" id="txt-updates">Updates</span>
-            <span class="chevron">›</span>
+        <a href="#" class="list-row">
+            <span id="txt-updates">Updates</span>
+            <span style="color: #48484A;">›</span>
         </a>
-        <a href="https://t.me/mti_cases" class="list-row">
-            <span class="list-title" id="txt-cases">Case Archive</span>
-            <span class="chevron">›</span>
+        <a href="#" class="list-row">
+            <span id="txt-cases">Case Archive</span>
+            <span style="color: #48484A;">›</span>
         </a>
     </div>
 
-    <footer class="status">
-        Core engine 2.1 • Operational
-    </footer>
+    <footer class="status">Core 2.2 • Operational</footer>
 </div>
 
 <!-- MODAL SYSTEM -->
 <div id="setup">
-    <div style="display:flex; justify-content: space-between; align-items: center;">
-        <h1 id="m-title" style="font-size: 34px; letter-spacing: -1.2px; margin: 0;">Module</h1>
+    <div style="display:flex; justify-content: space-between; align-items: baseline;">
+        <h1 id="m-title" style="font-size: 32px; letter-spacing: -1px; margin: 0;">Module</h1>
+        <span style="color: var(--text-gray); font-size: 14px;" id="txt-setup-step">Setup</span>
     </div>
+
+    <!-- Общие поля -->
     <div class="input-block">
         <div class="input-item">
-            <span id="txt-form-name">Name</span>
-            <input type="text" id="p-name" placeholder="...">
-        </div>
-        <div class="input-item">
-            <span id="txt-form-link">Link</span>
-            <input type="text" id="p-link" placeholder="@contact">
+            <label id="lbl-name">Project Name</label>
+            <input type="text" id="p-name" placeholder="My Business">
         </div>
     </div>
-    <div id="txt-func-label" style="margin: 24px 4px 12px; font-size: 13px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px;">Functionality</div>
+
+    <!-- Динамические поля -->
+    <div id="dynamic-fields"></div>
+
+    <!-- Выбор оплаты -->
+    <div class="section-title" id="txt-pay-method">Payment Method</div>
+    <div class="pay-selector">
+        <div class="pay-option active" id="pay-crypto" onclick="selectPay('cryptobot')">CryptoBot</div>
+        <div class="pay-option" id="pay-yookassa" onclick="selectPay('yookassa')">ЮKassa</div>
+    </div>
+
+    <div class="section-title" id="txt-features">Features included</div>
     <div id="feat-list" class="list-section"></div>
 </div>
 
 <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
-    tg.headerColor = '#000000';
+    
+    let currentModule = '';
+    let selectedPay = 'cryptobot';
+    let currentLang = 'ru';
+
+    const translations = {
+        ru: {
+            tagline: "Бизнес-инжиниринг нового поколения",
+            beautySub: "Экосистема и удержание",
+            cryptoSub: "Инфраструктура и платежи",
+            aiTitle: "AI Решения",
+            aiSub: "Индивидуальная архитектура",
+            updates: "Обновления",
+            cases: "Кейсы",
+            payMethod: "Способ оплаты подписки",
+            features: "Включенный функционал",
+            lblAddress: "Адрес студии",
+            lblHours: "Время работы",
+            lblPrice: "Прайс-лист (Услуга - Цена)",
+            lblCrypto: "CryptoBot API Token",
+            lblProject: "Название проекта",
+            phPrice: "Стрижка - 1000\nМаникюр - 800",
+            alertName: "Введите название проекта",
+            alertCrypto: "Введите API токен CryptoBot"
+        },
+        en: {
+            tagline: "Next-Gen Business Engineering",
+            beautySub: "Ecosystem & Retention",
+            cryptoSub: "Node Infra & Payments",
+            aiTitle: "AI Solutions",
+            aiSub: "Custom Architecture",
+            updates: "Updates",
+            cases: "Archive",
+            payMethod: "Subscription Payment",
+            features: "Features included",
+            lblAddress: "Studio Address",
+            lblHours: "Working Hours",
+            lblPrice: "Price List (Service - Price)",
+            lblCrypto: "CryptoBot API Token",
+            lblProject: "Project Name",
+            phPrice: "Haircut - 20\nManicure - 15",
+            alertName: "Enter project name",
+            alertCrypto: "Enter CryptoBot API Token"
+        }
+    };
 
     function toggleLang(lang) {
-        const body = document.body;
-        const btnRu = document.getElementById('btn-ru');
-        const btnEn = document.getElementById('btn-en');
-
-        if (lang === 'en') {
-            body.classList.add('lang-en');
-            btnEn.classList.add('active');
-            btnRu.classList.remove('active');
-            updateTexts('en');
-        } else {
-            body.classList.remove('lang-en');
-            btnRu.classList.add('active');
-            btnEn.classList.remove('active');
-            updateTexts('ru');
-        }
-        tg.HapticFeedback.selectionChanged();
-    }
-
-    function updateTexts(lang) {
-        const translations = {
-            ru: {
-                tagline: "Бизнес-инжиниринг нового поколения",
-                beautySub: "Экосистема услуг и управление удержанием",
-                cryptoSub: "Инфраструктура узлов Web3 и автоплатежи",
-                aiTitle: "AI и Кастомные решения",
-                aiSub: "Индивидуальная разработка архитектуры",
-                updates: "Обновления",
-                cases: "Архив кейсов",
-                formName: "Название",
-                formLink: "Контакт",
-                funcLabel: "Функционал"
-            },
-            en: {
-                tagline: "Next-Gen Business Engineering",
-                beautySub: "Service ecosystem & retention management",
-                cryptoSub: "Web3 node infra & automated payments",
-                aiTitle: "AI & Custom Solution",
-                aiSub: "Individual architectural development",
-                updates: "Updates",
-                cases: "Case Archive",
-                formName: "Name",
-                formLink: "Link",
-                funcLabel: "Functionality"
-            }
-        };
-
+        currentLang = lang;
+        document.body.className = lang === 'en' ? 'lang-en' : '';
+        document.getElementById('btn-ru').classList.toggle('active', lang === 'ru');
+        document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+        
         const t = translations[lang];
         document.getElementById('txt-tagline').innerText = t.tagline;
         document.getElementById('txt-beauty-sub').innerText = t.beautySub;
@@ -399,30 +255,72 @@
         document.getElementById('txt-ai-sub').innerText = t.aiSub;
         document.getElementById('txt-updates').innerText = t.updates;
         document.getElementById('txt-cases').innerText = t.cases;
-        document.getElementById('txt-form-name').innerText = t.formName;
-        document.getElementById('txt-form-link').innerText = t.formLink;
-        document.getElementById('txt-func-label').innerText = t.funcLabel;
+        document.getElementById('txt-pay-method').innerText = t.payMethod;
+        document.getElementById('txt-features').innerText = t.features;
+        document.getElementById('lbl-name').innerText = t.lblProject;
+
+        if (currentModule) openMod(currentModule); // Перерисовать поля
     }
 
-    const data = {
+    const moduleData = {
         'Beauty': ['Booking Core', 'Client CRM', 'Wallet Passes', 'AI Scheduling'],
-        'Crypto': ['L2 Transactions', 'Asset Monitoring', 'Smart Contracts', 'Custody Solutions'],
-        'AI': ['Neural Assistant', 'Custom LLM RAG', 'Automated Workflows', 'Visual Processing']
+        'Crypto': ['L2 Transactions', 'Asset Monitoring', 'Smart Contracts', 'Custody'],
+        'AI': ['Neural Assistant', 'Custom LLM RAG', 'Workflows', 'Vision']
     };
 
+    function selectPay(method) {
+        selectedPay = method;
+        document.getElementById('pay-crypto').classList.toggle('active', method === 'cryptobot');
+        document.getElementById('pay-yookassa').classList.toggle('active', method === 'yookassa');
+        tg.HapticFeedback.selectionChanged();
+    }
+
     function openMod(id) {
+        currentModule = id;
+        const t = translations[currentLang];
         document.getElementById('m-title').innerText = id;
-        const list = document.getElementById('feat-list');
-        list.innerHTML = '';
-        data[id].forEach(f => {
-            list.innerHTML += `<div class="list-row"><span style="font-size:16px;">${f}</span><span style="color:var(--accent)">✓</span></div>`;
-        });
         
+        // Рендер фич
+        const flist = document.getElementById('feat-list');
+        flist.innerHTML = '';
+        moduleData[id].forEach(f => {
+            flist.innerHTML += `<div class="list-row"><span>${f}</span><span style="color:var(--accent)">✓</span></div>`;
+        });
+
+        // Рендер динамических полей
+        const dyn = document.getElementById('dynamic-fields');
+        dyn.innerHTML = '';
+
+        if (id === 'Beauty') {
+            dyn.innerHTML = `
+                <div class="input-block">
+                    <div class="input-item">
+                        <label>${t.lblAddress}</label>
+                        <input type="text" id="p-address" placeholder="ул. Пушкина, 10">
+                    </div>
+                    <div class="input-item">
+                        <label>${t.lblHours}</label>
+                        <input type="text" id="p-hours" placeholder="09:00 - 21:00">
+                    </div>
+                    <div class="input-item">
+                        <label>${t.lblPrice}</label>
+                        <textarea id="p-price" placeholder="${t.phPrice}"></textarea>
+                    </div>
+                </div>`;
+        } else if (id === 'Crypto') {
+            dyn.innerHTML = `
+                <div class="input-block">
+                    <div class="input-item">
+                        <label>${t.lblCrypto}</label>
+                        <input type="text" id="p-crypto-token" placeholder="123456:AA... (from @CryptoBot)">
+                    </div>
+                </div>`;
+        }
+
         document.getElementById('setup').classList.add('active');
-        tg.MainButton.text = "Continue";
+        tg.MainButton.setText(currentLang === 'ru' ? "ПРОДОЛЖИТЬ" : "CONTINUE");
         tg.MainButton.show();
         tg.BackButton.show();
-        tg.HapticFeedback.impactOccurred('medium');
     }
 
     tg.BackButton.onClick(() => {
@@ -432,12 +330,32 @@
     });
 
     tg.MainButton.onClick(() => {
-        const p = document.getElementById('p-name').value;
-        if(!p) return tg.showAlert("Enter project name");
+        const name = document.getElementById('p-name').value;
+        if (!name) return tg.showAlert(translations[currentLang].alertName);
+
+        const result = {
+            module: currentModule,
+            projectName: name,
+            paymentMethod: selectedPay
+        };
+
+        if (currentModule === 'Beauty') {
+            result.address = document.getElementById('p-address').value;
+            result.hours = document.getElementById('p-hours').value;
+            result.priceList = document.getElementById('p-price').value;
+        } else if (currentModule === 'Crypto') {
+            const token = document.getElementById('p-crypto-token').value;
+            if (!token) return tg.showAlert(translations[currentLang].alertCrypto);
+            result.cryptoBotToken = token;
+        }
+
         tg.HapticFeedback.notificationOccurred('success');
-        tg.sendData(JSON.stringify({mod: document.getElementById('m-title').innerText, name: p}));
+        tg.sendData(JSON.stringify(result));
         tg.close();
     });
+
+    // Инициализация текстов
+    toggleLang('ru');
 </script>
 </body>
 </html>
